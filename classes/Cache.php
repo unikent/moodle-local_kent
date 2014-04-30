@@ -14,27 +14,31 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Local lib code
- *
- * @package    local_kent
- * @copyright  2014 University of Kent
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace local_kent;
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
 /**
- * Run the Kent Cron
+ * Cache stuff
  */
-function local_kent_cron() {
-    $enabled = get_config("local_kent", "enable_session_cron");
-    if ($enabled) {
-        \local_kent\Memcached::cron();
-    }
+class Cache
+{
+    /**
+     * Run the shouter cron.
+     */
+    public static function cron() {
+        if (!\local_hipchat\HipChat::available()) {
+            return false;
+        }
 
-    $enabled = get_config("local_kent", "enable_cache_shouter");
-    if ($enabled) {
-        \local_kent\Cache::cron();
+        $instance = \cache_config::instance();
+        $stores = $instance->get_all_stores();
+        foreach ($stores as $name => $details) {
+            $class = $details['class'];
+            $store = new $class($details['name'], $details['configuration']);
+            if (!$store->is_ready()) {
+                \local_hipchat\Message::send("Could not communicate with cache '{$name}'!", "red");
+            }
+        }
     }
 }

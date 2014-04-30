@@ -19,14 +19,14 @@ namespace local_kent;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Abstracts our most basic functions (use this most of the time.)
+ * Memcached stuff/
  */
 class Memcached
 {
     /**
-     * Memcached cron.
+     * Run the slab cron.
      */
-    public static function slab_cron() {
+    public static function cron() {
         global $DB;
 
         // We only run at midnight.

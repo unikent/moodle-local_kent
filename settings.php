@@ -27,9 +27,9 @@ if ($hassiteconfig) {
     ));
 
     $settings->add(new admin_setting_configcheckbox(
-        'local_kent/enable_memcached_shouter',
-        'Enable Memcached Shouter',
-        'Periodically checks Memcached and shouts at HipChat if there is a problem.',
+        'local_kent/enable_cache_shouter',
+        'Enable Cache Shouter',
+        'Periodically checks cache definitions and shouts at HipChat if there is a problem.',
         1
     ));
 
