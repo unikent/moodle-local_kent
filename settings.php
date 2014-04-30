@@ -47,5 +47,12 @@ if ($hassiteconfig) {
         0
     ));
 
+    $settings->add(new admin_setting_configcheckbox(
+        'local_kent/enable_log_buffer',
+        'Enable Log Buffering',
+        'Buffers log writes to a temporary table',
+        0
+    ));
+
     $ADMIN->add('localplugins', $settings);
 }
