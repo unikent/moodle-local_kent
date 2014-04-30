@@ -34,12 +34,12 @@ class Course
         }
 
         // What was the last time we shouted about in the config logs table?
-        $lasttime = $DB->get_field('local_kent_trackers', 'value', array(
+        $lasttime = $DB->get_field('kent_trackers', 'value', array(
             'name' => 'course_tracker'
         ));
 
         // Update the time stamp.
-        $DB->set_field('local_kent_trackers', 'value', time(), array(
+        $DB->set_field('kent_trackers', 'value', time(), array(
             'name' => 'course_tracker'
         ));
 

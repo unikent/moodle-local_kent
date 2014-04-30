@@ -23,7 +23,7 @@ function xmldb_local_kent_upgrade($oldversion) {
 
     if ($oldversion < 2014043001) {
         // Define table local_kent_log_buffer to be created.
-        $table = new xmldb_table('local_kent_log_buffer');
+        $table = new xmldb_table('kent_log_buffer');
 
         // Adding fields to table local_kent_log_buffer.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
@@ -47,6 +47,27 @@ function xmldb_local_kent_upgrade($oldversion) {
 
         // Kent savepoint reached.
         upgrade_plugin_savepoint(true, 2014043001, 'local', 'kent');
+    }
+
+    if ($oldversion < 2014043002) {
+        // Define table local_kent_trackers to be renamed to kent_trackers.
+        $table = new xmldb_table('local_kent_trackers');
+
+        // Launch rename table for local_kent_trackers.
+        if ($dbman->table_exists($table)) {
+            $dbman->rename_table($table, 'kent_trackers');
+        }
+
+        // Define table local_kent_log_buffer to be renamed to kent_log_buffer.
+        $table = new xmldb_table('local_kent_log_buffer');
+
+        // Launch rename table for local_kent_log_buffer.
+        if ($dbman->table_exists($table)) {
+            $dbman->rename_table($table, 'kent_log_buffer');
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2014043002, 'local', 'kent');
     }
 
     return true;
