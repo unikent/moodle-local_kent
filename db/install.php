@@ -24,5 +24,11 @@ function xmldb_local_kent_install() {
         'name' => 'config_tracker',
         'value' => time()
     ));
+
+    // Set a start timemodified for course logs tracking.
+    $DB->insert_record('local_kent_trackers', array(
+        'name' => 'course_tracker',
+        'value' => time()
+    ));
 }
 

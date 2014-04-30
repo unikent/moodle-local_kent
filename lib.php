@@ -42,4 +42,9 @@ function local_kent_cron() {
     if ($enabled) {
         \local_kent\Config::cron();
     }
+
+    $enabled = get_config("local_kent", "enable_course_shouter");
+    if ($enabled) {
+        \local_kent\Course::cron();
+    }
 }
