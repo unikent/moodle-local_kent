@@ -19,36 +19,32 @@ defined('MOODLE_INTERNAL') || die;
 if ($hassiteconfig) {
     $settings = new admin_settingpage('local_kent', get_string('pluginname', 'local_kent'));
 
-    $settings->add(new admin_setting_configtext(
+    $settings->add(new admin_setting_configcheckbox(
         'local_kent/enable_session_cron',
         'Enable Session Cron',
         'Runs a cron once a night to clear out the Memcached slabs',
-        1,
-        PARAM_BOOL
+        1
     ));
 
-    $settings->add(new admin_setting_configtext(
+    $settings->add(new admin_setting_configcheckbox(
         'local_kent/enable_memcached_shouter',
         'Enable Memcached Shouter',
         'Periodically checks Memcached and shouts at HipChat if there is a problem.',
-        1,
-        PARAM_BOOL
+        1
     ));
 
-    $settings->add(new admin_setting_configtext(
+    $settings->add(new admin_setting_configcheckbox(
         'local_kent/enable_config_shouter',
         'Enable Config Shouter',
         'Shouts out config modifications to HipChat',
-        1,
-        PARAM_BOOL
+        1
     ));
 
-    $settings->add(new admin_setting_configtext(
+    $settings->add(new admin_setting_configcheckbox(
         'local_kent/enable_course_shouter',
         'Enable Course Shouter',
         'Shouts out new courses to HipChat',
-        0,
-        PARAM_BOOL
+        0
     ));
 
     $ADMIN->add('localplugins', $settings);
