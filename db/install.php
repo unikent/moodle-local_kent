@@ -14,32 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Local lib code
- *
- * @package    local_kent
- * @copyright  2014 University of Kent
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+defined('MOODLE_INTERNAL') || die();
 
-defined('MOODLE_INTERNAL') || die;
+function xmldb_local_kent_install() {
+    global $DB;
 
-/**
- * Run the Kent Cron
- */
-function local_kent_cron() {
-    $enabled = get_config("local_kent", "enable_session_cron");
-    if ($enabled) {
-        \local_kent\Memcached::cron();
-    }
-
-    $enabled = get_config("local_kent", "enable_cache_shouter");
-    if ($enabled) {
-        \local_kent\Cache::cron();
-    }
-
-    $enabled = get_config("local_kent", "enable_config_shouter");
-    if ($enabled) {
-        \local_kent\Config::cron();
-    }
+    // Set a start timemodified for config logs tracking.
+    $DB->insert_record('local_kent_trackers', array(
+        'name' => 'config_tracker',
+        'value' => time()
+    ));
 }
+
