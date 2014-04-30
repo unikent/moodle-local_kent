@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="local_kent_trackers" COMMENT="Tracking table for tracking various statistics">
+    <TABLE NAME="kent_trackers" COMMENT="Tracking table for tracking various statistics">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
@@ -15,7 +15,7 @@
         <KEY NAME="k_name" TYPE="unique" FIELDS="name"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="local_kent_log_buffer" COMMENT="Kent log buffer">
+    <TABLE NAME="kent_log_buffer" COMMENT="Kent log buffer">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="time" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>

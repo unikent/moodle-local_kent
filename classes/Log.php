@@ -28,7 +28,7 @@ class Log
      */
     public static function get_log_table() {
         $enabled = get_config("local_kent", "enable_log_buffer");
-        return $enabled ? 'local_kent_log_buffer' : 'log';
+        return $enabled ? 'kent_log_buffer' : 'log';
     }
 
     /**
@@ -40,7 +40,7 @@ class Log
         $ids = array();
 
         // Copy from the buffer into log.
-        $rs = $DB->get_recordset('local_kent_log_buffer');
+        $rs = $DB->get_recordset('kent_log_buffer');
         foreach ($rs as $record) {
             $id = $record->id;
             unset($record->id);
@@ -52,6 +52,6 @@ class Log
         $rs->close();
 
         // Cleanup.
-        $DB->delete_records_list('local_kent_log_buffer', 'id', $ids);
+        $DB->delete_records_list('kent_log_buffer', 'id', $ids);
     }
 }
