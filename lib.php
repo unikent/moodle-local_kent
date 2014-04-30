@@ -28,5 +28,8 @@ defined('MOODLE_INTERNAL') || die;
  * Run the Kent Cron
  */
 function local_kent_cron() {
-    global $DB;
+    $enabled = get_config("local_kent", "enable_session_cron");
+    if ($enabled) {
+        \local_kent\Memcached::slab_cron();
+    }
 }

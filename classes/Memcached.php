@@ -24,11 +24,46 @@ defined('MOODLE_INTERNAL') || die();
 class Memcached
 {
     /**
+     * Memcached cron.
+     */
+    public static function slab_cron() {
+        global $DB;
+
+        // We only run at midnight.
+        if (date("H") != "00") {
+            return;
+        }
+
+        // Get the current date and the date we last ran.
+        $current = date("dmY");
+        $lastrun = $DB->get_field('local_kent_trackers', 'value', array(
+            'name' => 'kent_sess_memc_cron
+        '));
+
+        // If we have already run today, return.
+        if ($lastrun == $current) {
+            return;
+        }
+
+        // Let us know it has happened now, in case the below errors.
+        $DB->set_field('local_kent_trackers', 'value', $current, array(
+            'name' => 'kent_sess_memc_cron
+        '));
+
+        // Clear the slabs.
+        self::clear_slabs();
+    }
+
+    /**
      * Run through the Memcached slabs and clear out any old
      * sessions. Not supposed to be needed, but seems we need it.
      * Will investigate why at some point, but this works as a patch.
+     *
+     * Memcached is *supposed* to re-use items as they expire, but it seems
+     * our Memcached boxes dont do that and so throw away "good" sessions.
+     * Which is silly.
      */
-    public static function clear_slabs() {
+    private static function clear_slabs() {
         global $CFG, $DB;
 
         // Do we have anything to do?
