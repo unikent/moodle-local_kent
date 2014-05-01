@@ -37,21 +37,25 @@ class Log
     public static function cron() {
         global $DB;
 
-        $ids = array();
+        // Copy over into the transfer buffer.
+        $DB->execute("INSERT INTO {kent_log_transfer} (id,time,userid,ip,course,module,cmid,action,url,info) (
+            SELECT id,time,userid,ip,course,module,cmid,action,url,info
+            FROM {kent_log_buffer}
+        )");
 
-        // Copy from the buffer into log.
-        $rs = $DB->get_recordset('kent_log_buffer');
-        foreach ($rs as $record) {
-            $id = $record->id;
-            unset($record->id);
+        // Grab a list of IDs in the transfer buffer.
+        $ids = $DB->get_fieldset_sql("SELECT id FROM {kent_log_transfer}");
 
-            if ($DB->insert_record_raw('log', $record, false)) {
-                $ids[] = $id;
-            }
-        }
-        $rs->close();
-
-        // Cleanup.
+        // Delete them from the write buffer.
         $DB->delete_records_list('kent_log_buffer', 'id', $ids);
+
+        // Copy from the transfer buffer into log.
+        $DB->execute("INSERT INTO {log} (time,userid,ip,course,module,cmid,action,url,info) (
+            SELECT time,userid,ip,course,module,cmid,action,url,info
+            FROM {kent_log_transfer}
+        )");
+
+        // Cleanup the transfer buffer.
+        $DB->execute("TRUNCATE {kent_log_transfer}");
     }
 }

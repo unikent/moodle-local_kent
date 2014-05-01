@@ -16,5 +16,5 @@
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once($CFG->libdir . '/filelib.php');
-\local_kent\Log::cron();
+
 send_file_not_found();
