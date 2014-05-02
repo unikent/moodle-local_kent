@@ -98,5 +98,19 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2014050100, 'local', 'kent');
     }
 
+    if ($oldversion < 2014050200) {
+        $DB->delete_records('kent_tracker', array(
+            'name' => 'kent_sess_memc_cron'
+        ));
+
+        $DB->insert_record('kent_trackers', array(
+            'name' => 'memcached_tracker',
+            'value' => time()
+        ));
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2014050200, 'local', 'kent');
+    }
+
     return true;
 }

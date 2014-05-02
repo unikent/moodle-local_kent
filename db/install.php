@@ -30,5 +30,11 @@ function xmldb_local_kent_install() {
         'name' => 'course_tracker',
         'value' => time()
     ));
+
+    // Set a start timemodified for course logs tracking.
+    $DB->insert_record('kent_trackers', array(
+        'name' => 'memcached_tracker',
+        'value' => time()
+    ));
 }
 
