@@ -99,7 +99,7 @@ function xmldb_local_kent_upgrade($oldversion) {
     }
 
     if ($oldversion < 2014050200) {
-        $DB->delete_records('kent_tracker', array(
+        $DB->delete_records('kent_trackers', array(
             'name' => 'kent_sess_memc_cron'
         ));
 
