@@ -28,3 +28,7 @@ $plugin->component = 'local_kent';
 $plugin->version   = 2014050200;
 $plugin->requires  = 2013111802;
 $plugin->cron      = 60;
+
+$plugin->dependencies = array(
+    'local_hipchat' => 2014043000
+);

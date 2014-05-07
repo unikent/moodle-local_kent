@@ -105,7 +105,7 @@ function xmldb_local_kent_upgrade($oldversion) {
 
         $DB->insert_record('kent_trackers', array(
             'name' => 'memcached_tracker',
-            'value' => time()
+            'value' => 0
         ));
 
         // Kent savepoint reached.
