@@ -37,7 +37,7 @@ class Memcached
         // Get the current date and the date we last ran.
         $current = date("dmY");
         $lastrun = $DB->get_field('kent_trackers', 'value', array(
-            'name' => 'kent_sess_memc_cron
+            'name' => 'memcached_tracker
         '));
 
         // If we have already run today, return.
@@ -47,7 +47,7 @@ class Memcached
 
         // Let us know it has happened now, in case the below errors.
         $DB->set_field('kent_trackers', 'value', $current, array(
-            'name' => 'kent_sess_memc_cron
+            'name' => 'memcached_tracker
         '));
 
         // Clear the slabs.
