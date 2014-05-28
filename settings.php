@@ -43,7 +43,14 @@ if ($hassiteconfig) {
     $settings->add(new admin_setting_configcheckbox(
         'local_kent/enable_course_shouter',
         'Enable Course Shouter',
-        'Shouts out new courses to HipChat',
+        'Shouts out new courses to HipChat.',
+        0
+    ));
+
+    $settings->add(new admin_setting_configcheckbox(
+        'local_kent/enable_course_alt_shouter',
+        'Enable Course Shouter',
+        'Shouts out new courses to Academic Liason Team.',
         0
     ));
 

@@ -29,9 +29,8 @@ class Course
     public static function cron() {
         global $DB;
 
-        if (!\local_hipchat\HipChat::available()) {
-            return false;
-        }
+        $hipchat = get_config("local_kent", "enable_course_shouter");
+        $notifyalt = get_config("local_kent", "enable_course_alt_shouter");
 
         // What was the last time we shouted about in the config logs table?
         $lasttime = $DB->get_field('kent_trackers', 'value', array(
@@ -44,19 +43,78 @@ class Course
         ));
 
         // Grab all entries since then, not made by admin.
-        $sql = <<<SQL
-            SELECT COUNT(c.id)
-            FROM {course} c
-            WHERE c.timecreated > :time
-SQL;
-        $entries = $DB->count_records_sql($sql, array(
+        $entries = $DB->get_records_select('course', 'timecreated > :time', array(
             'time' => $lasttime
-        ));
+        ), '', 'id, shortname, fullname, category');
 
-        if ($entries > 0) {
-            $lastdate = strftime("%d-%m-%Y %H:%M", $lasttime);
-            $coursestr = $entries > 1 ? "courses have" : "course has";
-            \local_hipchat\Message::send("{$entries} {$coursestr} been created since {$lastdate}.");
+        if ($hipchat && \local_hipchat\HipChat::available()) {
+            if (!empty($entries)) {
+                $count = count($entries);
+                $lastdate = strftime("%d-%m-%Y %H:%M", $lasttime);
+                $coursestr = $count > 1 ? "courses have" : "course has";
+                \local_hipchat\Message::send("{$count} {$coursestr} been created since {$lastdate}.");
+            }
         }
+
+        if ($notifyalt) {
+            foreach ($entries as $entry) {
+                static::send_email($entry);
+            }
+        }
+    }
+
+    /**
+     * Emails Academic Liason Team
+     */
+    private static function send_email($course) {
+        global $CFG;
+
+        $courses = \local_connect\course::get_by_moodle_id($course->id);
+        $campus = array();
+        foreach ($courses as $obj) {
+            $name = $obj->campus->name;
+            if (!in_array($name, $campus)) {
+                $campus[] = $name;
+            }
+        }
+
+        if (!empty($campus)) {
+            $campus = implode(', ', $campus);
+        } else {
+            $campus = 'unknown';
+        }
+
+        $email = <<<HTML
+[###=== FP:TicketTemplate ===###]
+
+[###=== FP:Config:WorkspaceID ===###]           2
+[###=== FP:Config:EntryCount ===###]            1
+
+[###=== FP:Contact:Username ===###]         unk
+[###=== FP:Contact:Email__bAddress ===###]          unknown@kent.ac.uk
+
+[###=== FP:Config:Assignees ===###]         Academic__bLiaison
+[###=== FP:Config:Priority ===###]          2
+[###=== FP:Config:Status ===###]            New
+[###=== FP:Config:Title ===###]         Moodle : New module created
+[###=== FP:Entry:1:Field:Type__bof__bTicket ===###]         Service__bRequest__b__u__bService
+[###=== FP:Entry:1:Field:Category ===###]           Library
+
+[###=== FP:Entry:1:Email:Assignees ===###]          yes
+[###=== FP:Entry:1:Email:Contact ===###]            no
+[###=== FP:Entry:1:Email:CCs ===###]            no
+
+[###=== FP:Entry:1:Description:Description ===###]
+
+Code: $course->shortname
+Title: $course->fullname
+Campus: $campus
+Course: $CFG->wwwroot/course/view.php?id=$course->id
+Category: $CFG->wwwroot/course/category.php?id=$course->category
+HTML;
+
+        $user = get_admin();
+        $user->email = 'sbsrem@kent.ac.uk';
+        email_to_user($user, get_admin(), 'FootPrints Templated Ticket Email', $email);
     }
 }
