@@ -28,6 +28,8 @@ defined('MOODLE_INTERNAL') || die;
  * Run the Kent Cron
  */
 function local_kent_cron() {
+    \local_kent\Course::cron();
+
     $enabled = get_config("local_kent", "enable_session_cron");
     if ($enabled) {
         \local_kent\Memcached::cron();
@@ -41,11 +43,6 @@ function local_kent_cron() {
     $enabled = get_config("local_kent", "enable_config_shouter");
     if ($enabled) {
         \local_kent\Config::cron();
-    }
-
-    $enabled = get_config("local_kent", "enable_course_shouter");
-    if ($enabled) {
-        \local_kent\Course::cron();
     }
 
     $enabled = get_config("local_kent", "enable_log_buffer");
