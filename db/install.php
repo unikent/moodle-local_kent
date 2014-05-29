@@ -19,21 +19,23 @@ defined('MOODLE_INTERNAL') || die();
 function xmldb_local_kent_install() {
     global $DB;
 
-    // Set a start timemodified for config logs tracking.
     $DB->insert_record('kent_trackers', array(
         'name' => 'config_tracker',
         'value' => 0
     ));
 
-    // Set a start timemodified for course logs tracking.
     $DB->insert_record('kent_trackers', array(
         'name' => 'course_tracker',
         'value' => 0
     ));
 
-    // Set a start timemodified for course logs tracking.
     $DB->insert_record('kent_trackers', array(
         'name' => 'memcached_tracker',
+        'value' => 0
+    ));
+
+    $DB->insert_record('kent_trackers', array(
+        'name' => 'sharedb_tracker',
         'value' => 0
     ));
 }

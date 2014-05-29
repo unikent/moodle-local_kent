@@ -63,7 +63,17 @@ class Course
         }
 
         // Regen SHAREDB.
-        \local_kent\util\sharedb::regen_courses();
+        $lasttime = $DB->get_field('kent_trackers', 'value', array(
+            'name' => 'sharedb_tracker'
+        ));
+
+        if (time() - $lasttime >= 86400) {
+            \local_kent\util\sharedb::regen_courses();
+
+            $DB->set_field('kent_trackers', 'value', time(), array(
+                'name' => 'sharedb_tracker'
+            ));
+        }
     }
 
     /**
