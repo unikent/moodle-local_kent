@@ -61,6 +61,9 @@ class Course
                 static::send_email($entry);
             }
         }
+
+        // Regen SHAREDB.
+        \local_kent\util\sharedb::regen_courses();
     }
 
     /**
