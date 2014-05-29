@@ -15,38 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Local lib code
+ * Local stuff for Moodle Connect
  *
- * @package    local_kent
- * @copyright  2014 University of Kent
+ * @package    local_connect
+ * @copyright  2014 Skylar Kelty <S.Kelty@kent.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-/**
- * Run the Kent Cron
- */
-function local_kent_cron() {
-    \local_kent\Course::cron();
+global $SHAREDB;
 
-    $enabled = get_config("local_kent", "enable_session_cron");
-    if ($enabled) {
-        \local_kent\Memcached::cron();
-    }
-
-    $enabled = get_config("local_kent", "enable_cache_shouter");
-    if ($enabled) {
-        \local_kent\Cache::cron();
-    }
-
-    $enabled = get_config("local_kent", "enable_config_shouter");
-    if ($enabled) {
-        \local_kent\Config::cron();
-    }
-
-    $enabled = get_config("local_kent", "enable_log_buffer");
-    if ($enabled || \local_kent\Log::cron_override()) {
-        \local_kent\Log::cron();
-    }
-}
+require_once(dirname(__FILE__) . "/classes/util/sharedb.php");
+$SHAREDB = new \local_kent\util\sharedb();

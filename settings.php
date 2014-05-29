@@ -18,6 +18,8 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
     $settings = new admin_settingpage('local_kent', get_string('pluginname', 'local_kent'));
+    $ADMIN->add('reports', new admin_externalpage('reportsharedreport', 'ShareDB List',
+        "$CFG->wwwroot/local/kent/reports/sharedb.php", 'local/kentconnect:manage'));
 
     $settings->add(new admin_setting_configcheckbox(
         'local_kent/enable_session_cron',

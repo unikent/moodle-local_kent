@@ -58,4 +58,13 @@ class Log
         // Cleanup the transfer buffer.
         $DB->execute("TRUNCATE {kent_log_transfer}");
     }
+
+    /**
+     * Override the cron if we are disabled with stuff
+     * in the transfer buffer.
+     */
+    public static function cron_override() {
+        global $DB;
+        return $DB->count_records('kent_log_buffer') > 0;
+    }
 }

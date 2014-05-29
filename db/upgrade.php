@@ -112,5 +112,15 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2014050200, 'local', 'kent');
     }
 
+    if ($oldversion < 2014052900) {
+        $DB->insert_record('kent_trackers', array(
+            'name' => 'sharedb_tracker',
+            'value' => 0
+        ));
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2014052900, 'local', 'kent');
+    }
+
     return true;
 }
