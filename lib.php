@@ -46,7 +46,7 @@ function local_kent_cron() {
     }
 
     $enabled = get_config("local_kent", "enable_log_buffer");
-    if ($enabled) {
+    if ($enabled || \local_kent\Log::cron_override()) {
         \local_kent\Log::cron();
     }
 }
