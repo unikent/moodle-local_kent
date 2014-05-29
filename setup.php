@@ -26,5 +26,5 @@ defined('MOODLE_INTERNAL') || die;
 
 global $SHAREDB;
 
-require_once(dirname(__FILE__) . "/classes/util/sharedbprovider.php");
+require_once(dirname(__FILE__) . "/classes/util/sharedb.php");
 $SHAREDB = new \local_kent\util\sharedb();
