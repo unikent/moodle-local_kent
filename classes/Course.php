@@ -100,22 +100,22 @@ class Course
         $email = <<<HTML
 [###=== FP:TicketTemplate ===###]
 
-[###=== FP:Config:WorkspaceID ===###]           2
-[###=== FP:Config:EntryCount ===###]            1
+[###=== FP:Config:WorkspaceID ===###] 2
+[###=== FP:Config:EntryCount ===###] 1
 
-[###=== FP:Contact:Username ===###]         unk
-[###=== FP:Contact:Email__bAddress ===###]          unknown@kent.ac.uk
+[###=== FP:Contact:Username ===###] unk
+[###=== FP:Contact:Email__bAddress ===###] unknown@kent.ac.uk
 
-[###=== FP:Config:Assignees ===###]         Academic__bLiaison db370
-[###=== FP:Config:Priority ===###]          2
-[###=== FP:Config:Status ===###]            New
-[###=== FP:Config:Title ===###]         Moodle : New module created
-[###=== FP:Entry:1:Field:Type__bof__bTicket ===###]         Service__bRequest__b__u__bService
-[###=== FP:Entry:1:Field:Category ===###]           Library
+[###=== FP:Config:Assignees ===###] Academic__bLiaison db370
+[###=== FP:Config:Priority ===###] 2
+[###=== FP:Config:Status ===###] New
+[###=== FP:Config:Title ===###] Moodle : New module created
+[###=== FP:Entry:1:Field:Type__bof__bTicket ===###] Service__bRequest__b__u__bService
+[###=== FP:Entry:1:Field:Category ===###] Library
 
-[###=== FP:Entry:1:Email:Assignees ===###]          yes
-[###=== FP:Entry:1:Email:Contact ===###]            no
-[###=== FP:Entry:1:Email:CCs ===###]            no
+[###=== FP:Entry:1:Email:Assignees ===###] yes
+[###=== FP:Entry:1:Email:Contact ===###] no
+[###=== FP:Entry:1:Email:CCs ===###] no
 
 [###=== FP:Entry:1:Description:Description ===###]
 
