@@ -106,7 +106,7 @@ class Course
 [###=== FP:Contact:Username ===###]         unk
 [###=== FP:Contact:Email__bAddress ===###]          unknown@kent.ac.uk
 
-[###=== FP:Config:Assignees ===###]         Academic__bLiaison
+[###=== FP:Config:Assignees ===###]         Academic__bLiaison db370
 [###=== FP:Config:Priority ===###]          2
 [###=== FP:Config:Status ===###]            New
 [###=== FP:Config:Title ===###]         Moodle : New module created
