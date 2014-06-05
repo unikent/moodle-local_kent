@@ -21,13 +21,20 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Role Sync stuff
  */
-class RoleSync
+class RoleSync extends Base
 {
     /**
      * Run the shouter cron.
      */
     public static function cron() {
         $engine = new static();
+
+        $tracker = $engine->get_tracker('role_tracker');
+        if (time() - $tracker < 86400) {
+            return;
+        }
+
+        $engine->update_tracker('role_tracker');
 
         if (get_config("local_kent", "sync_panopto")) {
             $engine->sync_panopto();
