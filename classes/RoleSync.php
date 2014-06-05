@@ -121,26 +121,42 @@ class RoleSync
         $context = \context_system::instance();
 
         $roleid = $this->get_role_id('panopto_academic');
-        $this->push_up($roleid, $context->id);
-        $this->pull_down($roleid, $context->id);
+        if ($roleid) {
+            $this->push_up($roleid, $context->id);
+            $this->pull_down($roleid, $context->id);
+        }
 
         $roleid = $this->get_role_id('panopto_non_academic');
-        $this->push_up($roleid, $context->id);
-        $this->pull_down($roleid, $context->id);
+        if ($roleid) {
+            $this->push_up($roleid, $context->id);
+            $this->pull_down($roleid, $context->id);
+        }
     }
 
     /**
      * Sync helpdesk role between connected Moodle installations
      */
     private function sync_helpdesk() {
+        $context = \context_system::instance();
 
+        $roleid = $this->get_role_id('support');
+        if ($roleid) {
+            $this->push_up($roleid, $context->id);
+            $this->pull_down($roleid, $context->id);
+        }
     }
 
     /**
      * Sync cla role between connected Moodle installations
      */
     private function sync_cla() {
+        $context = \context_system::instance();
 
+        $roleid = $this->get_role_id('cla_admin');
+        if ($roleid) {
+            $this->push_up($roleid, $context->id);
+            $this->pull_down($roleid, $context->id);
+        }
     }
 
     /**
@@ -149,5 +165,4 @@ class RoleSync
     private function sync_category_admins() {
 
     }
-
 }
