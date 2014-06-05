@@ -50,3 +50,6 @@ function local_kent_cron() {
         \local_kent\Log::cron();
     }
 }
+
+// Inject the GA code for every request.
+\local_kent\GA::inject();
