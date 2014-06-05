@@ -31,7 +31,7 @@ class RoleSync extends Base
 
         $tracker = $engine->get_tracker('role_tracker');
         if (time() - $tracker < 86400) {
-            return;
+            //return;
         }
 
         $engine->update_tracker('role_tracker');
@@ -129,7 +129,7 @@ class RoleSync extends Base
     /**
      * Pull a given set of roles from SHAREDB.
      */
-    private function pull_down($roleid) {
+    private function pull_down($roleid, $shortname) {
         global $CFG, $DB, $SHAREDB;
 
         $context = \context_system::instance();
@@ -140,12 +140,14 @@ class RoleSync extends Base
             FROM {shared_role_assignments} sra
             INNER JOIN {shared_roles} sr
               ON sr.id=sra.roleid
-            WHERE sra.moodle_env <> :moodle_env AND sra.moodle_dist <> :moodle_dist AND sr.roleid = :roleid
+            WHERE
+              CONCAT(sra.moodle_env, '_', sra.moodle_dist) <> CONCAT(:moodle_env, '_', :moodle_dist)
+              AND sr.shortname = :roleshortname
             GROUP BY sr.shortname, sra.username
         ", array(
             'moodle_env' => $CFG->kent->environment,
             'moodle_dist' => $CFG->kent->distribution,
-            'roleid' => $roleid
+            'roleshortname' => $shortname
         ));
 
         foreach ($records as $record) {
@@ -163,13 +165,13 @@ class RoleSync extends Base
         $roleid = $this->get_role_id('panopto_academic');
         if ($roleid) {
             $this->push_up($roleid);
-            $this->pull_down($roleid);
+            $this->pull_down($roleid, 'panopto_academic');
         }
 
         $roleid = $this->get_role_id('panopto_non_academic');
         if ($roleid) {
             $this->push_up($roleid);
-            $this->pull_down($roleid);
+            $this->pull_down($roleid, 'panopto_non_academic');
         }
     }
 
@@ -180,7 +182,7 @@ class RoleSync extends Base
         $roleid = $this->get_role_id('support');
         if ($roleid) {
             $this->push_up($roleid);
-            $this->pull_down($roleid);
+            $this->pull_down($roleid, 'support');
         }
     }
 
@@ -191,7 +193,7 @@ class RoleSync extends Base
         $roleid = $this->get_role_id('cla_admin');
         if ($roleid) {
             $this->push_up($roleid);
-            $this->pull_down($roleid);
+            $this->pull_down($roleid, 'cla_admin');
         }
     }
 }

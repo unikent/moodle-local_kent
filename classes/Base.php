@@ -46,6 +46,7 @@ abstract class Base
 
         if ($DB->record_exists('kent_trackers', $params)) {
             $DB->set_field('kent_trackers', 'value', time(), $params);
+            return;
         }
 
         $params['value'] = time();
