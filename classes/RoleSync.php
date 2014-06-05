@@ -40,10 +40,6 @@ class RoleSync
         if (get_config("local_kent", "sync_cla")) {
             $engine->sync_cla();
         }
-
-        if (get_config("local_kent", "sync_category_admins")) {
-            $engine->sync_category_admins();
-        }
     }
 
     /**
@@ -60,7 +56,7 @@ class RoleSync
     /**
      * Push a given set of roles up to SHAREDB.
      */
-    private function push_up($roleid, $contextid) {
+    private function push_up($roleid) {
         global $CFG, $DB, $SHAREDB;
 
         // Grab users.
@@ -68,11 +64,10 @@ class RoleSync
             FROM {role_assignments} ra
             INNER JOIN {user} u
               ON u.id=ra.userid
-            WHERE ra.roleid = :roleid AND ra.contextid = :contextid
+            WHERE ra.roleid = :roleid
             GROUP BY u.username
         ", array(
-            "roleid" => $roleid,
-            "contextid" => $contextid
+            "roleid" => $roleid
         ));
 
         $role = $DB->get_record('role', array(
@@ -108,28 +103,66 @@ class RoleSync
     }
 
     /**
+     * Get a user ID for a username.
+     */
+    private function get_user($username) {
+        global $DB;
+
+        static $cache = array();
+
+        if (!isset($cache[$username])) {
+            $cache[$username] = $DB->get_field('user', 'id', array(
+                'username' => $username
+            ));
+        }
+
+        return $cache[$username];
+    }
+
+    /**
      * Pull a given set of roles from SHAREDB.
      */
-    private function pull_down($roleid, $context) {
+    private function pull_down($roleid) {
+        global $CFG, $DB, $SHAREDB;
 
+        $context = \context_system::instance();
+
+        // Grab a list of enrolments, merge between installations.
+        $records = $SHAREDB->get_records_sql("
+            SELECT sra.id, sra.username, sr.shortname
+            FROM {shared_role_assignments} sra
+            INNER JOIN {shared_roles} sr
+              ON sr.id=sra.roleid
+            WHERE sra.moodle_env <> :moodle_env AND sra.moodle_dist <> :moodle_dist AND sr.roleid = :roleid
+            GROUP BY sr.shortname, sra.username
+        ", array(
+            'moodle_env' => $CFG->kent->environment,
+            'moodle_dist' => $CFG->kent->distribution,
+            'roleid' => $roleid
+        ));
+
+        foreach ($records as $record) {
+            $userid = $this->get_user($record->username);
+            if ($userid && !user_has_role_assignment($userid, $roleid, $context->id)) {
+                role_assign($roleid, $userid, $context->id);
+            }
+        }
     }
 
     /**
      * Sync panopto role between connected Moodle installations
      */
     private function sync_panopto() {
-        $context = \context_system::instance();
-
         $roleid = $this->get_role_id('panopto_academic');
         if ($roleid) {
-            $this->push_up($roleid, $context->id);
-            $this->pull_down($roleid, $context->id);
+            $this->push_up($roleid);
+            $this->pull_down($roleid);
         }
 
         $roleid = $this->get_role_id('panopto_non_academic');
         if ($roleid) {
-            $this->push_up($roleid, $context->id);
-            $this->pull_down($roleid, $context->id);
+            $this->push_up($roleid);
+            $this->pull_down($roleid);
         }
     }
 
@@ -137,12 +170,10 @@ class RoleSync
      * Sync helpdesk role between connected Moodle installations
      */
     private function sync_helpdesk() {
-        $context = \context_system::instance();
-
         $roleid = $this->get_role_id('support');
         if ($roleid) {
-            $this->push_up($roleid, $context->id);
-            $this->pull_down($roleid, $context->id);
+            $this->push_up($roleid);
+            $this->pull_down($roleid);
         }
     }
 
@@ -150,19 +181,10 @@ class RoleSync
      * Sync cla role between connected Moodle installations
      */
     private function sync_cla() {
-        $context = \context_system::instance();
-
         $roleid = $this->get_role_id('cla_admin');
         if ($roleid) {
-            $this->push_up($roleid, $context->id);
-            $this->pull_down($roleid, $context->id);
+            $this->push_up($roleid);
+            $this->pull_down($roleid);
         }
-    }
-
-    /**
-     * Sync category_admins role between connected Moodle installations
-     */
-    private function sync_category_admins() {
-
     }
 }

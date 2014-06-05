@@ -92,13 +92,6 @@ if ($hassiteconfig) {
                 'Synchronizes CLA role between connected Moodle installations.',
                 0
             ));
-
-            $settings->add(new admin_setting_configcheckbox(
-                'local_kent/sync_category_admins',
-                'Sync Category Admins',
-                'Synchronizes category admins between connected Moodle installations.',
-                0
-            ));
         }
     }
 
