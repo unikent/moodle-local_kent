@@ -22,6 +22,8 @@ define('CLI_SCRIPT', true);
 
 require_once(dirname(__FILE__) . '/../../../config.php');
 require_once($CFG->libdir . '/clilib.php');
+require_once($CFG->libdir . '/setuplib.php');
+require_once($CFG->libdir . '/filelib.php');
 
 list($options, $unrecognized) = cli_get_params(
     array(
@@ -41,6 +43,11 @@ raise_memory_limit(MEMORY_HUGE);
 if ($options['compatibility']) {
     $CFG->enabletgzbackups = false;
 }
+
+$backuppath = $CFG->tempdir . '/backup/' . $options['category'];
+fulldelete($backuppath);
+make_writable_directory($backuppath);
+
 
 cli_heading("Running Category Backup" . ($options['compatibility'] ? ' (compatibility mode)' : ''));
 
@@ -69,6 +76,7 @@ $courses = $DB->get_fieldset_sql("
     "catb" => "%/" . $options['category']
 ));
 
+$files = array();
 $prefs = array();
 
 foreach ($courses as $course) {
@@ -87,10 +95,30 @@ foreach ($courses as $course) {
     }
 
     // Okay we have a backup file, copy it to temp dir.
-    $filename = $CFG->tempdir . '/backup/' . $hash;
+    $filename = $backuppath . '/' . $hash;
     file_put_contents($filename, $file->get_content());
+    $files[$course . ".mbz"] = $filename;
     $file->delete();
 
     echo "Finished!\n";
     cli_separator();
 }
+
+cli_heading("Packing up");
+
+$newfile = $CFG->tempdir . '/backup/' . $options['category'] . '.tgz';
+
+// Delete old file if it exists.
+@unlink($newfile);
+
+// Pack all the files up.
+$packer = get_file_packer('application/x-gzip');
+if (!$packer->archive_to_pathname($files, $newfile)) {
+    cli_error('Error whilst trying to tar files. You will need to zip it up yourself.');
+}
+
+cli_heading("Cleaning Up");
+
+fulldelete($backuppath);
+
+cli_heading("Finished!");
