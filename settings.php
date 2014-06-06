@@ -19,7 +19,7 @@ defined('MOODLE_INTERNAL') || die;
 if ($hassiteconfig) {
     $settings = new admin_settingpage('local_kent', get_string('pluginname', 'local_kent'));
     $ADMIN->add('reports', new admin_externalpage('reportsharedreport', 'ShareDB List',
-        "$CFG->wwwroot/local/kent/reports/sharedb.php", 'local/kentconnect:manage'));
+        "$CFG->wwwroot/local/kent/reports/sharedb.php", 'local/connect:manage'));
 
     $settings->add(new admin_setting_configcheckbox(
         'local_kent/enable_session_cron',
@@ -62,6 +62,38 @@ if ($hassiteconfig) {
         'Buffers log writes to a temporary table',
         0
     ));
+
+    if (!empty($CFG->kent->sharedb["host"])) {
+        $settings->add(new admin_setting_configcheckbox(
+            'local_kent/enable_role_sync',
+            'Enable Role Synchronization',
+            'Synchronizes roles between connected Moodle installations.',
+            0
+        ));
+
+        if (get_config('local_kent', 'enable_role_sync')) {
+            $settings->add(new admin_setting_configcheckbox(
+                'local_kent/sync_panopto',
+                'Sync Panopto Role',
+                'Synchronizes Panopto role between connected Moodle installations.',
+                0
+            ));
+
+            $settings->add(new admin_setting_configcheckbox(
+                'local_kent/sync_helpdesk',
+                'Sync Helpdesk Role',
+                'Synchronizes helpdesk role between connected Moodle installations.',
+                0
+            ));
+
+            $settings->add(new admin_setting_configcheckbox(
+                'local_kent/sync_cla',
+                'Sync CLA Role',
+                'Synchronizes CLA role between connected Moodle installations.',
+                0
+            ));
+        }
+    }
 
     $ADMIN->add('localplugins', $settings);
 }

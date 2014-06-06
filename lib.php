@@ -28,6 +28,11 @@ defined('MOODLE_INTERNAL') || die;
  * Run the Kent Cron
  */
 function local_kent_cron() {
+    $enabled = get_config("local_kent", "enable_log_buffer");
+    if ($enabled || \local_kent\Log::cron_override()) {
+        \local_kent\Log::cron();
+    }
+
     \local_kent\Course::cron();
 
     $enabled = get_config("local_kent", "enable_session_cron");
@@ -45,9 +50,9 @@ function local_kent_cron() {
         \local_kent\Config::cron();
     }
 
-    $enabled = get_config("local_kent", "enable_log_buffer");
-    if ($enabled || \local_kent\Log::cron_override()) {
-        \local_kent\Log::cron();
+    $enabled = get_config("local_kent", "enable_role_sync");
+    if ($enabled) {
+        \local_kent\RoleSync::cron();
     }
 }
 
