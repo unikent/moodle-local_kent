@@ -25,7 +25,10 @@ require_once($CFG->libdir . '/clilib.php');
 
 list($options, $unrecognized) = cli_get_params(
     array(
-        'category' => false
+        // The ID of the category to export.
+        'category' => false,
+        // Compatibility with < 2.6 Moodles.
+        'compatibility' => false
     )
 );
 
@@ -35,7 +38,11 @@ if (!$options['category']) {
 
 raise_memory_limit(MEMORY_HUGE);
 
-cli_heading("Running Category Backup");
+if ($options['compatibility']) {
+    $CFG->enabletgzbackups = false;
+}
+
+cli_heading("Running Category Backup" . ($options['compatibility'] ? ' (compatibility mode)' : ''));
 
 $username = exec('logname');
 $user = $DB->get_record('user', array(
