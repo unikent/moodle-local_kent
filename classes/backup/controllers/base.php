@@ -33,12 +33,14 @@ require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
  */
 class base extends \backup_controller implements \loggable
 {
+    protected $prefs;
+
     /**
      * Constructor
      */
-    public function __construct($type, $id, $format, $interactive, $mode, $userid, $prefs) {
-        parent::__construct($type, $id, $format, $interactive, $mode, $userid);
+    public function __construct($type, $id, $format, $interactive, $mode, $userid, $prefs = array()) {
         $this->prefs = $prefs;
+        parent::__construct($type, $id, $format, $interactive, $mode, $userid);
     }
 
     /**
