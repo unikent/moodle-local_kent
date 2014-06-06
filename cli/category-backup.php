@@ -36,3 +36,54 @@ if (!$options['category']) {
 raise_memory_limit(MEMORY_HUGE);
 
 cli_heading("Running Category Backup");
+
+$username = exec('logname');
+$user = $DB->get_record('user', array(
+    'username' => $username
+));
+
+if ($user) {
+    echo "Detected user: {$user->username}.\n";
+} else {
+    $user = get_admin();
+    echo "No valid username detected - using admin.\n";
+}
+
+\core\session\manager::set_user($user);
+
+$courses = $DB->get_fieldset_sql("
+    SELECT c.id FROM {course} c
+    INNER JOIN {course_categories} cc
+      ON cc.id=c.category
+    WHERE cc.path LIKE :cata
+      OR cc.path LIKE :catb
+", array(
+    "cata" => "%/" . $options['category'] . "/%",
+    "catb" => "%/" . $options['category']
+));
+
+$prefs = array();
+
+foreach ($courses as $course) {
+    cli_separator();
+    echo "Backing up course $course...\n";
+
+    $controller = new \local_kent\backup\controllers\simple($course, $prefs);
+    $controller->execute_plan();
+    $result = $controller->get_results();
+
+    $file = $result['backup_destination'];
+    $hash = $file->get_contenthash();
+    if (!$hash) {
+        cli_problem("Failed!\n");
+        continue;
+    }
+
+    // Okay we have a backup file, copy it to temp dir.
+    $filename = $CFG->tempdir . '/backup/' . $hash;
+    file_put_contents($filename, $file->get_content());
+    $file->delete();
+
+    echo "Finished!\n";
+    cli_separator();
+}
