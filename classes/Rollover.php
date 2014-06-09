@@ -72,9 +72,13 @@ class Rollover
 
         $transaction = $DB->start_delegated_transaction();
 
-        $this->migrate_data();
-        $this->manipulate_data();
-        $this->import();
+        try {
+            $this->migrate_data();
+            $this->manipulate_data();
+            $this->import();
+        } catch (\moodle_exception $e) {
+            $DB->rollback_delegated_transaction($transaction, $e);
+        }
 
         $transaction->allow_commit();
     }

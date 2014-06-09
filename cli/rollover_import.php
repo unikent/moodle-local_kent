@@ -29,5 +29,9 @@ if (empty($settings)) {
     cli_error("No prefs detected!");
 }
 
-$controller = new \local_kent\Rollover($settings);
-$controller->go();
+try {
+    $controller = new \local_kent\Rollover($settings);
+    $controller->go();
+} catch (moodle_exception $e) {
+    cli_error($e->getMessage());
+}
