@@ -110,4 +110,12 @@ class sharedb {
             ));
         }
     }
+
+    /**
+     * Is this available?
+     */
+    public static function available() {
+        global $CFG;
+        return !empty($CFG->kent->sharedb['user']) && !empty($CFG->kent->sharedb['pass']);
+    }
 }
