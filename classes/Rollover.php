@@ -42,6 +42,32 @@ class Rollover
     }
 
     /**
+     * Static backup method.
+     */
+    public static function backup($settings) {
+        global $CFG;
+
+        $controller = new backup\controllers\rollover($settings['id'], $settings);
+        $controller->execute_plan();
+
+        $result = $controller->get_results();
+        $file = $result['backup_destination'];
+
+        if ($file->get_contenthash()) {
+            $packer = get_file_packer('application/vnd.moodle.backup');
+
+            $destination = $CFG->tempdir . '/backup/' . $file->get_contenthash();
+
+            $file->extract_to_pathname($packer, $destination);
+            $file->delete();
+
+            return $destination;
+        }
+
+        return null;
+    }
+
+    /**
      * Setup.
      */
     private function setup() {

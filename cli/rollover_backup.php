@@ -31,22 +31,9 @@ if (empty($settings)) {
     cli_error("No prefs detected!");
 }
 
-$controller = new \local_kent\backup\controllers\rollover($settings['id'], $settings);
-$controller->execute_plan();
-$result = $controller->get_results();
-$file = $result['backup_destination'];
-
-if ($file->get_contenthash()) {
-    $packer = get_file_packer('application/vnd.moodle.backup');
-
-    $destination = $CFG->tempdir . '/backup/' . $file->get_contenthash();
-
-    $file->extract_to_pathname($packer, $destination);
-    $file->delete();
-
-    echo $destination;
-
-    exit(0);
+$destination = \local_kent\Rollover::backup($settings);
+if ($destination === null) {
+    exit(1);
 }
 
-exit(1);
+echo $destination;
