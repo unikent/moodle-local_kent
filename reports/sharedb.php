@@ -52,7 +52,7 @@ if (true) {
     $table->data = array();
 
     // Grab a list of courses we can see.
-    $records = $SHAREDB->get_records('course_list', $conditions, '',
+    $records = $SHAREDB->get_records('shared_courses', $conditions, '',
         'id,moodle_env,moodle_dist,moodle_id,shortname,fullname', $page * $perpage, $perpage);
     foreach ($records as $record) {
         $table->data[] = new \html_table_row(array(
@@ -71,7 +71,7 @@ if (true) {
 
 // Output paging bar.
 if (true) {
-    $count = $SHAREDB->count_records('course_list', $conditions);
+    $count = $SHAREDB->count_records('shared_courses', $conditions);
     $baseurl = new moodle_url('/local/kent/reports/sharedb.php', array('perpage' => $perpage, 'dist' => $dist));
     echo $OUTPUT->paging_bar($count, $page, $perpage, $baseurl);
 }

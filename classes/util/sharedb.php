@@ -83,6 +83,7 @@ class sharedb {
 
     /**
      * Populate the Shared DB list of courses.
+     * @todo Move to bulk insert in Moodle 2.7
      */
     public static function regen_courses() {
         global $CFG, $DB, $SHAREDB;
@@ -91,7 +92,7 @@ class sharedb {
         $courses = $DB->get_records('course', null, '', 'id,shortname,fullname,summary');
 
         // Clear out SHAREDB.
-        $SHAREDB->delete_records('course_list', array(
+        $SHAREDB->delete_records('shared_courses', array(
             "moodle_env" => $CFG->kent->environment,
             "moodle_dist" => $CFG->kent->distribution
         ));
@@ -99,7 +100,7 @@ class sharedb {
         // Copy across.
         foreach ($courses as $item) {
             // Insert.
-            $SHAREDB->insert_record("course_list", array(
+            $SHAREDB->insert_record("shared_courses", array(
                 "moodle_env" => $CFG->kent->environment,
                 "moodle_dist" => $CFG->kent->distribution,
                 "moodle_id" => $item->id,
