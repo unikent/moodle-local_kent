@@ -86,7 +86,7 @@ echo "  Finished.\n";
 cli_heading("Testing Clustered Memcached");
 
 $cache = new \Memcached(crc32("clustered-memcached"));
-$cache->setOption(Memcached::OPT_RETRY_TIMEOUT, 15);
+$cache->setOption(\Memcached::OPT_RETRY_TIMEOUT, 15);
 $cache->setOption(\Memcached::OPT_CONNECT_TIMEOUT, 200);
 $cache->setOption(\Memcached::OPT_SEND_TIMEOUT, 200);
 $cache->setOption(\Memcached::OPT_RECV_TIMEOUT, 200);
@@ -116,7 +116,7 @@ $cache->quit();
 
 
 $cache = new \Memcached(crc32("clustered-memcached"));
-$cache->setOption(Memcached::OPT_RETRY_TIMEOUT, 15);
+$cache->setOption(\Memcached::OPT_RETRY_TIMEOUT, 15);
 $cache->setOption(\Memcached::OPT_CONNECT_TIMEOUT, 200);
 $cache->setOption(\Memcached::OPT_SEND_TIMEOUT, 200);
 $cache->setOption(\Memcached::OPT_RECV_TIMEOUT, 200);
@@ -135,7 +135,7 @@ $cache->quit();
 
 
 $cache = new \Memcached(crc32("clustered-memcached"));
-$cache->setOption(Memcached::OPT_RETRY_TIMEOUT, 15);
+$cache->setOption(\Memcached::OPT_RETRY_TIMEOUT, 15);
 $cache->setOption(\Memcached::OPT_CONNECT_TIMEOUT, 200);
 $cache->setOption(\Memcached::OPT_SEND_TIMEOUT, 200);
 $cache->setOption(\Memcached::OPT_RECV_TIMEOUT, 200);
