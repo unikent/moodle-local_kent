@@ -17,4 +17,5 @@
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once($CFG->libdir . '/filelib.php');
 
+\local_kent\Course::regen_courses();
 send_file_not_found();

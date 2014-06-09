@@ -68,7 +68,7 @@ class Course
         ));
 
         if (time() - $lasttime >= 86400) {
-            \local_kent\util\sharedb::regen_courses();
+            static::regen_courses();
 
             $DB->set_field('kent_trackers', 'value', time(), array(
                 'name' => 'sharedb_tracker'
@@ -129,5 +129,68 @@ HTML;
         $user = get_admin();
         $user->email = 'sbsrem@kent.ac.uk';
         email_to_user($user, get_admin(), 'FootPrints Templated Ticket Email', $email);
+    }
+
+    /**
+     * Populate the Shared DB list of courses.
+     * @todo Move to bulk insert in Moodle 2.7
+     */
+    public static function regen_courses() {
+        global $CFG, $DB, $SHAREDB;
+
+        $sql = <<<SQL
+        SELECT c.id, c.shortname, c.fullname, c.summary, GROUP_CONCAT(u.username) as logins
+        FROM {course} c
+
+        LEFT OUTER JOIN {enrol} e ON e.courseid=c.id
+        LEFT OUTER JOIN {role} r ON r.id=e.roleid
+        LEFT OUTER JOIN {user_enrolments} ue ON ue.enrolid=e.id
+        LEFT OUTER JOIN {user} u ON u.id=ue.userid
+
+        WHERE r.shortname IN ("sds_teacher", "sds_convenor", "convenor", "dep_admin", "manager", "editingteacher", "support_staff")
+            OR r.id IS NULL
+
+        GROUP BY c.id
+SQL;
+
+        // Grab a list of courses in Moodle.
+        $courses = $DB->get_records_sql($sql);
+
+        // Clear out SHAREDB.
+        $SHAREDB->delete_records('shared_courses', array(
+            "moodle_env" => $CFG->kent->environment,
+            "moodle_dist" => $CFG->kent->distribution
+        ));
+        $SHAREDB->delete_records('shared_course_admins', array(
+            "moodle_env" => $CFG->kent->environment,
+            "moodle_dist" => $CFG->kent->distribution
+        ));
+
+        // Copy across.
+        foreach ($courses as $item) {
+            // Insert.
+            $SHAREDB->insert_record("shared_courses", array(
+                "moodle_env" => $CFG->kent->environment,
+                "moodle_dist" => $CFG->kent->distribution,
+                "moodle_id" => $item->id,
+                "shortname" => $item->shortname,
+                "fullname" => $item->fullname,
+                "summary" => $item->summary
+            ), true, true);
+
+            if (empty($item->logins)) {
+                continue;
+            }
+
+            $logins = explode(',', $item->logins);
+            foreach ($logins as $login) {
+                $SHAREDB->insert_record("shared_course_admins", array(
+                    "moodle_env" => $CFG->kent->environment,
+                    "moodle_dist" => $CFG->kent->distribution,
+                    "courseid" => $item->id,
+                    "username" => $login
+                ), true, true);
+            }
+        }
     }
 }
