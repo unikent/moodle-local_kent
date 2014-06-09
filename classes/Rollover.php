@@ -88,7 +88,8 @@ class Rollover
         $from = escapeshellcmd($this->settings['folder']);
         $to = escapeshellcmd($CFG->tempdir . '/backup/' . $this->id);
 
-        exec("mv $from $to", null, $return);
+        exec("mv $from $to", $out, $return);
+
         if ($return != 0) {
             throw new \moodle_exception('Could not move backup folder!');
         }
@@ -140,10 +141,8 @@ class Rollover
     private function import() {
         global $CFG;
 
-        $folder = $CFG->tempdir . '/backup/' . $this->id;
-
         $controller = new \restore_controller(
-            $folder,
+            $this->id,
             $this->settings['id'],
             \backup::INTERACTIVE_NO,
             \backup::MODE_GENERAL,
