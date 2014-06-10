@@ -57,4 +57,6 @@ function local_kent_cron() {
 }
 
 // Inject the GA code for every request.
-\local_kent\GA::inject();
+if (!defined("CLI_SCRIPT") || (defined("CLI_SCRIPT") && !CLI_SCRIPT)) {
+    \local_kent\GA::inject();
+}
