@@ -59,4 +59,5 @@ function local_kent_cron() {
 // Inject the GA code for every request.
 if (!defined("CLI_SCRIPT") || (defined("CLI_SCRIPT") && !CLI_SCRIPT)) {
     \local_kent\GA::inject();
+    \local_kent\NewYear::inject();
 }
