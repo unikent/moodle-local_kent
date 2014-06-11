@@ -40,7 +40,7 @@ class NewYear
     private function get_code() {
         global $CFG;
 
-        if (time() > 1404172800 || !is_siteadmin()) {
+        if (empty($CFG->new_year_cutoff) || time() > $CFG->new_year_cutoff || !is_siteadmin()) {
             return "";
         }
 
