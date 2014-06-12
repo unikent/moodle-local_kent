@@ -25,7 +25,7 @@ require_once(dirname(__FILE__) . '/../../../config.php');
 require_once($CFG->libdir . '/clilib.php');
 
 // We have to comment this before running.
-die("You do not want to run this.");
+die("You do not want to run this.\n");
 
 \local_hipchat\Message::send("Err.. you should probably know that someone is destroying Moodle...", "red");
 
