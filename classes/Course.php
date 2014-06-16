@@ -84,7 +84,7 @@ class Course
     private static function send_email($course) {
         global $CFG;
 
-        $courses = \local_connect\course::get_by_moodle_id($course->id);
+        $courses = \local_connect\course::get_by('mid', $course->id);
         $campus = array();
         foreach ($courses as $obj) {
             $name = $obj->campus->name;
