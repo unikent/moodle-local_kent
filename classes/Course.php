@@ -85,6 +85,12 @@ class Course
         global $CFG;
 
         $courses = \local_connect\course::get_by('mid', $course->id);
+
+        // Force array.
+        if (!is_array($courses)) {
+            $courses = array($courses);
+        }
+
         $campus = array();
         foreach ($courses as $obj) {
             $name = $obj->campus->name;
