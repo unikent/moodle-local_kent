@@ -30,6 +30,10 @@ class Course
     public static function course_created(\core\event\course_created $event) {
         global $CFG, $DB, $SHAREDB;
 
+        if (!util\sharedb::available()) {
+            return true;
+        }
+
         $fullname = $event->other['fullname'];
 
         $hipchat = get_config("local_kent", "enable_course_shouter");
@@ -49,6 +53,8 @@ class Course
             "fullname" => $course->fullname,
             "summary" => $course->summary
         ));
+
+        return true;
     }
 
     /**
@@ -57,6 +63,10 @@ class Course
      */
     public static function user_enrolment_created(\core\event\user_enrolment_created $event) {
         global $CFG, $DB, $SHAREDB;
+
+        if (!util\sharedb::available()) {
+            return true;
+        }
 
         $user = $DB->get_record('user', array(
             'id' => $event->relateduserid
@@ -71,6 +81,8 @@ class Course
                 "username" => $user->username
             ));
         }
+
+        return true;
     }
 
     /**
