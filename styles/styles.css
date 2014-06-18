@@ -3,3 +3,8 @@
 	height: 650px;
 	margin-bottom: 15px;
 }
+
+.box.notification {
+	text-align: center;
+	padding: 10px;
+}

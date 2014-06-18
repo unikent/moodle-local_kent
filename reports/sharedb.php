@@ -29,7 +29,7 @@ require_once($CFG->libdir.'/adminlib.php');
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url('/local/kent/reports/sharedb.php');
-$PAGE->requires->css('/local/kent/reports/styles/report.css');
+$PAGE->requires->css('/local/kent/styles/styles.css');
 
 $page       = optional_param('page', 0, PARAM_INT);
 $perpage    = optional_param('perpage', 30, PARAM_INT);
