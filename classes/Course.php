@@ -25,7 +25,6 @@ class Course
 {
     /**
      * Course created observer.
-     * @todo Just add a task for this to regen
      */
     public static function course_created(\core\event\course_created $event) {
         global $CFG, $DB, $SHAREDB;
@@ -115,7 +114,6 @@ class Course
 
     /**
      * User enrolment deleted.
-     * @todo Just add a task for this to regen
      */
     public static function user_enrolment_deleted(\core\event\user_enrolment_deleted $event) {
         global $CFG, $DB, $SHAREDB;
