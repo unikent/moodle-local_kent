@@ -45,11 +45,11 @@ class Notification
         }
 
         return $DB->insert_record('kent_notifications', array(
-            'to' => $to,
+            'userid' => $to,
             'shortdesc' => $shortdesc,
             'longdesc' => $longdesc,
-            'updated' => time(),
-            'seen' => 0
+            'seen' => '0',
+            'timemodified' => time()
         ));
     }
 
@@ -70,12 +70,12 @@ class Notification
             $userid = $userid->id;
         }
 
-        $args = array('to' => $userid);
+        $args = array('userid' => $userid);
 
         if ($seen !== 'any') {
             $args['seen'] = $seen == 1 ? 1 : 0;
         }
 
-        return $DB->get_records('kent_notifications', $args, 'seen DESC');
+        return $DB->get_records('kent_notifications', $args, 'timemodified DESC');
     }
 }

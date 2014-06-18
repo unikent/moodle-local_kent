@@ -128,19 +128,19 @@ function xmldb_local_kent_upgrade($oldversion) {
 
         // Adding fields to table kent_notifications.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('to', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, null);
         $table->add_field('shortdesc', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
         $table->add_field('longdesc', XMLDB_TYPE_TEXT, null, null, null, null, null);
         $table->add_field('seen', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
-        $table->add_field('updated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
 
         // Adding keys to table kent_notifications.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
 
         // Adding indexes to table kent_notifications.
-        $table->add_index('i_to', XMLDB_INDEX_NOTUNIQUE, array('to'));
+        $table->add_index('i_userid', XMLDB_INDEX_NOTUNIQUE, array('userid'));
         $table->add_index('i_seen', XMLDB_INDEX_NOTUNIQUE, array('seen'));
-        $table->add_index('i_to_seen', XMLDB_INDEX_NOTUNIQUE, array('to', 'seen'));
+        $table->add_index('i_userid_seen', XMLDB_INDEX_NOTUNIQUE, array('userid', 'seen'));
 
         // Conditionally launch create table for kent_notifications.
         if (!$dbman->table_exists($table)) {
