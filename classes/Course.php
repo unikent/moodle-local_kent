@@ -47,13 +47,14 @@ class Course
         $params = array(
             "moodle_env" => $CFG->kent->environment,
             "moodle_dist" => $CFG->kent->distribution,
-            "moodle_id" => $course->id,
-            "shortname" => $course->shortname,
-            "fullname" => $course->fullname,
-            "summary" => $course->summary
+            "moodle_id" => $course->id
         );
 
         if (!$SHAREDB->record_exists('shared_courses', $params)) {
+            $params["shortname"] = $course->shortname;
+            $params["fullname"] = $course->fullname;
+            $params["summary"] = $course->summary;
+
             $SHAREDB->insert_record('shared_courses', $params);
         }
 
