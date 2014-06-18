@@ -24,6 +24,119 @@ defined('MOODLE_INTERNAL') || die();
 class Course
 {
     /**
+     * Course created observer.
+     */
+    public static function course_created(\core\event\course_created $event) {
+        global $CFG, $DB, $SHAREDB;
+
+        if (!util\sharedb::available()) {
+            return true;
+        }
+
+        $fullname = $event->other['fullname'];
+
+        $hipchat = get_config("local_kent", "enable_course_shouter");
+        if ($hipchat && \local_hipchat\HipChat::available()) {
+            \local_hipchat\Message::send("A new course has been created: '{$fullname}'.");
+        }
+
+        $course = $DB->get_record('course', array(
+            "id" => $event->objectid
+        ));
+
+        $params = array(
+            "moodle_env" => $CFG->kent->environment,
+            "moodle_dist" => $CFG->kent->distribution,
+            "moodle_id" => $course->id,
+            "shortname" => $course->shortname,
+            "fullname" => $course->fullname,
+            "summary" => $course->summary
+        );
+
+        if (!$SHAREDB->record_exists('shared_courses', $params)) {
+            $SHAREDB->insert_record('shared_courses', $params);
+        }
+
+        return true;
+    }
+
+    /**
+     * Course deleted observer.
+     */
+    public static function course_deleted(\core\event\course_deleted $event) {
+        global $CFG, $SHAREDB;
+
+        if (!util\sharedb::available()) {
+            return true;
+        }
+
+        $SHAREDB->delete_records('shared_courses', array(
+            "moodle_env" => $CFG->kent->environment,
+            "moodle_dist" => $CFG->kent->distribution,
+            "moodle_id" => $event->objectid
+        ));
+
+        return true;
+    }
+
+    /**
+     * User enrolment created.
+     */
+    public static function user_enrolment_created(\core\event\user_enrolment_created $event) {
+        global $CFG, $DB, $SHAREDB;
+
+        if (!util\sharedb::available()) {
+            return true;
+        }
+
+        $ctx = \context_course::instance($event->courseid);
+        if (!has_capability('moodle/course:update', $ctx, $event->relateduserid)) {
+            return true;
+        }
+
+        $user = $DB->get_record('user', array(
+            'id' => $event->relateduserid
+        ));
+
+        $params = array(
+            "moodle_env" => $CFG->kent->environment,
+            "moodle_dist" => $CFG->kent->distribution,
+            "courseid" => $event->courseid,
+            "username" => $user->username
+        );
+
+        if (!$SHAREDB->record_exists('shared_course_admins', $params)) {
+            $SHAREDB->insert_record('shared_course_admins', $params);
+        }
+
+        return true;
+    }
+
+    /**
+     * User enrolment deleted.
+     */
+    public static function user_enrolment_deleted(\core\event\user_enrolment_deleted $event) {
+        global $CFG, $DB, $SHAREDB;
+
+        if (!util\sharedb::available()) {
+            return true;
+        }
+
+        $user = $DB->get_record('user', array(
+            'id' => $event->relateduserid
+        ));
+
+        $SHAREDB->delete_records('shared_course_admins', array(
+            "moodle_env" => $CFG->kent->environment,
+            "moodle_dist" => $CFG->kent->distribution,
+            "courseid" => $event->courseid,
+            "username" => $user->username
+        ));
+
+        return true;
+    }
+
+    /**
      * Run the shouter cron.
      */
     public static function cron() {
