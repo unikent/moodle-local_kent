@@ -49,23 +49,5 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="kent_notifications" COMMENT="Kent Notifications Table">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="shortdesc" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="longdesc" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="seen" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="i_userid" UNIQUE="false" FIELDS="userid"/>
-        <INDEX NAME="i_seen" UNIQUE="false" FIELDS="seen"/>
-        <INDEX NAME="i_userid_seen" UNIQUE="false" FIELDS="userid, seen"/>
-      </INDEXES>
-    </TABLE>
   </TABLES>
 </XMLDB>

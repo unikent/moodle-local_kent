@@ -122,34 +122,5 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2014052900, 'local', 'kent');
     }
 
-    if ($oldversion < 2014061800) {
-        // Define table kent_notifications to be created.
-        $table = new xmldb_table('kent_notifications');
-
-        // Adding fields to table kent_notifications.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('userid', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('shortdesc', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('longdesc', XMLDB_TYPE_TEXT, null, null, null, null, null);
-        $table->add_field('seen', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
-        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-
-        // Adding keys to table kent_notifications.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-
-        // Adding indexes to table kent_notifications.
-        $table->add_index('i_userid', XMLDB_INDEX_NOTUNIQUE, array('userid'));
-        $table->add_index('i_seen', XMLDB_INDEX_NOTUNIQUE, array('seen'));
-        $table->add_index('i_userid_seen', XMLDB_INDEX_NOTUNIQUE, array('userid', 'seen'));
-
-        // Conditionally launch create table for kent_notifications.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
-
-        // Kent savepoint reached.
-        upgrade_plugin_savepoint(true, 2014061800, 'local', 'kent');
-    }
-
     return true;
 }
