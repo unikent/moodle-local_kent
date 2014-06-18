@@ -52,4 +52,30 @@ class Notification
             'seen' => 0
         ));
     }
+
+    /**
+     * Get notifications for a given user.
+     * 
+     * @param stdClass $user $USER object or user ID (if null - will use current USER)
+     * @param string|int $seen 'any', 0 or 1 - only show notifications that match
+     */
+    public static function get($userid = null, $seen = 'any') {
+        global $DB, $USER;
+
+        if ($userid === null) {
+            $userid = $USER->id;
+        }
+
+        if (is_object($userid)) {
+            $userid = $userid->id;
+        }
+
+        $args = array('to' => $userid);
+
+        if ($seen !== 'any') {
+            $args['seen'] = $seen == 1 ? 1 : 0;
+        }
+
+        return $DB->get_records('kent_notifications', $args, 'seen DESC');
+    }
 }
