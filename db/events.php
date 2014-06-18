@@ -15,20 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information
+ * Local stuff for Kent
  *
  * @package    local_kent
- * @copyright  2014 University of Kent
+ * @copyright  2014 Skylar Kelty <S.Kelty@kent.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+$observers = array (
 
-$plugin->component = 'local_kent';
-$plugin->version   = 2014061802;
-$plugin->requires  = 2013111802;
-$plugin->cron      = 60;
+    array (
+        'eventname' => '\core\event\course_created',
+        'callback' => '\local_kent\Course::course_created',
+    ),
 
-$plugin->dependencies = array(
-    'local_hipchat' => 2014043000
+    array (
+        'eventname' => '\core\event\user_enrolment_created',
+        'callback' => '\local_kent\Course::user_enrolment_created',
+    )
+
 );
