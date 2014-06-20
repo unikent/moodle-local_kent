@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+die("You don't want to do that...\nTrust me, I'm a computer.\n");
+
 /**
  * This file completely obliterates every course in Moodle.
  * You probably dont want to do that.
@@ -24,8 +26,18 @@ define('CLI_SCRIPT', true);
 require_once(dirname(__FILE__) . '/../../../config.php');
 require_once($CFG->libdir . '/clilib.php');
 
-// We have to comment this before running.
-die("You do not want to run this.\n");
+list($options, $unrecognized) = cli_get_params(
+    array(
+        'dry' => true
+    )
+);
+
+// Dry is true by default.
+if ($options['dry']) {
+    echo "Running in DRY mode...\n";
+} else {
+    echo "Running in LIVE mode...\n";
+}
 
 \local_hipchat\Message::send("Err.. you should probably know that someone is destroying Moodle...", "red");
 
@@ -40,11 +52,15 @@ foreach ($rs as $course) {
     if ($course->id <= 1) {
         continue;
     }
-    delete_course($course);
+
+    echo "Deleting {$course->id}...\n";
+    if (!$options['dry']) {
+        delete_course($course);
+    }
 }
 $rs->close();
 
-$count = $count - $DB->count_records('course');
+$count -= $DB->count_records('course');
 
-echo "Deleted $count courses.\n";
-\local_hipchat\Message::send("Too late... $count courses just got wiped.", "red");
+echo "Deleted {$count} courses.\n";
+\local_hipchat\Message::send("Too late... {$count} courses just got wiped.", "red");
