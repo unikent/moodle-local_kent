@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-die("You don't want to do that...\nTrust me, I'm a computer.");
+die("You don't want to do that...\nTrust me, I'm a computer.\n");
 
 /**
  * This file completely obliterates every course in Moodle.
