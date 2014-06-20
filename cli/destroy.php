@@ -24,6 +24,12 @@ define('CLI_SCRIPT', true);
 require_once(dirname(__FILE__) . '/../../../config.php');
 require_once($CFG->libdir . '/clilib.php');
 
+list($options, $unrecognized) = cli_get_params(
+    array(
+        'dry' => false
+    )
+);
+
 // We have to comment this before running.
 die("You do not want to run this.\n");
 
@@ -40,11 +46,15 @@ foreach ($rs as $course) {
     if ($course->id <= 1) {
         continue;
     }
-    delete_course($course);
+
+    echo "Deleting {$course->id}...\n";
+    if (!$options['dry']) {
+        delete_course($course);
+    }
 }
 $rs->close();
 
-$count = $count - $DB->count_records('course');
+$count -= $DB->count_records('course');
 
-echo "Deleted $count courses.\n";
-\local_hipchat\Message::send("Too late... $count courses just got wiped.", "red");
+echo "Deleted {$count} courses.\n";
+\local_hipchat\Message::send("Too late... {$count} courses just got wiped.", "red");
