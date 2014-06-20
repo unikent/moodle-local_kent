@@ -228,16 +228,18 @@ class Course
 [###=== FP:Contact:Username ===###] unk
 [###=== FP:Contact:Email__bAddress ===###] unknown@kent.ac.uk
 
-[###=== FP:Config:Assignees ===###] Academic__bLiaison db370
+[###=== FP:CcEmails:Permanent ===###] D.Bedford@kent.ac.uk
+
+[###=== FP:Config:Assignees ===###] Academic__bLiaison
 [###=== FP:Config:Priority ===###] 2
 [###=== FP:Config:Status ===###] New
-[###=== FP:Config:Title ===###] Moodle : New module created
+[###=== FP:Config:Title ===###] Moodle {$CFG->kent->distribution}: New module created - $course->shortname
 [###=== FP:Entry:1:Field:Type__bof__bTicket ===###] Service__bRequest__b__u__bService
 [###=== FP:Entry:1:Field:Category ===###] Library
 
 [###=== FP:Entry:1:Email:Assignees ===###] yes
 [###=== FP:Entry:1:Email:Contact ===###] no
-[###=== FP:Entry:1:Email:CCs ===###] no
+[###=== FP:Entry:1:Email:CCs ===###] yes
 
 [###=== FP:Entry:1:Description:Description ===###]
 
