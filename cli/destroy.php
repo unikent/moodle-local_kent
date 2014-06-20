@@ -26,12 +26,16 @@ require_once($CFG->libdir . '/clilib.php');
 
 list($options, $unrecognized) = cli_get_params(
     array(
-        'dry' => false
+        'dry' => true
     )
 );
 
-// We have to comment this before running.
-die("You do not want to run this.\n");
+// Dry is true by default.
+if ($options['dry']) {
+    echo "Running in DRY mode...\n";
+} else {
+    echo "Running in LIVE mode...\n";
+}
 
 \local_hipchat\Message::send("Err.. you should probably know that someone is destroying Moodle...", "red");
 
