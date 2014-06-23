@@ -41,7 +41,8 @@ class NewYear
         global $CFG;
 
         $enabled = get_config("local_kent", "enable_new_year");
-        if (empty($CFG->new_year_cutoff) || time() > $CFG->new_year_cutoff || !$enabled || !is_siteadmin()) {
+        $isflt = has_capability('moodle/site:config', context_system::instance());
+        if (empty($CFG->new_year_cutoff) || time() > $CFG->new_year_cutoff || !$enabled || (!is_siteadmin() && !$isflt)) {
             return "";
         }
 
