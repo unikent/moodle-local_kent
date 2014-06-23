@@ -40,7 +40,8 @@ class NewYear
     private function get_code() {
         global $CFG;
 
-        if (empty($CFG->new_year_cutoff) || time() > $CFG->new_year_cutoff || !is_siteadmin()) {
+        $enabled = get_config("local_kent", "enable_new_year");
+        if (empty($CFG->new_year_cutoff) || time() > $CFG->new_year_cutoff || !$enabled || !is_siteadmin()) {
             return "";
         }
 

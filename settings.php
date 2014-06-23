@@ -95,5 +95,12 @@ if ($hassiteconfig) {
         }
     }
 
+    $settings->add(new admin_setting_configcheckbox(
+        'local_kent/enable_new_year',
+        'Enable New Year Icon',
+        'Shows the new icon in the header',
+        0
+    ));
+
     $ADMIN->add('localplugins', $settings);
 }
