@@ -198,12 +198,7 @@ class Course
     private static function send_email($course) {
         global $CFG;
 
-        $courses = \local_connect\course::get_by('mid', $course->id);
-
-        // Force array.
-        if (!is_array($courses)) {
-            $courses = array($courses);
-        }
+        $courses = \local_connect\course::get_by('mid', $course->id, true);
 
         $campus = array();
         foreach ($courses as $obj) {
