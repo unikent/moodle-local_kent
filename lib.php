@@ -24,13 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-/**
- * Run the Kent Cron
- */
-function local_kent_cron() {
-    \local_kent\Course::cron();
-}
-
 // Inject the GA code for every request.
 if (!defined("CLI_SCRIPT") || (defined("CLI_SCRIPT") && !CLI_SCRIPT)) {
     \local_kent\GA::inject();
