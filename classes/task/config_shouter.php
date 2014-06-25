@@ -34,6 +34,8 @@ class config_shouter extends \core\task\scheduled_task
     }
 
     public function execute() {
+        global $DB;
+
         $enabled = get_config("local_kent", "enable_config_shouter");
         if (!$enabled) {
             return;
