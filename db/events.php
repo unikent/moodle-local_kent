@@ -26,22 +26,22 @@ $observers = array (
 
     array (
         'eventname' => '\core\event\course_created',
-        'callback' => '\local_kent\Course::course_created',
+        'callback' => '\local_kent\observers::course_created',
     ),
 
     array (
         'eventname' => '\core\event\user_enrolment_created',
-        'callback' => '\local_kent\Course::user_enrolment_created',
+        'callback' => '\local_kent\observers::user_enrolment_created',
     ),
 
     array (
         'eventname' => '\core\event\course_deleted',
-        'callback' => '\local_kent\Course::course_deleted',
+        'callback' => '\local_kent\observers::course_deleted',
     ),
 
     array (
         'eventname' => '\core\event\user_enrolment_deleted',
-        'callback' => '\local_kent\Course::user_enrolment_deleted',
+        'callback' => '\local_kent\observers::user_enrolment_deleted',
     )
 
 );

@@ -36,6 +36,12 @@ class config_shouter extends \core\task\scheduled_task
     public function execute() {
         global $DB;
 
+        // What was the last time we shouted about in the config logs table?
+        $lasttime = $this->get_last_run_time();
+        if ($lasttime === 0) {
+            return;
+        }
+
         $enabled = get_config("local_kent", "enable_config_shouter");
         if (!$enabled) {
             return;
@@ -55,7 +61,7 @@ class config_shouter extends \core\task\scheduled_task
 SQL;
 
         $entries = $DB->get_records_sql($sql, array(
-            'time' => $this->get_last_run_time()
+            'time' => $lasttime
         ));
 
         foreach ($entries as $entry) {
