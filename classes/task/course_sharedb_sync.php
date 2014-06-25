@@ -58,6 +58,36 @@ SQL;
         // Grab a list of courses in Moodle.
         $courses = $DB->get_records_sql($sql);
 
+        // Generate dataset for shared_courses and shared_course_admins.
+        $courseset = array();
+        $adminset = array();
+        foreach ($courses as $item) {
+            $courseset[] = array(
+                "moodle_env" => $CFG->kent->environment,
+                "moodle_dist" => $CFG->kent->distribution,
+                "moodle_id" => $item->id,
+                "shortname" => $item->shortname,
+                "fullname" => $item->fullname,
+                "summary" => $item->summary
+            );
+
+            if (empty($item->logins)) {
+                continue;
+            }
+
+            $logins = explode(',', $item->logins);
+            foreach ($logins as $login) {
+                $adminset[] = array(
+                    "moodle_env" => $CFG->kent->environment,
+                    "moodle_dist" => $CFG->kent->distribution,
+                    "courseid" => $item->id,
+                    "username" => $login
+                );
+            }
+        }
+
+        $transaction = $SHAREDB->start_delegated_transaction();
+
         // Clear out SHAREDB.
         $SHAREDB->delete_records('shared_courses', array(
             "moodle_env" => $CFG->kent->environment,
@@ -68,31 +98,10 @@ SQL;
             "moodle_dist" => $CFG->kent->distribution
         ));
 
-        // Copy across.
-        foreach ($courses as $item) {
-            // Insert.
-            $SHAREDB->insert_record("shared_courses", array(
-                "moodle_env" => $CFG->kent->environment,
-                "moodle_dist" => $CFG->kent->distribution,
-                "moodle_id" => $item->id,
-                "shortname" => $item->shortname,
-                "fullname" => $item->fullname,
-                "summary" => $item->summary
-            ), true, true);
+        // Insert new records.
+        $SHAREDB->insert_records("shared_courses", $courseset);
+        $SHAREDB->insert_records("shared_course_admins", $adminset);
 
-            if (empty($item->logins)) {
-                continue;
-            }
-
-            $logins = explode(',', $item->logins);
-            foreach ($logins as $login) {
-                $SHAREDB->insert_record("shared_course_admins", array(
-                    "moodle_env" => $CFG->kent->environment,
-                    "moodle_dist" => $CFG->kent->distribution,
-                    "courseid" => $item->id,
-                    "username" => $login
-                ), true, true);
-            }
-        }
+        $transaction->allow_commit();
     }
 } 
