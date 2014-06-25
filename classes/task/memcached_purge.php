@@ -14,44 +14,32 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_kent;
+/**
+ * Local stuff for Moodle Kent
+ *
+ * @package    local_kent
+ * @copyright  2014 Skylar Kelty <S.Kelty@kent.ac.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_kent\task;
 
 /**
- * Memcached stuff/
+ * Memcached Purger
  */
-class Memcached
+class memcached_purge extends \core\task\scheduled_task
 {
-    /**
-     * Run the slab cron.
-     */
-    public static function cron() {
-        global $DB;
+    public function get_name() {
+        return "Memcached Purger";
+    }
 
-        // We only run at midnight.
-        if (date("H") != "00") {
+    public function execute() {
+        $enabled = get_config("local_kent", "enable_session_cron");
+        if (!$enabled) {
             return;
         }
 
-        // Get the current date and the date we last ran.
-        $current = date("dmY");
-        $lastrun = $DB->get_field('kent_trackers', 'value', array(
-            'name' => 'memcached_tracker'
-        ));
-
-        // If we have already run today, return.
-        if ($lastrun == $current) {
-            return;
-        }
-
-        // Let us know it has happened now, in case the below errors.
-        $DB->set_field('kent_trackers', 'value', "$current", array(
-            'name' => 'memcached_tracker'
-        ));
-
-        // Clear the slabs.
-        self::clear_slabs();
+        $this->clear_slabs();
     }
 
     /**
@@ -63,7 +51,7 @@ class Memcached
      * our Memcached boxes dont do that and so throw away "good" sessions.
      * Which is silly.
      */
-    private static function clear_slabs() {
+    private function clear_slabs() {
         global $CFG, $DB;
 
         // Do we have anything to do?
@@ -152,4 +140,4 @@ class Memcached
             }
         }
     }
-}
+} 
