@@ -14,38 +14,41 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_kent;
+/**
+ * Local stuff for Moodle Kent
+ *
+ * @package    local_kent
+ * @copyright  2014 Skylar Kelty <S.Kelty@kent.ac.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_kent\task;
 
 /**
- * Role Sync stuff
+ * Checks cache.
  */
-class RoleSync extends Base
+class role_sync extends \core\task\scheduled_task
 {
-    /**
-     * Run the shouter cron.
-     */
-    public static function cron() {
-        $engine = new static();
+    public function get_name() {
+        return "Role Sync";
+    }
 
-        $tracker = $engine->get_tracker('role_tracker');
-        if (time() - $tracker < 86400) {
-            //return;
+    public function execute() {
+        $enabled = get_config("local_kent", "enable_role_sync");
+        if (!$enabled) {
+            return;
         }
 
-        $engine->update_tracker('role_tracker');
-
         if (get_config("local_kent", "sync_panopto")) {
-            $engine->sync_panopto();
+            $this->sync_panopto();
         }
 
         if (get_config("local_kent", "sync_helpdesk")) {
-            $engine->sync_helpdesk();
+            $this->sync_helpdesk();
         }
 
         if (get_config("local_kent", "sync_cla")) {
-            $engine->sync_cla();
+            $this->sync_cla();
         }
     }
 
@@ -196,4 +199,4 @@ class RoleSync extends Base
             $this->pull_down($roleid, 'cla_admin');
         }
     }
-}
+} 

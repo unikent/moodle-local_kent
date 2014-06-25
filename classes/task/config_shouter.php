@@ -14,34 +14,34 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_kent;
+/**
+ * Local stuff for Moodle Kent
+ *
+ * @package    local_kent
+ * @copyright  2014 Skylar Kelty <S.Kelty@kent.ac.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_kent\task;
 
 /**
- * Config stuff
+ * Config shouter.
  */
-class Config
+class config_shouter extends \core\task\scheduled_task
 {
-    /**
-     * Run the shouter cron.
-     */
-    public static function cron() {
-        global $DB;
+    public function get_name() {
+        return "Config Shouter";
+    }
 
-        if (!\local_hipchat\HipChat::available()) {
-            return false;
+    public function execute() {
+        $enabled = get_config("local_kent", "enable_config_shouter");
+        if (!$enabled) {
+            return;
         }
 
-        // What was the last time we shouted about in the config logs table?
-        $lasttime = $DB->get_field('kent_trackers', 'value', array(
-            'name' => 'config_tracker'
-        ));
-
-        // Update the time stamp.
-        $DB->set_field('kent_trackers', 'value', time(), array(
-            'name' => 'config_tracker'
-        ));
+        if (!\local_hipchat\HipChat::available()) {
+            return;
+        }
 
         // Grab all entries since then, not made by admin.
         $sql = <<<SQL
@@ -51,8 +51,9 @@ class Config
             WHERE cl.timemodified > :time AND u.id > 2
             ORDER BY cl.id ASC
 SQL;
+
         $entries = $DB->get_records_sql($sql, array(
-            'time' => $lasttime
+            'time' => $this->get_last_run_time()
         ));
 
         foreach ($entries as $entry) {
@@ -62,4 +63,4 @@ SQL;
             \local_hipchat\Message::send($msg);
         }
     }
-}
+} 

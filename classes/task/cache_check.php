@@ -14,21 +14,33 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_kent;
+/**
+ * Local stuff for Moodle Kent
+ *
+ * @package    local_kent
+ * @copyright  2014 Skylar Kelty <S.Kelty@kent.ac.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_kent\task;
 
 /**
- * Cache stuff
+ * Checks cache.
  */
-class Cache
+class cache_check extends \core\task\scheduled_task
 {
-    /**
-     * Run the shouter cron.
-     */
-    public static function cron() {
+    public function get_name() {
+        return "Cache checker";
+    }
+
+    public function execute() {
+        $enabled = get_config("local_kent", "enable_cache_shouter");
+        if (!$enabled) {
+            return;
+        }
+
         if (!\local_hipchat\HipChat::available()) {
-            return false;
+            return;
         }
 
         $instance = \cache_config::instance();
@@ -41,4 +53,4 @@ class Cache
             }
         }
     }
-}
+} 
