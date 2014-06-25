@@ -86,6 +86,8 @@ SQL;
             }
         }
 
+        unset($courses);
+
         $transaction = $SHAREDB->start_delegated_transaction();
 
         // Clear out SHAREDB.
