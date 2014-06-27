@@ -40,23 +40,8 @@ class course_sharedb_sync extends \core\task\scheduled_task
             return;
         }
 
-        $sql = <<<SQL
-        SELECT c.id, c.shortname, c.fullname, c.summary, GROUP_CONCAT(u.username) as logins
-        FROM {course} c
-
-        LEFT OUTER JOIN {enrol} e ON e.courseid=c.id
-        LEFT OUTER JOIN {role} r ON r.id=e.roleid
-        LEFT OUTER JOIN {user_enrolments} ue ON ue.enrolid=e.id
-        LEFT OUTER JOIN {user} u ON u.id=ue.userid
-
-        WHERE r.shortname IN ("sds_teacher", "sds_convenor", "convenor", "dep_admin", "manager", "editingteacher", "support_staff")
-            OR r.id IS NULL
-
-        GROUP BY c.id
-SQL;
-
         // Grab a list of courses in Moodle.
-        $courses = $DB->get_records_sql($sql);
+        $courses = $DB->get_records('course', array(), '', 'id,shortname,fullname,summary');
 
         // Generate dataset for shared_courses and shared_course_admins.
         $courseset = array();
@@ -71,17 +56,14 @@ SQL;
                 "summary" => $item->summary
             );
 
-            if (empty($item->logins)) {
-                continue;
-            }
-
-            $logins = explode(',', $item->logins);
-            foreach ($logins as $login) {
+            $ctx = \context_course::instance($item->id);
+            $users = get_users_by_capability($ctx, 'moodle/course:update', 'u.id, u.username');
+            foreach ($users as $user) {
                 $adminset[] = array(
                     "moodle_env" => $CFG->kent->environment,
                     "moodle_dist" => $CFG->kent->distribution,
                     "courseid" => $item->id,
-                    "username" => $login
+                    "username" => $user->username
                 );
             }
         }
