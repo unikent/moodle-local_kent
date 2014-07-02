@@ -38,7 +38,7 @@ if (!$options['category']) {
     cli_error("Must specify category with --category=id!");
 }
 
-raise_memory_limit(MEMORY_HUGE);
+raise_memory_limit(MEMORY_UNLIMITED);
 
 if ($options['compatibility']) {
     $CFG->enabletgzbackups = false;
