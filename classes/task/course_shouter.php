@@ -40,7 +40,7 @@ class course_shouter extends \core\task\scheduled_task
 
         // What was the last time we shouted about in the config logs table?
         $lasttime = $this->get_last_run_time();
-        if ($lasttime === 0) {
+        if (empty($lasttime)) {
             return;
         }
 
