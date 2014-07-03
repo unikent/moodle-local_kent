@@ -74,6 +74,19 @@ class observers
     }
 
     /**
+     * Course purged observer.
+     */
+    public static function course_purged(\local_catman\event\course_purged $event) {
+        $shortname = $event->other['shortname'];
+        $msg = "Deleting '{$shortname}' ({$event->objectid})...";
+
+        // Notify HipChat.
+        \local_hipchat\Message::send($msg, "purple", "text", "CatMan");
+
+        return true;
+    }
+
+    /**
      * User enrolment created.
      */
     public static function user_enrolment_created(\core\event\user_enrolment_created $event) {
