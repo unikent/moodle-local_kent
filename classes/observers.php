@@ -81,7 +81,11 @@ class observers
         $msg = "Deleting '{$shortname}' ({$event->objectid})...";
 
         // Notify HipChat.
-        \local_hipchat\Message::send($msg, "purple", "text", "CatMan");
+        try {
+            \local_hipchat\Message::send($msg, "purple", "text", "CatMan");
+        } catch (\Exception $e) {
+            // Ignore.
+        }
 
         return true;
     }
