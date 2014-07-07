@@ -40,6 +40,11 @@ $observers = array (
     ),
 
     array (
+        'eventname' => '\local_catman\event\course_purged',
+        'callback' => '\local_kent\observers::course_purged',
+    ),
+
+    array (
         'eventname' => '\core\event\user_enrolment_deleted',
         'callback' => '\local_kent\observers::user_enrolment_deleted',
     )
