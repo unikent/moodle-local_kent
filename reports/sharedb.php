@@ -24,7 +24,7 @@
 
 global $PAGE, $OUTPUT, $CFG, $SHAREDB;
 
-require_once('../../config.php');
+require_once(dirname(__FILE__) . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 
 $PAGE->set_context(context_system::instance());
