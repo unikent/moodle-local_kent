@@ -48,7 +48,8 @@ class sharedb {
         }
 
         if (!$SHAREDB = \moodle_database::get_driver_instance($CFG->kent->sharedb['driver'],
-                                                              $CFG->kent->sharedb['library'])) {
+                                                              $CFG->kent->sharedb['library'],
+                                                              true)) {
             throw new \dml_exception('dbdriverproblem', "Unknown driver for kent");
         }
 
