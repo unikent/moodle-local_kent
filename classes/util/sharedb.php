@@ -90,4 +90,14 @@ class sharedb {
 
         return !empty($CFG->kent->sharedb['user']);
     }
+
+    /**
+     * Dispose SHAREDB.
+     */
+    public static function dispose() {
+        global $SHAREDB;
+
+        $SHAREDB->dispose();
+        static::$setup = false;
+    }
 }
