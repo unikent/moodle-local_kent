@@ -33,14 +33,17 @@ class adhoc_queue_check extends \local_nagios\base_check
         global $DB;
 
         $config = get_config('local_nagios');
+        $errorthreshold = isset($config->nagios_adhoc_threshhold_error) ? $config->nagios_adhoc_threshhold_error : 25;
+        $warnthreshold = isset($config->nagios_adhoc_threshhold_warning) ? $config->nagios_adhoc_threshhold_warning : 10;
+
         $count = $DB->count_records('task_adhoc');
 
-        if ($count > $config->nagios_adhoc_threshhold_error) {
+        if ($count > $errorthreshold) {
             $this->error("{$count} adhoc tasks in the queue!");
             return;
         }
 
-        if ($count > $config->nagios_adhoc_threshhold_warning) {
+        if ($count > $warnthreshold) {
             $this->warn("{$count} adhoc tasks in the queue!");
         }
     }
