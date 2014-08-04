@@ -15,18 +15,33 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Local stuff for Kent
+ * Local stuff for Moodle Kent
  *
  * @package    local_kent
  * @copyright  2014 Skylar Kelty <S.Kelty@kent.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$nagios = array(
-    array(
-        'classname' => 'local_kent\nagios\cache_check'
-    ),
-    array(
-        'classname' => 'local_kent\nagios\adhoc_queue_check'
-    )
-);
+namespace local_kent\nagios;
+
+/**
+ * Checks cache.
+ */
+class adhoc_queue_check extends \local_nagios\base_check
+{
+    public function execute() {
+        global $DB;
+
+        $config = get_config('local_nagios');
+        $count = $DB->count_records('task_adhoc');
+
+        if ($count > $config->nagios_adhoc_threshhold_error) {
+            $this->error("{$count} adhoc tasks in the queue!");
+            return;
+        }
+
+        if ($count > $config->nagios_adhoc_threshhold_warning) {
+            $this->warn("{$count} adhoc tasks in the queue!");
+        }
+    }
+}
