@@ -21,20 +21,6 @@ if ($hassiteconfig) {
     $ADMIN->add('reports', new admin_externalpage('reportsharedreport', 'ShareDB List',
         "$CFG->wwwroot/local/kent/reports/sharedb.php", 'local/connect:manage'));
 
-    $settings->add(new admin_setting_configtext(
-        'local_kent/nagios_adhoc_threshhold_warning',
-        'Adhoc queue threshold (warning)',
-        'The maximum allowed tasks in the adhoc queue before a warning is triggered.',
-        10, PARAM_INT
-    ));
-
-    $settings->add(new admin_setting_configtext(
-        'local_kent/nagios_adhoc_threshhold_error',
-        'Adhoc queue threshold (error)',
-        'The maximum allowed tasks in the adhoc queue before an error is triggered.',
-        25, PARAM_INT
-    ));
-
     $settings->add(new admin_setting_configcheckbox(
         'local_kent/enable_session_cron',
         'Enable Session Cron',

@@ -25,8 +25,5 @@
 $nagios = array(
     array(
         'classname' => 'local_kent\nagios\cache_check'
-    ),
-    array(
-        'classname' => 'local_kent\nagios\adhoc_queue_check'
     )
 );
