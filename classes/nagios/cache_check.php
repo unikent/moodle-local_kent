@@ -22,35 +22,22 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kent\task;
+namespace local_kent\nagios;
 
 /**
  * Checks cache.
  */
-class cache_check extends \core\task\scheduled_task
+class cache_check extends \local_nagios\base_check
 {
-    public function get_name() {
-        return "Cache checker";
-    }
-
     public function execute() {
-        $enabled = get_config("local_kent", "enable_cache_shouter");
-        if (!$enabled) {
-            return;
-        }
-
-        if (!\local_hipchat\HipChat::available()) {
-            return;
-        }
-
         $instance = \cache_config::instance();
         $stores = $instance->get_all_stores();
         foreach ($stores as $name => $details) {
             $class = $details['class'];
             $store = new $class($details['name'], $details['configuration']);
             if (!$store->is_ready()) {
-                \local_hipchat\Message::send("Could not communicate with cache '{$name}'!", "red");
+                $this->error("Could not communicate with Cache '{$name}'!");
             }
         }
     }
-} 
+}

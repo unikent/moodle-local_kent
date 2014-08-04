@@ -15,20 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information
+ * Local stuff for Kent
  *
  * @package    local_kent
- * @copyright  2014 University of Kent
+ * @copyright  2014 Skylar Kelty <S.Kelty@kent.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->component = 'local_kent';
-$plugin->version   = 2014080400;
-$plugin->requires  = 2014051200;
-$plugin->cron      = 0;
-
-$plugin->dependencies = array(
-    'local_hipchat' => 2014043000
+$nagios = array(
+    array(
+        'classname' => 'local_kent\nagios\cache_check'
+    )
 );
