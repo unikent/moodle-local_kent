@@ -24,15 +24,6 @@
 
 $tasks = array(
     array(
-        'classname' => 'local_kent\task\cache_check',
-        'blocking' => 0,
-        'minute' => '*/10',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
         'classname' => 'local_kent\task\role_sync',
         'blocking' => 0,
         'minute' => '30',

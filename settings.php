@@ -29,13 +29,6 @@ if ($hassiteconfig) {
     ));
 
     $settings->add(new admin_setting_configcheckbox(
-        'local_kent/enable_cache_shouter',
-        'Enable Cache Shouter',
-        'Periodically checks cache definitions and shouts at HipChat if there is a problem.',
-        1
-    ));
-
-    $settings->add(new admin_setting_configcheckbox(
         'local_kent/enable_config_shouter',
         'Enable Config Shouter',
         'Shouts out config modifications to HipChat',
