@@ -53,6 +53,7 @@ function xmldb_local_kent_upgrade($oldversion) {
          */
         set_config('loglifetime', 365, 'logstore_standard');
         set_config('enablecourserequests', true);
+        set_config('country', 'GB');
 
         /**
          * Theme settings.
@@ -145,8 +146,6 @@ function xmldb_local_kent_upgrade($oldversion) {
         /**
          * Misc.
          */
-        set_config('country', 'GB');
-        set_config('cachetext', 900);
         set_config('filter_tex_convertformat', 'png');
         set_config('syncall', false, 'enrol_meta');
         set_config('doctonewwindow', true);
