@@ -19,6 +19,10 @@ defined('MOODLE_INTERNAL') || die();
 function xmldb_local_kent_install() {
     global $CFG, $DB;
 
+    if (defined("IS_TRAVIS")) {
+        return true;
+    }
+
     /**
      * Core settings.
      */
@@ -123,4 +127,6 @@ function xmldb_local_kent_install() {
     set_config('syncall', false, 'enrol_meta');
     set_config('doctonewwindow', true);
     set_config('hiddenuserfields', 'city,country,icqnumber,skypeid,yahooid,aimid,msnid,firstaccess,lastaccess,mycourses,groups,suspended');
+
+    return true;
 }
