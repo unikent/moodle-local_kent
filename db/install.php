@@ -22,8 +22,10 @@ function xmldb_local_kent_install() {
     /**
      * Core settings.
      */
-    set_config('loglifetime', 365, 'logstore_standard');
+    set_config('defaulthomepage', 1);
     set_config('enablecourserequests', true);
+    set_config('country', 'GB');
+    set_config('loglifetime', 365, 'logstore_standard');
     set_config('texteditors', 'atto,tinymce,textarea');
 
     /**
@@ -62,7 +64,6 @@ function xmldb_local_kent_install() {
     set_config('navshowallcourses', true);
     set_config('navsortmycoursessort', 'shortname');
     set_config('navcourselimit', 20);
-    set_config('defaulthomepage', 1);
     set_config('courselistshortnames', true);
 
     /**
@@ -118,8 +119,6 @@ function xmldb_local_kent_install() {
     /**
      * Misc.
      */
-    set_config('country', 'GB');
-    set_config('cachetext', 900);
     set_config('filter_tex_convertformat', 'png');
     set_config('syncall', false, 'enrol_meta');
     set_config('doctonewwindow', true);
