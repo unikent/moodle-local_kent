@@ -31,6 +31,7 @@ function xmldb_local_kent_install() {
     set_config('country', 'GB');
     set_config('loglifetime', 365, 'logstore_standard');
     set_config('texteditors', 'atto,tinymce,textarea');
+    set_config('enablemobilewebservice', true);
 
     /**
      * Theme settings.
