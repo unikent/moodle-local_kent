@@ -74,6 +74,8 @@ HTML;
      * Function to return google tag manager code, only if the analytics is enabled
      */
     private function get_tagmanager_code() {
+        global $CFG;
+        
         if (empty($CFG->google_analytics_code) || !$this->can_log()) {
             return "";
         }
