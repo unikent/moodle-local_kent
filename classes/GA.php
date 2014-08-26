@@ -75,7 +75,7 @@ HTML;
      */
     private function get_tagmanager_code() {
         global $CFG;
-        
+
         if (empty($CFG->google_analytics_code) || !$this->can_log()) {
             return "";
         }
@@ -144,7 +144,8 @@ HTML;
 
         // Setup user tracking if logged in.
         if (isloggedin()) {
-            $tracker = "ga('set', '&uid', {$USER->id});";
+            $ident = sha1($USER->username);
+            $tracker = "ga('set', '&uid', {$ident});";
         }
 
         return $tracker;
