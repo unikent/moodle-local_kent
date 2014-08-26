@@ -32,6 +32,8 @@ class GA
         $ga = new static();
 
         $CFG->additionalhtmlfooter .= $ga->get_code();
+        // prepend to top of body
+        $CFG->additionalhtmltopofbody = $ga->get_tagmanager_code() . $CFG->additionalhtmltopofbody;
     }
 
     /**
@@ -65,6 +67,29 @@ class GA
 
     </script>
     <!-- End of Google Analytics -->
+HTML;
+    }
+
+    /**
+     * Function to return google tag manager code, only if the analytics is enabled
+     */
+    private function get_tagmanager_code() {
+        global $CFG;
+        
+        if (empty($CFG->google_analytics_code) || !$this->can_log()) {
+            return "";
+        }
+
+        return <<<HTML
+        <!-- Google Tag Manager -->
+        <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-PK6HFD"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-PK6HFD');</script>
+        <!-- End Google Tag Manager -->
 HTML;
     }
 
