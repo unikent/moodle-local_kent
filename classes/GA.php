@@ -149,7 +149,7 @@ HTML;
         // Setup user tracking if logged in.
         if (isloggedin()) {
             $ident = sha1($USER->username);
-            $tracker = "ga('set', '&uid', {$ident});";
+            $tracker = "ga('set', '&uid', '{$ident}');";
         }
 
         return $tracker;
