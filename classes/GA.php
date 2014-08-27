@@ -42,7 +42,7 @@ class GA
     private function get_code() {
         global $CFG;
 
-        if (empty($CFG->google_analytics_code) || !$this->can_log()) {
+        if (empty($CFG->google_analytics_code) || empty($CFG->google_analytics_global_code) || !$this->can_log()) {
             return "";
         }
 
@@ -59,10 +59,14 @@ class GA
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
         ga('create', '{$CFG->google_analytics_code}', 'kent.ac.uk');
+        ga('create', '{$CFG->google_analytics_global_code}', 'auto', {'name': 'global'});
         ga('require', 'displayfeatures');
         {$tracker}
         ga('send', 'pageview', {
-        {$dimensions}
+            {$dimensions}
+        });
+        ga('global.send', 'pageview', {
+            {$dimensions}
         });
 
     </script>
@@ -75,8 +79,8 @@ HTML;
      */
     private function get_tagmanager_code() {
         global $CFG;
-        
-        if (empty($CFG->google_analytics_code) || !$this->can_log()) {
+
+        if (empty($CFG->google_analytics_code) || empty($CFG->google_analytics_global_code) || !$this->can_log()) {
             return "";
         }
 
@@ -144,7 +148,8 @@ HTML;
 
         // Setup user tracking if logged in.
         if (isloggedin()) {
-            $tracker = "ga('set', '&uid', {$USER->id});";
+            $ident = sha1($USER->username);
+            $tracker = "ga('set', '&uid', '{$ident}');";
         }
 
         return $tracker;
