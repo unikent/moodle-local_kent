@@ -59,8 +59,9 @@ class GA
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
         ga('create', '{$CFG->google_analytics_code}', 'kent.ac.uk');
-        ga('create', '{$CFG->google_analytics_global_code}', 'auto', {'name': 'global'});
+        ga('create', '{$CFG->google_analytics_global_code}', {'name': 'global', 'cookieDomain': 'kent.ac.uk'});
         ga('require', 'displayfeatures');
+        ga('global.require', 'displayfeatures');
         {$tracker}
         ga('send', 'pageview', {
             {$dimensions}
