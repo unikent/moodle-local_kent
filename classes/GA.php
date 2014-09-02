@@ -42,7 +42,7 @@ class GA
     private function get_code() {
         global $CFG;
 
-        if (empty($CFG->google_analytics_code) || empty($CFG->google_analytics_global_code) || !$this->can_log()) {
+        if (empty($CFG->google_analytics_code) || empty($CFG->google_analytics_global_code)) {
             return "";
         }
 
@@ -81,7 +81,7 @@ HTML;
     private function get_tagmanager_code() {
         global $CFG;
 
-        if (empty($CFG->google_analytics_code) || empty($CFG->google_analytics_global_code) || !$this->can_log()) {
+        if (empty($CFG->google_analytics_code) || empty($CFG->google_analytics_global_code)) {
             return "";
         }
 
@@ -96,22 +96,6 @@ HTML;
         })(window,document,'script','dataLayer','GTM-PK6HFD');</script>
         <!-- End Google Tag Manager -->
 HTML;
-    }
-
-    /**
-     * Returns true if this request should be logged.
-     */
-    private function can_log() {
-        global $CFG, $PAGE;
-
-        // Disable analytics on admin pages.
-        $url = substr($PAGE->url, strlen($CFG->wwwroot));
-        $path = substr($url, 0, 7);
-        if ($path == "/local/" || $path == "/admin/" || $path == "/report") {
-            return false;
-        }
-
-        return true;
     }
 
     /**
