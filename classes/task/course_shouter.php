@@ -40,8 +40,8 @@ class course_shouter extends \core\task\scheduled_task
 
         // What was the last time we shouted about in the config logs table?
         $lasttime = $this->get_last_run_time();
-        if (empty($lasttime)) {
-            return;
+        if (empty($lasttime) || $lasttime === 0) {
+            return true;
         }
 
         // Grab all entries since then, not made by admin.
@@ -49,28 +49,36 @@ class course_shouter extends \core\task\scheduled_task
             'time' => $lasttime
         ), '', 'id, shortname, fullname, category');
 
-        foreach ($entries as $entry) {
-            $this->send_email($entry);
-            $this->send_hipchat($entry);
+        if (!empty($entries)) {
+            $this->send_emails($entries);
+            $this->send_hipchats($entries);
         }
+
+        return true;
     }
 
     /**
      * Send a message about a new course to HipChat.
      */
-    private function send_hipchat($fullname) {
+    private function send_hipchats($courses) {
         $hipchat = get_config("local_kent", "enable_course_shouter");
         if (!$hipchat || !\local_hipchat\HipChat::available()) {
             return;
         }
 
-        \local_hipchat\Message::send("A new course has been created: '{$fullname}'.");
+        $shortnames = array();
+        foreach ($courses as $course) {
+            $shortnames[] = $course->shortname;
+        }
+        $shortnames = implode(', ', $shortnames);
+
+        \local_hipchat\Message::send("New courses have been created: '{$shortnames}'.");
     }
 
     /**
      * Emails Academic Liason Team
      */
-    private function send_email($course) {
+    private function send_emails($courses) {
         global $CFG;
 
         $notifyalt = get_config("local_kent", "enable_course_alt_shouter");
@@ -78,21 +86,40 @@ class course_shouter extends \core\task\scheduled_task
             return;
         }
 
-        $courses = \local_connect\course::get_by('mid', $course->id, true);
+        $formatted = array();
 
-        $campus = array();
-        foreach ($courses as $obj) {
-            $name = $obj->campus->name;
-            if (!in_array($name, $campus)) {
-                $campus[] = $name;
+        foreach ($courses as $course) {
+            $courses = \local_connect\course::get_by('mid', $course->id, true);
+
+            $campus = array();
+            foreach ($courses as $obj) {
+                $name = $obj->campus->name;
+                if (!in_array($name, $campus)) {
+                    $campus[] = $name;
+                }
             }
+
+            if (!empty($campus)) {
+                $campus = implode(', ', $campus);
+            } else {
+                $campus = 'unknown';
+            }
+
+            $courseurl = "{$CFG->wwwroot}/course/view.php?id={$course->id}";
+            $categoryurl = "{$CFG->wwwroot}/course/category.php?id={$course->category}";
+
+            $formatted[] = <<<HTML
+-----------------------------------
+Code: $course->shortname
+Title: $course->fullname
+Campus: $campus
+Course: $courseurl
+Category: $categoryurl
+-----------------------------------
+HTML;
         }
 
-        if (!empty($campus)) {
-            $campus = implode(', ', $campus);
-        } else {
-            $campus = 'unknown';
-        }
+        $formatted = implode("\n\n", $formatted);
 
         $email = <<<HTML
 [###=== FP:TicketTemplate ===###]
@@ -108,7 +135,7 @@ class course_shouter extends \core\task\scheduled_task
 [###=== FP:Config:Assignees ===###] Academic__bLiaison
 [###=== FP:Config:Priority ===###] 2
 [###=== FP:Config:Status ===###] New
-[###=== FP:Config:Title ===###] Moodle {$CFG->kent->distribution}: New module created - $course->shortname
+[###=== FP:Config:Title ===###] New Moodle Modules Created
 [###=== FP:Entry:1:Field:Type__bof__bTicket ===###] Service__bRequest__b__u__bService
 [###=== FP:Entry:1:Field:Category ===###] Library
 
@@ -118,11 +145,7 @@ class course_shouter extends \core\task\scheduled_task
 
 [###=== FP:Entry:1:Description:Description ===###]
 
-Code: $course->shortname
-Title: $course->fullname
-Campus: $campus
-Course: $CFG->wwwroot/course/view.php?id=$course->id
-Category: $CFG->wwwroot/course/category.php?id=$course->category
+$formatted
 HTML;
 
         $user = get_admin();
