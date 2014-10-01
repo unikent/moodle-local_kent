@@ -32,6 +32,8 @@ function xmldb_local_kent_install() {
     set_config('loglifetime', 365, 'logstore_standard');
     set_config('texteditors', 'atto,tinymce,textarea');
     set_config('enablemobilewebservice', true);
+    set_config('enableblogs', '0');
+    set_config('enableportfolios', '1');
 
     /**
      * Theme settings.
@@ -128,6 +130,21 @@ function xmldb_local_kent_install() {
     set_config('syncall', false, 'enrol_meta');
     set_config('doctonewwindow', true);
     set_config('hiddenuserfields', 'city,country,icqnumber,skypeid,yahooid,aimid,msnid,firstaccess,lastaccess,mycourses,groups,suspended');
+    set_config('hotpot_enablemymoodle', 0);
+    set_config('hotpot_enablemymoodle', '0');
+    set_config('glossary_defaultapproval', '0');
+    set_config('forum_maxattachments', '2');
+    set_config('core_media_enable_vimeo', '1');
+    set_config('core_media_enable_qt', '0');
+    set_config('core_media_enable_wmp', '0');
+    set_config('core_media_enable_rm', '0');
+    set_config('grade_report_showquickfeedback', '1');
+    set_config('grade_report_enableajax', '1');
+    set_config('grade_report_showcalculations', '1');
+    set_config('grade_report_showeyecons', '1');
+    set_config('grade_report_showlocks', '1');
+    set_config('grade_report_showuserimage', '0');
+    set_config('messaginghidereadnotifications', '1');
 
     return true;
 }
