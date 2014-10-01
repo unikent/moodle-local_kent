@@ -14,13 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-die("You don't want to do that...\nTrust me, I'm a computer.\n");
-
-/**
- * This file completely obliterates every course in Moodle.
- * You probably dont want to do that.
- */
-
 define('CLI_SCRIPT', true);
 
 require_once(dirname(__FILE__) . '/../../../config.php');
@@ -28,9 +21,16 @@ require_once($CFG->libdir . '/clilib.php');
 
 list($options, $unrecognized) = cli_get_params(
     array(
-        'dry' => true
+        'dry' => false,
+        'category' => ''
     )
 );
+
+if (empty($options['category'])) {
+    die("You must specify a category!\n");
+}
+
+$category = $options['category'];
 
 // Dry is true by default.
 if ($options['dry']) {
@@ -39,15 +39,24 @@ if ($options['dry']) {
     echo "Running in LIVE mode...\n";
 }
 
-\local_hipchat\Message::send("Err.. you should probably know that someone is destroying Moodle...", "red");
+\local_hipchat\Message::send("Purging Category {$category}...", "red");
 
 // Destroy everything.
-cli_heading("Destroying Build");
+cli_heading("Destroying {$category}...");
 
 // Delete all courses.
 $count = $DB->count_records('course');
 
-$rs = $DB->get_recordset('course');
+$rs = $DB->get_recordset_sql("SELECT c.* FROM mdl_course c
+    INNER JOIN mdl_course_categories cc
+      ON cc.id=c.category
+    WHERE cc.path LIKE :p1
+      OR cc.path LIKE :p2
+", array(
+    'p1' => "%/{$category}/%",
+    'p2' => "%/{$category}"
+));
+
 foreach ($rs as $course) {
     if ($course->id <= 1) {
         continue;
@@ -63,4 +72,4 @@ $rs->close();
 $count -= $DB->count_records('course');
 
 echo "Deleted {$count} courses.\n";
-\local_hipchat\Message::send("Too late... {$count} courses just got wiped.", "red");
+\local_hipchat\Message::send("Finished! {$count} courses purged.", "red");
