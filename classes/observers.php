@@ -157,6 +157,8 @@ class observers
      * @return bool true on success.
      */
     public static function role_assigned(\core\event\role_assigned $event) {
+        global $DB;
+
         // Make sure this is a course.
         $context = \context::instance_by_id($event->contextid, MUST_EXIST);
         if ($context->contextlevel != CONTEXT_COURSE) {
