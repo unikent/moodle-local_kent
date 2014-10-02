@@ -54,8 +54,16 @@ class manager
      * Sync all enrolments for a course.
      * This isnt usually used, just here for the upgrade script.
      */
-    public static function enrolment_created($course, $userid) {
+    public static function enrolment_created($courseid, $userid) {
         global $DB;
+
+        $course = $DB->get_record('course', array(
+            'id' => $courseid
+        ));
+
+        if (!$course) {
+            return false;
+        }
 
         // Get group ID.
         $group = $DB->get_record('groups', array(

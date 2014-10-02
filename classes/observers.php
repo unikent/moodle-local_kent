@@ -29,6 +29,9 @@ class observers
     public static function course_created(\core\event\course_created $event) {
         global $CFG, $DB, $SHAREDB;
 
+        // Ping the group manager.
+        \local_kent\group\manager::course_created($course);
+
         if (!util\sharedb::available()) {
             return true;
         }
@@ -50,9 +53,6 @@ class observers
 
             $SHAREDB->insert_record('shared_courses', $params);
         }
-
-        // Ping the group manager.
-        \local_kent\group\manager::course_created($course);
 
         return true;
     }
@@ -98,6 +98,9 @@ class observers
      */
     public static function user_enrolment_created(\core\event\user_enrolment_created $event) {
         global $CFG, $DB, $SHAREDB;
+
+        // Ping the group manager.
+        \local_kent\group\manager::enrolment_created($event->courseid, $event->relateduserid);
 
         if (!util\sharedb::available()) {
             return true;
