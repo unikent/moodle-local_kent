@@ -54,7 +54,7 @@ class manager
      * Sync all enrolments for a course.
      * This isnt usually used, just here for the upgrade script.
      */
-    public static function sync_enrolments($course) {
+    public static function enrolment_created($course, $userid) {
         global $DB;
 
         // Get group ID.
@@ -63,30 +63,14 @@ class manager
             'name' => $course->shortname
         ));
 
-        // Has this since been deleted?
         if (!$group) {
             return false;
         }
 
-        // Get a list of enrolments for this course.
-        $enrolments = $DB->get_records_sql("
-            SELECT ue.userid FROM {user_enrolments} ue
-            INNER JOIN {enrol} e
-                ON e.id = ue.enrolid
-            LEFT OUTER JOIN {groups_members} gm
-                ON gm.userid = ue.userid
-                AND gm.groupid = :groupid
-            WHERE e.courseid = :courseid AND gm.id IS NULL
-        ", array(
-            "courseid" => $course->id,
-            "groupid" => $group->id
-        ));
-
-        // Make sure all these users are in the group.
-        foreach ($enrolments as $enrolment) {
-            groups_add_member($group, $enrolment->userid, 'enrol_connect');
-        }
+        groups_add_member($group, $userid, 'enrol_connect');
 
         return true;
     }
 }
+
+

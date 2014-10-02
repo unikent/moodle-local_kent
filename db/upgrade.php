@@ -152,19 +152,62 @@ function xmldb_local_kent_upgrade($oldversion) {
         set_config('hiddenuserfields', 'city,country,icqnumber,skypeid,yahooid,aimid,msnid,firstaccess,lastaccess,mycourses,groups,suspended');
     }
 
-    if ($oldversion < 2014100200) {
-        // We want to go through every course and add
-        // everyone in that course to the group.
+    if ($oldversion < 2014100201) {
+        // Create any missing groups.
         $rs = $DB->get_recordset('course');
         foreach ($rs as $course) {
             \local_kent\group\manager::course_created($course);
-            \local_kent\group\manager::sync_enrolments($course);
+        }
+        $rs->close();
+        unset($rs);
+
+        // Now go through every course and add
+        // everyone in that course to the group.
+        $rs = $DB->get_recordset_sql("
+            SELECT g.id, c.id as courseid, GROUP_CONCAT(ue.userid) as userids
+
+            FROM {groups} g
+            INNER JOIN {course} c
+                ON c.shortname = g.name
+
+            INNER JOIN {enrol} e
+                ON e.courseid = c.id
+            INNER JOIN {user_enrolments} ue
+                ON ue.enrolid=e.id
+
+            INNER JOIN {context} ctx
+                ON ctx.instanceid=e.courseid
+                AND ctx.contextlevel=:ctxlevel
+
+            INNER JOIN {role_assignments} ra
+                ON ra.userid = ue.userid
+                AND ra.contextid = ctx.id
+            INNER JOIN {role} r
+                ON r.id=ra.roleid
+                AND r.shortname LIKE :match
+
+            LEFT OUTER JOIN {groups_members} gm
+                ON gm.userid = ue.userid AND gm.groupid=g.id
+
+            WHERE gm.id IS NULL
+            GROUP BY g.id
+        ", array(
+            "ctxlevel" => CONTEXT_COURSE,
+            "match" => "%student%"
+        ));
+
+        foreach ($rs as $group) {
+            // These enrolments are missing.
+            $userids = explode(',', $group->userids);
+            foreach ($userids as $userid) {
+                \local_kent\group\manager::enrolment_created($group->courseid, $userid);
+            }
         }
         $rs->close();
         unset($rs);
 
         // Connect savepoint reached.
-        upgrade_plugin_savepoint(true, 2014100200, 'local', 'connect');
+        upgrade_plugin_savepoint(true, 2014100201, 'local', 'connect');
     }
 
     return true;
