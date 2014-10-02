@@ -152,5 +152,20 @@ function xmldb_local_kent_upgrade($oldversion) {
         set_config('hiddenuserfields', 'city,country,icqnumber,skypeid,yahooid,aimid,msnid,firstaccess,lastaccess,mycourses,groups,suspended');
     }
 
+    if ($oldversion < 2014100200) {
+        // We want to go through every course and add
+        // everyone in that course to the group.
+        $rs = $DB->get_recordset('course');
+        foreach ($rs as $course) {
+            \local_kent\group\manager::course_created($course);
+            \local_kent\group\manager::sync_enrolments($course);
+        }
+        $rs->close();
+        unset($rs);
+
+        // Connect savepoint reached.
+        upgrade_plugin_savepoint(true, 2014100200, 'local', 'connect');
+    }
+
     return true;
 }

@@ -51,6 +51,9 @@ class observers
             $SHAREDB->insert_record('shared_courses', $params);
         }
 
+        // Ping the group manager.
+        \local_kent\group\manager::course_created($course);
+
         return true;
     }
 
