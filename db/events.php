@@ -47,6 +47,10 @@ $observers = array (
     array (
         'eventname' => '\core\event\user_enrolment_deleted',
         'callback' => '\local_kent\observers::user_enrolment_deleted',
-    )
+    ),
 
+    array (
+        'eventname' => '\core\event\role_assigned',
+        'callback' => '\local_kent\observers::role_assigned',
+    )
 );

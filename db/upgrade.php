@@ -152,7 +152,7 @@ function xmldb_local_kent_upgrade($oldversion) {
         set_config('hiddenuserfields', 'city,country,icqnumber,skypeid,yahooid,aimid,msnid,firstaccess,lastaccess,mycourses,groups,suspended');
     }
 
-    if ($oldversion < 2014100201) {
+    if ($oldversion < 2014100202) {
         // Create any missing groups.
         $rs = $DB->get_recordset('course');
         foreach ($rs as $course) {
@@ -207,7 +207,7 @@ function xmldb_local_kent_upgrade($oldversion) {
         unset($rs);
 
         // Connect savepoint reached.
-        upgrade_plugin_savepoint(true, 2014100201, 'local', 'connect');
+        upgrade_plugin_savepoint(true, 2014100202, 'local', 'kent');
     }
 
     return true;

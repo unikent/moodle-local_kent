@@ -99,9 +99,6 @@ class observers
     public static function user_enrolment_created(\core\event\user_enrolment_created $event) {
         global $CFG, $DB, $SHAREDB;
 
-        // Ping the group manager.
-        \local_kent\group\manager::enrolment_created($event->courseid, $event->relateduserid);
-
         if (!util\sharedb::available()) {
             return true;
         }
@@ -149,6 +146,33 @@ class observers
             "courseid" => $event->courseid,
             "username" => $user->username
         ));
+
+        return true;
+    }
+
+    /**
+     * Triggered via role_assigned event.
+     *
+     * @param \core\event\role_assigned $event
+     * @return bool true on success.
+     */
+    public static function role_assigned(\core\event\role_assigned $event) {
+        // Make sure this is a course.
+        $context = \context::instance_by_id($event->contextid, MUST_EXIST);
+        if ($context->contextlevel != CONTEXT_COURSE) {
+            return true;
+        }
+
+        // Get the role, check the name.
+        $role = $DB->get_record('role', array(
+            'id' => $event->objectid
+        ));
+        if (!$role || strpos($role->shortname, 'student') === false) {
+            return true;
+        }
+
+        // Ping the group manager.
+        \local_kent\group\manager::enrolment_created($context->instanceid, $event->relateduserid);
 
         return true;
     }
