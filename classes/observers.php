@@ -29,16 +29,16 @@ class observers
     public static function course_created(\core\event\course_created $event) {
         global $CFG, $DB, $SHAREDB;
 
+        $course = $DB->get_record('course', array(
+            "id" => $event->objectid
+        ));
+
         // Ping the group manager.
         \local_kent\group\manager::course_created($course);
 
         if (!util\sharedb::available()) {
             return true;
         }
-
-        $course = $DB->get_record('course', array(
-            "id" => $event->objectid
-        ));
 
         $params = array(
             "moodle_env" => $CFG->kent->environment,
