@@ -29,13 +29,16 @@ class observers
     public static function course_created(\core\event\course_created $event) {
         global $CFG, $DB, $SHAREDB;
 
-        if (!util\sharedb::available()) {
-            return true;
-        }
-
         $course = $DB->get_record('course', array(
             "id" => $event->objectid
         ));
+
+        // Ping the group manager.
+        \local_kent\group\manager::course_created($course);
+
+        if (!util\sharedb::available()) {
+            return true;
+        }
 
         $params = array(
             "moodle_env" => $CFG->kent->environment,
@@ -143,6 +146,35 @@ class observers
             "courseid" => $event->courseid,
             "username" => $user->username
         ));
+
+        return true;
+    }
+
+    /**
+     * Triggered via role_assigned event.
+     *
+     * @param \core\event\role_assigned $event
+     * @return bool true on success.
+     */
+    public static function role_assigned(\core\event\role_assigned $event) {
+        global $DB;
+
+        // Make sure this is a course.
+        $context = \context::instance_by_id($event->contextid, MUST_EXIST);
+        if ($context->contextlevel != CONTEXT_COURSE) {
+            return true;
+        }
+
+        // Get the role, check the name.
+        $role = $DB->get_record('role', array(
+            'id' => $event->objectid
+        ));
+        if (!$role || strpos($role->shortname, 'student') === false) {
+            return true;
+        }
+
+        // Ping the group manager.
+        \local_kent\group\manager::enrolment_created($context->instanceid, $event->relateduserid);
 
         return true;
     }
