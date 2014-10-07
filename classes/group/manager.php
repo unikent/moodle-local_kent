@@ -32,6 +32,10 @@ class manager
     public static function course_created($course) {
         global $DB;
 
+        if (defined("IS_TRAVIS")) {
+            return true;
+        }
+
         // Check if there is already a group.
         if ($DB->record_exists('groups', array(
             'courseid' => $course->id,
@@ -56,6 +60,10 @@ class manager
      */
     public static function enrolment_created($courseid, $userid) {
         global $DB;
+
+        if (defined("IS_TRAVIS")) {
+            return true;
+        }
 
         $course = $DB->get_record('course', array(
             'id' => $courseid
