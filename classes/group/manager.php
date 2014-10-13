@@ -32,7 +32,7 @@ class manager
     public static function course_created($course) {
         global $DB;
 
-        if (defined("IS_TRAVIS")) {
+        if (defined("PHPUNIT_TEST") && PHPUNIT_TEST) {
             return true;
         }
 
@@ -61,7 +61,7 @@ class manager
     public static function enrolment_created($courseid, $userid) {
         global $DB;
 
-        if (defined("IS_TRAVIS")) {
+        if (defined("PHPUNIT_TEST") && PHPUNIT_TEST) {
             return true;
         }
 

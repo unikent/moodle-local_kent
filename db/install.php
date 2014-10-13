@@ -19,7 +19,7 @@ defined('MOODLE_INTERNAL') || die();
 function xmldb_local_kent_install() {
     global $CFG, $DB;
 
-    if (defined("IS_TRAVIS")) {
+    if (defined("PHPUNIT_TEST") && PHPUNIT_TEST) {
         return true;
     }
 
