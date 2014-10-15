@@ -88,8 +88,8 @@ function xmldb_local_kent_install() {
     /**
      * Aspire Lists.
      */
-    set_config('targetAspire', 'http://resourcelists.kent.ac.uk', 'mod_aspirelists');
-    set_config('altTargetAspire', 'http://medwaylists.kent.ac.uk', 'mod_aspirelists');
+    set_config('baseurl', 'http://resourcelists.kent.ac.uk', 'aspirelists');
+    set_config('altBaseurl', 'http://medwaylists.kent.ac.uk', 'aspirelists');
 
     /**
      * OnlineSurvey.
@@ -115,6 +115,15 @@ function xmldb_local_kent_install() {
     set_config('turnitin_apiurl', 'https://submit.ac.uk/api.asp');
     set_config('turnitin_account_id', 2642);
     set_config('turnitin_useanon', true);
+
+    /**
+     * Quiz.
+     */
+    set_config('overduehandling', 'autosubmit', 'quiz');
+    set_config('maximumgrade', 100, 'quiz');
+    set_config('attempts', 1, 'quiz');
+    set_config('questionsperpage', 5, 'quiz');
+    set_config('decimalpoints', 0, 'quiz');
 
     /**
      * Default module settings.
