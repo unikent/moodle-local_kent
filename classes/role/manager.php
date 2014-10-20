@@ -27,9 +27,37 @@ class manager
      * Migrate the action up to SHAREDB.
      */
     public static function role_created($roleid, $userid) {
-        global $CFG, $DB;
+        return self::migrate('add', $roleid, $userid);
+    }
+
+    /**
+     * Migrate the action up to SHAREDB.
+     */
+    public static function role_deleted($roleid, $userid) {
+        return self::migrate('delete', $roleid, $userid);
+    }
+
+    /**
+     * Is the roleid in our sphere of care?
+     */
+    public static function is_managed($roleid) {
+        $config = get_config('local_kent', 'sync_roles');
+        $ids = explode(',', $config);
+
+        return in_array($roleid, $ids);
+    }
+
+    /**
+     * Helper for the above.
+     */
+    private static function migrate($action, $roleid, $userid) {
+        global $CFG, $DB, $SHAREDB;
 
         if (defined("ROLESYNC_CRON_RUN") && ROLESYNC_CRON_RUN) {
+            return true;
+        }
+
+        if (!self::is_managed($roleid)) {
             return true;
         }
 
@@ -39,33 +67,15 @@ class manager
         ));
 
         // Update the migration.
-        
+        $migration = \local_kent\shared\config::increment("role_migration");
 
-        $params = array(
+        $SHAREDB->insert_record('shared_role_assignments', array(
             'moodle_env' => $CFG->kent->environment,
             'moodle_dist' => $CFG->kent->distribution,
             'roleid' => $roleid,
             'username' => $username,
-            'action' => 'created',
+            'action' => $action,
             'migration' => $migration
-        );
-
-        return true;
-    }
-
-    /**
-     * Migrate the action up to SHAREDB.
-     */
-    public static function role_deleted($roleid, $userid) {
-        global $CFG, $DB;
-
-        if (defined("ROLESYNC_CRON_RUN") && ROLESYNC_CRON_RUN) {
-            return true;
-        }
-
-        // Get the user.
-        $username = $DB->get_field('user', 'username', array(
-            'id' => $userid
         ));
 
         return true;
