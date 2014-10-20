@@ -31,9 +31,18 @@ class config
 
         // Get the record.
         $record = self::get($name, true);
+        if (!$record) {
+            $record = new \stdClass();
+            $record->name = $name;
+        }
+
         $record->value = $value;
 
-        $SHAREDB->update_record('shared_config', $record);
+        if (isset($record->id)) {
+            $SHAREDB->update_record('shared_config', $record);
+        } else {
+            $SHAREDB->insert_record('shared_config', $record);
+        }
     }
 
     /**
@@ -63,19 +72,16 @@ class config
     public static function increment($name) {
         global $SHAREDB;
 
-        $result = $SHAREDB->execute("SELECT value FROM {shared_config} WHERE name=:name FOR UPDATE", array(
+        $result = $SHAREDB->get_record_sql("SELECT * FROM {shared_config} WHERE name=:name FOR UPDATE", array(
             'name' => $name
         ));
 
-        $value = (int)$result->value + 1;
+        $result->value = (int)$result->value + 1;
 
-        $SHAREDB->execute("UPDATE {shared_config} SET value=:value WHERE name=:name", array(
-            'name' => $name,
-            'value' => $value
-        ));
+        $SHAREDB->update_record("shared_config", $result);
 
         $SHAREDB->execute("commit");
 
-        return $value;
+        return $result->value;
     }
 }

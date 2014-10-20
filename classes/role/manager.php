@@ -38,6 +38,9 @@ class manager
             'id' => $userid
         ));
 
+        // Update the migration.
+        
+
         $params = array(
             'moodle_env' => $CFG->kent->environment,
             'moodle_dist' => $CFG->kent->distribution,
