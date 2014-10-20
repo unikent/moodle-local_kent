@@ -64,14 +64,14 @@ class role_sync extends \core\task\scheduled_task
         ));
 
         // Run migrations.
-        define('ROLESYNC_CRON_RUN', true);
+        $CFG->in_role_sync = true;
         foreach ($migrations as $migration) {
-            $this->migrate($migration);
-
-            // Record now, in case we error.
-            set_config('role_migration', $migration->migration, 'local_kent');
+            if ($this->migrate($migration)) {
+                // Record now, in case we error later.
+                set_config('role_migration', $migration->migration, 'local_kent');
+            }
         }
-        define('ROLESYNC_CRON_RUN', false);
+        unset($CFG->in_role_sync);
 
         return true;
     }
@@ -158,11 +158,7 @@ class role_sync extends \core\task\scheduled_task
 
         if ($user) {
             $user = \local_connect\user::get_user_object($user->username, $user->firstname, $user->lastname);
-            try {
-                return user_create_user($user, false);
-            } catch (\Exception $e) {
-                debugging($e->getMessage());
-            }
+            return user_create_user($user, false);
         }
 
         return null;
@@ -177,7 +173,7 @@ class role_sync extends \core\task\scheduled_task
 
         // Do we care?
         if (!$roleid || !\local_kent\role\manager::is_managed($roleid)) {
-            return false;
+            return true;
         }
 
         // Map the username.

@@ -53,7 +53,7 @@ class manager
     private static function migrate($action, $roleid, $userid) {
         global $CFG, $DB, $SHAREDB;
 
-        if (defined("ROLESYNC_CRON_RUN") && ROLESYNC_CRON_RUN) {
+        if (isset($CFG->in_role_sync)) {
             return true;
         }
 
