@@ -61,6 +61,31 @@ class manager
             return true;
         }
 
+        // Get the role shortname.
+        $shortname = $DB->get_field('role', 'shortname', array(
+            'id' => $roleid
+        ));
+
+        // Check the role exists in the mapping table #1.
+        $params = array(
+            'moodle_env' => $CFG->kent->environment,
+            'moodle_dist' => $CFG->kent->distribution,
+            'roleid' => $roleid
+        );
+        $sharedrole = $SHAREDB->get_record('shared_roles', $params);
+        $params['shortname'] = $shortname;
+
+        // Check the role exists in the mapping table #2.
+        if (!$sharedrole) {
+            $SHAREDB->insert_record('shared_roles', $params);
+        } else {
+            // Does it need updating?
+            if ($sharedrole->shortname != $shortname) {
+                $params['id'] = $sharedrole->id;
+                $SHAREDB->update_record('shared_roles', $params);
+            }
+        }
+
         // Get the user.
         $username = $DB->get_field('user', 'username', array(
             'id' => $userid
