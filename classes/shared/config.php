@@ -67,18 +67,23 @@ class config
     }
 
     /**
-     * Atomic increment.
+     * Atomic increment, returns new value.
      */
     public static function increment($name) {
         global $SHAREDB;
 
-        $result = $SHAREDB->get_record_sql("SELECT * FROM {shared_config} WHERE name=:name FOR UPDATE", array(
+        $result = $SHAREDB->get_record_sql("SELECT value FROM {shared_config} WHERE name=:name FOR UPDATE", array(
             'name' => $name
         ));
 
+        if (!$result) {
+            $result = new \stdClass();
+            $result->value = 0;
+        }
+
         $result->value = (int)$result->value + 1;
 
-        $SHAREDB->update_record("shared_config", $result);
+        self::set($name, $result->value);
 
         $SHAREDB->execute("commit");
 
