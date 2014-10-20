@@ -34,88 +34,103 @@ class role_sync extends \core\task\scheduled_task
     }
 
     public function execute() {
-        $enabled = get_config("local_kent", "enable_role_sync");
+        global $CFG, $SHAREDB;
+
+        $enabled = get_config('local_kent', 'enable_role_sync');
         if (!$enabled) {
             return;
         }
 
-        if (get_config("local_kent", "sync_panopto")) {
-            $this->sync_panopto();
+        // What migration are we at?
+        $migration = get_config('local_kent', 'role_migration');
+        if (!$migration) {
+            $migration = 1;
         }
 
-        if (get_config("local_kent", "sync_helpdesk")) {
-            $this->sync_helpdesk();
+        // What is the latest migration?
+        $latest = \local_kent\shared\config::get('role_migration');
+
+        // We done yet?
+        if ($migration == $latest) {
+            return true;
         }
 
-        if (get_config("local_kent", "sync_cla")) {
-            $this->sync_cla();
+        // Get all records between migration and the latest.
+        $where = 'moodle_dist != :dist AND migration BETWEEN :val1 AND :val2';
+        $migrations = $SHAREDB->get_records_select('shared_role_assignments', $where, array(
+            'dist' => $CFG->kent->distribution,
+            'val1' => $migration,
+            'val2' => $latest
+        ));
+
+        // Run migrations.
+        define('ROLESYNC_CRON_RUN', true);
+        foreach ($migrations as $migration) {
+            $this->migrate($migration);
+
+            // Record now, in case we error.
+            set_config('role_migration', $migration->migration, 'local_kent');
         }
+        define('ROLESYNC_CRON_RUN', false);
+
+        return true;
+    }
+
+    /**
+     * Map a role to a shortname.
+     */
+    private function map_external_role($env, $dist, $id) {
+        global $SHAREDB;
+
+        static $map = array();
+        if (empty($map)) {
+            $records = $SHAREDB->get_records('shared_roles');
+
+            foreach ($records as $record) {
+                if (!isset($map[$record->moodle_env])) {
+                    $map[$record->moodle_env] = array();
+                }
+
+                if (!isset($map[$record->moodle_env][$record->moodle_dist])) {
+                    $map[$record->moodle_env][$record->moodle_dist] = array();
+                }
+
+                $map[$record->moodle_env][$record->moodle_dist][$record->roleid] = $record->shortname;
+            }
+        }
+
+        if (isset($map[$env][$dist][$id])) {
+            return $map[$env][$dist][$id];
+        }
+
+        return null;
     }
 
     /**
      * Grab's the ID for a given role.
      */
-    private function get_role_id($shortname) {
+    private function map_internal_role($shortname) {
         global $DB;
 
-        return $DB->get_field('role', 'id', array(
-            'shortname' => $shortname
-        ));
-    }
-
-    /**
-     * Push a given set of roles up to SHAREDB.
-     */
-    private function push_up($roleid) {
-        global $CFG, $DB, $SHAREDB;
-
-        // Grab users.
-        $users = $DB->get_fieldset_sql("SELECT u.username
-            FROM {role_assignments} ra
-            INNER JOIN {user} u
-              ON u.id=ra.userid
-            WHERE ra.roleid = :roleid
-            GROUP BY u.username
-        ", array(
-            "roleid" => $roleid
-        ));
-
-        $role = $DB->get_record('role', array(
-            'id' => $roleid
-        ), 'id, shortname');
-
-        $params = array(
-            'moodle_env' => $CFG->kent->environment,
-            'moodle_dist' => $CFG->kent->distribution,
-            'roleid' => $role->id,
-            'shortname' => $role->shortname
-        );
-
-        // Sync the role itself.
-        if (!$SHAREDB->record_exists('shared_roles', $params)) {
-            $SHAREDB->insert_record('shared_roles', $params);
+        static $map = array();
+        if (empty($map)) {
+            $records = $DB->get_records('role');
+            foreach ($records as $record) {
+                $maps[$record->shortname] = $record->id;
+            }
         }
 
-        $shareid = $SHAREDB->get_field('shared_roles', 'id', $params);
-
-        $params = array(
-            'moodle_env' => $CFG->kent->environment,
-            'moodle_dist' => $CFG->kent->distribution,
-            "roleid" => $shareid
-        );
-
-        // And the assignments for this context.
-        $SHAREDB->delete_records("shared_role_assignments", $params);
-        foreach ($users as $username) {
-            $params['username'] = $username;
-            $SHAREDB->insert_record("shared_role_assignments", $params);
+        if (isset($maps[$shortname])) {
+            return $maps[$shortname];
         }
+
+        return null;
     }
 
     /**
      * Get a user ID for a username.
      */
-    private function get_user($username) {
+    private function map_internal_username($username) {
         global $DB;
 
         static $cache = array();
@@ -130,73 +145,38 @@ class role_sync extends \core\task\scheduled_task
     }
 
     /**
-     * Pull a given set of roles from SHAREDB.
+     * Run a migration.
      */
-    private function pull_down($roleid, $shortname) {
-        global $CFG, $DB, $SHAREDB;
+    private function migrate($migration) {
+        $shortname = $this->map_external_role($migration->moodle_env, $migration->moodle_dist, $migration->roleid);
+        $roleid = $this->map_internal_role($shortname);
 
+        // Do we care?
+        if (!$roleid || !\local_kent\role\manager::is_managed($roleid)) {
+            return false;
+        }
+
+        // Map the username.
+        $userid = $this->map_internal_username($migration->username);
+        if (!$userid) {
+            return false;
+        }
+
+        // Get the context (one for now).
         $context = \context_system::instance();
 
-        // Grab a list of enrolments, merge between installations.
-        $records = $SHAREDB->get_records_sql("
-            SELECT sra.id, sra.username, sr.shortname
-            FROM {shared_role_assignments} sra
-            INNER JOIN {shared_roles} sr
-              ON sr.id=sra.roleid
-            WHERE
-              CONCAT(sra.moodle_env, '_', sra.moodle_dist) <> CONCAT(:moodle_env, '_', :moodle_dist)
-              AND sr.shortname = :roleshortname
-            GROUP BY sr.shortname, sra.username
-        ", array(
-            'moodle_env' => $CFG->kent->environment,
-            'moodle_dist' => $CFG->kent->distribution,
-            'roleshortname' => $shortname
-        ));
+        switch ($migration->action) {
+            case 'add':
+                if (!user_has_role_assignment($userid, $roleid, $context->id)) {
+                    role_assign($roleid, $userid, $context->id);
+                }
+            break;
 
-        foreach ($records as $record) {
-            $userid = $this->get_user($record->username);
-            if ($userid && !user_has_role_assignment($userid, $roleid, $context->id)) {
-                role_assign($roleid, $userid, $context->id);
-            }
-        }
-    }
-
-    /**
-     * Sync panopto role between connected Moodle installations
-     */
-    private function sync_panopto() {
-        $roleid = $this->get_role_id('panopto_academic');
-        if ($roleid) {
-            $this->push_up($roleid);
-            $this->pull_down($roleid, 'panopto_academic');
-        }
-
-        $roleid = $this->get_role_id('panopto_non_academic');
-        if ($roleid) {
-            $this->push_up($roleid);
-            $this->pull_down($roleid, 'panopto_non_academic');
-        }
-    }
-
-    /**
-     * Sync helpdesk role between connected Moodle installations
-     */
-    private function sync_helpdesk() {
-        $roleid = $this->get_role_id('support');
-        if ($roleid) {
-            $this->push_up($roleid);
-            $this->pull_down($roleid, 'support');
-        }
-    }
-
-    /**
-     * Sync cla role between connected Moodle installations
-     */
-    private function sync_cla() {
-        $roleid = $this->get_role_id('cla_admin');
-        if ($roleid) {
-            $this->push_up($roleid);
-            $this->pull_down($roleid, 'cla_admin');
+            case 'delete':
+                if (user_has_role_assignment($userid, $roleid, $context->id)) {
+                    role_unassign($roleid, $userid, $context->id);
+                }
+            break;
         }
     }
 } 
