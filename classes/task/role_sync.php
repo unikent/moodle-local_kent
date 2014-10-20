@@ -145,6 +145,30 @@ class role_sync extends \core\task\scheduled_task
     }
 
     /**
+     * Pull down and create a shared user.
+     */
+    private function grab_shared_user($username) {
+        global $CFG, $SHAREDB;
+
+        require_once($CFG->dirroot . "/user/lib.php");
+
+        $user = $SHAREDB->get_record('shared_users', array(
+            'username' => $username
+        ));
+
+        if ($user) {
+            $user = \local_connect\user::get_user_object($user->username, $user->firstname, $user->lastname);
+            try {
+                return user_create_user($user, false);
+            } catch (\Exception $e) {
+                debugging($e->getMessage());
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Run a migration.
      */
     private function migrate($migration) {
@@ -159,7 +183,12 @@ class role_sync extends \core\task\scheduled_task
         // Map the username.
         $userid = $this->map_internal_username($migration->username);
         if (!$userid) {
-            return false;
+            // Create the user.
+            $userid = $this->grab_shared_user($migration->username);
+            if (!$userid) {
+                debugging("Unshared user encountered during migration: {$migration->username}");
+                return false;
+            }
         }
 
         // Get the context (one for now).
@@ -177,6 +206,12 @@ class role_sync extends \core\task\scheduled_task
                     role_unassign($roleid, $userid, $context->id);
                 }
             break;
+
+            default:
+                debugging("Unknown migration action: {$migration->action}");
+            break;
         }
+
+        return true;
     }
 } 

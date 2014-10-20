@@ -65,6 +65,34 @@ class manager
         $shortname = $DB->get_field('role', 'shortname', array(
             'id' => $roleid
         ));
+        self::share_role_mapping($roleid, $shortname);
+
+        // Get the user.
+        $user = $DB->get_record('user', array(
+            'id' => $userid
+        ));
+        self::share_user($user);
+
+        // Update the migration.
+        $migration = \local_kent\shared\config::increment("role_migration");
+
+        $SHAREDB->insert_record('shared_role_assignments', array(
+            'moodle_env' => $CFG->kent->environment,
+            'moodle_dist' => $CFG->kent->distribution,
+            'roleid' => $roleid,
+            'username' => $user->username,
+            'action' => $action,
+            'migration' => $migration
+        ));
+
+        return true;
+    }
+
+    /**
+     * Create mapping in SHAREDB for roleid.
+     */
+    private static function share_role_mapping($roleid, $shortname) {
+        global $CFG, $SHAREDB;
 
         // Check the role exists in the mapping table #1.
         $params = array(
@@ -85,24 +113,24 @@ class manager
                 $SHAREDB->update_record('shared_roles', $params);
             }
         }
+    }
 
-        // Get the user.
-        $username = $DB->get_field('user', 'username', array(
-            'id' => $userid
+    /**
+     * Create record in SHAREDB for user.
+     */
+    private static function share_user($user) {
+        global $SHAREDB;
+
+        $user = $SHAREDB->get_record('shared_users', array(
+            'username' => $user->username
         ));
 
-        // Update the migration.
-        $migration = \local_kent\shared\config::increment("role_migration");
-
-        $SHAREDB->insert_record('shared_role_assignments', array(
-            'moodle_env' => $CFG->kent->environment,
-            'moodle_dist' => $CFG->kent->distribution,
-            'roleid' => $roleid,
-            'username' => $username,
-            'action' => $action,
-            'migration' => $migration
-        ));
-
-        return true;
+        if (!$user) {
+            $SHAREDB->insert_record('shared_users', array(
+                'username' => $user->username,
+                'firstname' => $user->firstname,
+                'lastname' => $user->lastname
+            ));
+        }
     }
 }
