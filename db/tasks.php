@@ -26,8 +26,8 @@ $tasks = array(
     array(
         'classname' => 'local_kent\task\role_sync',
         'blocking' => 0,
-        'minute' => '30',
-        'hour' => '*/2',
+        'minute' => '*/5',
+        'hour' => '*',
         'day' => '*',
         'dayofweek' => '*',
         'month' => '*'
@@ -53,7 +53,7 @@ $tasks = array(
     array(
         'classname' => 'local_kent\task\course_shouter',
         'blocking' => 0,
-        'minute' => '5',
+        'minute' => '*/5',
         'hour' => '*',
         'day' => '*',
         'dayofweek' => '*',
