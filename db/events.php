@@ -52,5 +52,10 @@ $observers = array (
     array (
         'eventname' => '\core\event\role_assigned',
         'callback' => '\local_kent\observers::role_assigned',
+    ),
+
+    array (
+        'eventname' => '\core\event\role_unassigned',
+        'callback'  => '\local_kent\observers::role_unassigned',
     )
 );
