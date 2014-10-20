@@ -49,8 +49,12 @@ if ($hassiteconfig) {
         0
     ));
 
+    $ADMIN->add('localplugins', $settings);
+
+    $rolemgrsettings = new admin_settingpage('local_kent_role_mgr', 'Role Sync');
+
     if (!empty($CFG->kent->sharedb["host"])) {
-        $settings->add(new admin_setting_configcheckbox(
+        $rolemgrsettings->add(new admin_setting_configcheckbox(
             'local_kent/enable_role_sync',
             'Enable Role Synchronization',
             'Synchronizes roles between connected Moodle installations.',
@@ -58,28 +62,26 @@ if ($hassiteconfig) {
         ));
 
         if (get_config('local_kent', 'enable_role_sync')) {
-            $settings->add(new admin_setting_configcheckbox(
-                'local_kent/sync_panopto',
-                'Sync Panopto Role',
-                'Synchronizes Panopto role between connected Moodle installations.',
-                0
-            ));
+            // Load roles.
+            $choices = array();
+            $systemcontext = \context_system::instance();
+            $roles = get_assignable_roles(\context_system::instance(), ROLENAME_ALIAS, true);
+            if (count($roles) == 3) {
+                $roles = $roles[2];
+                foreach ($roles as $id => $name) {
+                    $choices[$id] = format_string($name);
+                }
+            }
 
-            $settings->add(new admin_setting_configcheckbox(
-                'local_kent/sync_helpdesk',
-                'Sync Helpdesk Role',
-                'Synchronizes helpdesk role between connected Moodle installations.',
-                0
-            ));
-
-            $settings->add(new admin_setting_configcheckbox(
-                'local_kent/sync_cla',
-                'Sync CLA Role',
-                'Synchronizes CLA role between connected Moodle installations.',
-                0
+            $rolemgrsettings->add(new admin_setting_configmultiselect(
+                'local_kent/sync_roles',
+                'Roles to synchronize',
+                'Any roles selected here will be synchronized to all Moodles also configured to sync that role.',
+                array(),
+                $choices
             ));
         }
     }
 
-    $ADMIN->add('localplugins', $settings);
+    $ADMIN->add('roles', $rolemgrsettings);
 }

@@ -159,23 +159,41 @@ class observers
     public static function role_assigned(\core\event\role_assigned $event) {
         global $DB;
 
-        // Make sure this is a course.
+        // Get the context.
         $context = \context::instance_by_id($event->contextid, MUST_EXIST);
-        if ($context->contextlevel != CONTEXT_COURSE) {
-            return true;
-        }
 
-        // Get the role, check the name.
+        // Get the role.
         $role = $DB->get_record('role', array(
             'id' => $event->objectid
         ));
-        if (!$role || strpos($role->shortname, 'student') === false) {
-            return true;
+
+        // Ping the group manager?
+        if ($context->contextlevel == CONTEXT_COURSE && strpos($role->shortname, 'student') !== false) {
+            \local_kent\group\manager::enrolment_created($context->instanceid, $event->relateduserid);
         }
 
-        // Ping the group manager.
-        \local_kent\group\manager::enrolment_created($context->instanceid, $event->relateduserid);
+        // Ping the role manager?
+        if ($context->contextlevel == CONTEXT_SYSTEM) {
+            \local_kent\role\manager::role_created($event->objectid, $event->relateduserid);
+        }
 
         return true;
+    }
+
+    /**
+     * Triggered when user role is unassigned.
+     *
+     * @param \core\event\role_unassigned $event
+     */
+    public static function role_unassigned(\core\event\role_unassigned $event) {
+        global $DB;
+
+        // Get the context.
+        $context = \context::instance_by_id($event->contextid, MUST_EXIST);
+
+        // Ping the role manager?
+        if ($context->contextlevel == CONTEXT_SYSTEM) {
+            \local_kent\role\manager::role_created($event->objectid, $event->relateduserid);
+        }
     }
 }
