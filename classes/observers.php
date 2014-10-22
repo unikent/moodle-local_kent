@@ -85,7 +85,7 @@ class observers
 
         // Notify HipChat.
         try {
-            \local_hipchat\Message::send($msg, "purple", "text", "CatMan");
+            \local_hipchat\Message::send($msg, "purple", "text");
         } catch (\Exception $e) {
             // Ignore.
         }
