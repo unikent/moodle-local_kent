@@ -19,7 +19,13 @@ defined('MOODLE_INTERNAL') || die();
 function xmldb_local_kent_install() {
     global $CFG, $DB;
 
-    if (defined("PHPUNIT_TEST") && PHPUNIT_TEST) {
+    // Not if we are installing a phpunit test site.
+    if (defined("PHPUNIT_UTIL") && PHPUNIT_UTIL) {
+        return true;
+    }
+
+    // Not if we are installing a behat test site.
+    if (defined("BEHAT_UTIL") && BEHAT_UTIL) {
         return true;
     }
 
