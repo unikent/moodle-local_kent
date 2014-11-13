@@ -1,3 +1,4 @@
 [submodule "lib/footprints"]
 	path = lib/footprints
 	url = https://github.com/unikent/footprints-php.git
+    branch = master
