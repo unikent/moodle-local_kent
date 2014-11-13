@@ -121,35 +121,13 @@ HTML;
 
         $formatted = implode("\n\n", $formatted);
 
-        $email = <<<HTML
-[###=== FP:TicketTemplate ===###]
-
-[###=== FP:Config:WorkspaceID ===###] 2
-[###=== FP:Config:EntryCount ===###] 1
-
-[###=== FP:Contact:Username ===###] unk
-[###=== FP:Contact:Email__bAddress ===###] unknown@kent.ac.uk
-
-[###=== FP:CcEmails:Permanent ===###] D.Bedford@kent.ac.uk
-
-[###=== FP:Config:Assignees ===###] Academic__bLiaison
-[###=== FP:Config:Priority ===###] 2
-[###=== FP:Config:Status ===###] New
-[###=== FP:Config:Title ===###] New Moodle Modules Created
-[###=== FP:Entry:1:Field:Type__bof__bTicket ===###] Service__bRequest__b__u__bService
-[###=== FP:Entry:1:Field:Category ===###] Library
-
-[###=== FP:Entry:1:Email:Assignees ===###] yes
-[###=== FP:Entry:1:Email:Contact ===###] no
-[###=== FP:Entry:1:Email:CCs ===###] yes
-
-[###=== FP:Entry:1:Description:Description ===###]
-
-$formatted
-HTML;
-
-        $user = get_admin();
-        $user->email = 'sbsrem@kent.ac.uk';
-        email_to_user($user, get_admin(), 'FootPrints Templated Ticket Email', $email);
+        $ticket = new \local_kent\footprints\ticket("[Moodle] New Modules Created");
+        $ticket->set_user("w3moodle");
+        $ticket->add_entry($formatted);
+        $ticket->add_cc("D.Bedford@kent.ac.uk");
+        $ticket->add_assignee("Academic Liaison");
+        $ticket->set_type("Service Request - Service");
+        $ticket->set_category("Library");
+        $ticket->schedule();
     }
 } 
