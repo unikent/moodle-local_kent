@@ -121,7 +121,6 @@ HTML;
 
         $formatted = implode("\n\n", $formatted);
 
-
         $ticket = new \local_kent\footprints\ticket("[Moodle] New Modules Created");
         $ticket->set_user("w3moodle");
         $ticket->add_entry($formatted);
