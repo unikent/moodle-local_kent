@@ -47,6 +47,7 @@ class footprints_send extends \core\task\adhoc_task
         $ticketnumber = \Footprints\API::create_raw(json_encode(array($obj)));
 
         $event = \local_kent\event\footprints_ticket_created::create(array(
+            'context' => \context_system::instance(),
             'other' => array(
                 'ticketnumber' => $ticketnumber,
                 'workspace' => $obj->Workspace
