@@ -76,6 +76,7 @@ SQL;
         // Also submit a CR.
         $cr = new \local_kent\footprints\change_request("[Moodle] Config Change");
         $cr->set_user("w3moodle");
+        $cr->set_emails(false, false, false);
         $cr->add_entry(implode("\n", $messages));
         $cr->add_assignee("Learning and Research Systems");
         $cr->add_server_link($CFG->kent->servers);
