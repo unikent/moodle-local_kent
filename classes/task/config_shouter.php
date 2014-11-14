@@ -64,6 +64,10 @@ SQL;
             'time' => $lasttime
         ));
 
+        if (empty($entries)) {
+            return true;
+        }
+
         $messages = array();
         foreach ($entries as $entry) {
             $username = $entry->firstname . " " . $entry->lastname;
@@ -81,5 +85,7 @@ SQL;
         $cr->add_assignee("Learning and Research Systems");
         $cr->add_server_link($CFG->kent->servers);
         $cr->schedule();
+
+        return true;
     }
 } 
