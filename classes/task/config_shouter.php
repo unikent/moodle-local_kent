@@ -34,7 +34,7 @@ class config_shouter extends \core\task\scheduled_task
     }
 
     public function execute() {
-        global $DB;
+        global $CFG, $DB;
 
         // What was the last time we shouted about in the config logs table?
         $lasttime = $this->get_last_run_time();
@@ -78,6 +78,7 @@ SQL;
         $cr->set_user("w3moodle");
         $cr->add_entry(implode("\n", $messages));
         $cr->add_assignee("Learning and Research Systems");
+        $cr->add_server_link($CFG->kent->servers);
         $cr->schedule();
     }
 } 
