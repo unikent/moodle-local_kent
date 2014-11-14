@@ -64,11 +64,20 @@ SQL;
             'time' => $lasttime
         ));
 
+        $messages = array();
         foreach ($entries as $entry) {
             $username = $entry->firstname . " " . $entry->lastname;
             $msg = "{$username} changed the value of '{$entry->name}'";
             $msg .= " ('{$entry->plugin}') from '{$entry->oldvalue}' to '{$entry->value}'.";
+            $messages[] = $msg;
             \local_hipchat\Message::send($msg);
         }
+
+        // Also submit a CR.
+        $cr = new \local_kent\footprints\change_request("[Moodle] Config Change");
+        $cr->set_user("w3moodle");
+        $cr->add_entry(implode("\n", $messages));
+        $cr->add_assignee("Learning and Research Systems");
+        $cr->schedule();
     }
 } 
