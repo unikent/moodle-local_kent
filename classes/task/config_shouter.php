@@ -34,7 +34,7 @@ class config_shouter extends \core\task\scheduled_task
     }
 
     public function execute() {
-        global $DB;
+        global $CFG, $DB;
 
         // What was the last time we shouted about in the config logs table?
         $lasttime = $this->get_last_run_time();
@@ -64,11 +64,28 @@ SQL;
             'time' => $lasttime
         ));
 
+        if (empty($entries)) {
+            return true;
+        }
+
+        $messages = array();
         foreach ($entries as $entry) {
             $username = $entry->firstname . " " . $entry->lastname;
             $msg = "{$username} changed the value of '{$entry->name}'";
             $msg .= " ('{$entry->plugin}') from '{$entry->oldvalue}' to '{$entry->value}'.";
+            $messages[] = $msg;
             \local_hipchat\Message::send($msg);
         }
+
+        // Also submit a CR.
+        $cr = new \local_kent\footprints\change_request("[Moodle] Config Change");
+        $cr->set_user("w3moodle");
+        $cr->set_emails(false, false, false);
+        $cr->add_entry(implode("\n", $messages));
+        $cr->add_assignee("Learning and Research Systems");
+        $cr->add_server_link($CFG->kent->servers);
+        $cr->schedule();
+
+        return true;
     }
 } 
