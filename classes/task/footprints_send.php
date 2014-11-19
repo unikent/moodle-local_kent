@@ -36,6 +36,11 @@ class footprints_send extends \core\task\adhoc_task
     }
 
     public function execute() {
+        $enabled = get_config("local_kent", "enable_footprints");
+        if (!$enabled) {
+            return true;
+        }
+
         $data = (array)$this->get_custom_data();
         $json = $data['json'];
 
@@ -54,6 +59,8 @@ class footprints_send extends \core\task\adhoc_task
             )
         ));
         $event->trigger();
+
+        return true;
     }
 
     /**

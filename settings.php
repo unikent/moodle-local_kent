@@ -49,6 +49,13 @@ if ($hassiteconfig) {
         0
     ));
 
+    $settings->add(new admin_setting_configcheckbox(
+        'local_kent/enable_footprints',
+        'Enable Footprints',
+        'Enable Footprints tickets to be sent.',
+        0
+    ));
+
     $ADMIN->add('localplugins', $settings);
 
     $rolemgrsettings = new admin_settingpage('local_kent_role_mgr', 'Role Sync');
