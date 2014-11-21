@@ -23,7 +23,7 @@ require_once($CFG->dirroot . "/local/kent/lib/footprints/src/Ticket.php");
 /**
  * Footprints ticket class.
  */
-class ticket extends \Footprints\Ticket
+class ticket extends \unikent\Footprints\Ticket
 {
     /**
      * Schedule ticket creation.

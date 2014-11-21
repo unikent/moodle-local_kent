@@ -24,7 +24,7 @@ require_once($CFG->dirroot . "/local/kent/lib/footprints/src/ChangeRequest.php")
 /**
  * Footprints ticket class.
  */
-class change_request extends \Footprints\ChangeRequest
+class change_request extends \unikent\Footprints\ChangeRequest
 {
     /**
      * Schedule ticket creation.

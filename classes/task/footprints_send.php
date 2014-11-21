@@ -36,6 +36,11 @@ class footprints_send extends \core\task\adhoc_task
     }
 
     public function execute() {
+        $enabled = get_config("local_kent", "enable_footprints");
+        if (!$enabled) {
+            return true;
+        }
+
         $data = (array)$this->get_custom_data();
         $json = $data['json'];
 
@@ -44,7 +49,7 @@ class footprints_send extends \core\task\adhoc_task
             throw new \moodle_exception("Error: Invalid JSON.");
         }
 
-        $ticketnumber = \Footprints\API::create_raw(json_encode(array($obj)));
+        $ticketnumber = \unikent\Footprints\API::create_raw(json_encode(array($obj)));
 
         $event = \local_kent\event\footprints_ticket_created::create(array(
             'context' => \context_system::instance(),
@@ -54,6 +59,8 @@ class footprints_send extends \core\task\adhoc_task
             )
         ));
         $event->trigger();
+
+        return true;
     }
 
     /**
