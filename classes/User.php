@@ -73,7 +73,7 @@ SQL;
     /**
      * Returns a user preference.
      */
-    public function get_user_preferences() {
+    public static function get_user_preferences() {
         global $DB, $USER;
 
         if (!isloggedin()) {
@@ -111,7 +111,7 @@ SQL;
     /**
      * Returns a user preference.
      */
-    public function get_user_preference($name) {
+    public static function get_user_preference($name) {
         $content = static::get_user_preferences();
         return isset($content[$name]) ? $content[$name] : null;
     }
