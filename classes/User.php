@@ -98,8 +98,8 @@ SQL;
                 'userid' => $USER->id
             ));
 
-            foreach ($prefs as $k => $v) {
-                $content[$k] = $v;
+            foreach ($prefs as $pref) {
+                $content[$pref->name] = $pref->value;
             }
 
             $cache->set($USER->id . "_prefs", $content);
