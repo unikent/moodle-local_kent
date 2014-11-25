@@ -35,6 +35,11 @@ $observers = array (
     ),
 
     array (
+        'eventname' => '\core\event\user_updated',
+        'callback' => '\local_kent\observers::user_updated',
+    ),
+
+    array (
         'eventname' => '\core\event\course_deleted',
         'callback' => '\local_kent\observers::course_deleted',
     ),

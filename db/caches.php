@@ -15,20 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information
+ * Local stuff for Moodle Kent
  *
  * @package    local_kent
- * @copyright  2014 University of Kent
+ * @copyright  2014 Skylar Kelty <S.Kelty@kent.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->component = 'local_kent';
-$plugin->version   = 2014112500;
-$plugin->requires  = 2014051200;
-
-$plugin->dependencies = array(
-    'local_hipchat' => 2014043000,
-    'local_connect' => 2014102000
+/**
+ * Our MUC caches
+ */
+$definitions = array(
+    'userprefs' => array(
+        'mode' => cache_store::MODE_APPLICATION,
+        'staticacceleration' => true,
+        'staticaccelerationsize' => 2
+    )
 );
