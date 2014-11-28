@@ -196,4 +196,14 @@ class observers
             \local_kent\role\manager::role_created($event->objectid, $event->relateduserid);
         }
     }
+
+    /**
+     * Triggered when user is updated.
+     *
+     * @param \core\event\user_updated $event
+     */
+    public static function user_updated(\core\event\user_updated $event) {
+        $cache = \cache::make('local_kent', 'userprefs');
+        $cache->delete($event->objectid . '_prefs');
+    }
 }

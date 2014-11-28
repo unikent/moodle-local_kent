@@ -69,4 +69,50 @@ SQL;
             'capability' => 'moodle/course:update'
         )) > 0;
     }
+
+    /**
+     * Returns a user preference.
+     */
+    public static function get_user_preferences() {
+        global $DB, $USER;
+
+        if (!isloggedin()) {
+            return null;
+        }
+
+        $cache = \cache::make('local_kent', 'userprefs');
+        $content = $cache->get($USER->id . "_prefs");
+
+        if (!$content) {
+            $content = array();
+
+            $sql = <<<SQL
+                SELECT uif.shortname as name, uid.data as value
+                FROM {user_info_data} uid
+                INNER JOIN {user_info_field} uif
+                    ON uif.id = uid.fieldid
+                WHERE
+                    uid.userid = :userid
+SQL;
+            $prefs = $DB->get_records_sql($sql, array(
+                'userid' => $USER->id
+            ));
+
+            foreach ($prefs as $pref) {
+                $content[$pref->name] = $pref->value;
+            }
+
+            $cache->set($USER->id . "_prefs", $content);
+        }
+
+        return $content;
+    }
+
+    /**
+     * Returns a user preference.
+     */
+    public static function get_user_preference($name) {
+        $content = static::get_user_preferences();
+        return isset($content[$name]) ? $content[$name] : null;
+    }
 }
