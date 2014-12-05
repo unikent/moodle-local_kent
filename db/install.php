@@ -19,6 +19,8 @@ defined('MOODLE_INTERNAL') || die();
 function xmldb_local_kent_install() {
     global $CFG, $DB;
 
+    $dbman = $DB->get_manager();
+
     // Not if we are installing a phpunit test site.
     if (defined("PHPUNIT_UTIL") && PHPUNIT_UTIL) {
         return true;
@@ -160,6 +162,51 @@ function xmldb_local_kent_install() {
     set_config('grade_report_showlocks', '1');
     set_config('grade_report_showuserimage', '0');
     set_config('messaginghidereadnotifications', '1');
+
+    // Define index ip (not unique) to be added to logstore_standard_log.
+    $table = new xmldb_table('logstore_standard_log');
+    $index = new xmldb_index('ip', XMLDB_INDEX_NOTUNIQUE, array('ip'));
+
+    // Conditionally launch add index ip.
+    if (!$dbman->index_exists($table, $index)) {
+        $dbman->add_index($table, $index);
+    }
+
+    // Define index eventname (not unique) to be added to logstore_standard_log.
+    $table = new xmldb_table('logstore_standard_log');
+    $index = new xmldb_index('eventname', XMLDB_INDEX_NOTUNIQUE, array('eventname'));
+
+    // Conditionally launch add index eventname.
+    if (!$dbman->index_exists($table, $index)) {
+        $dbman->add_index($table, $index);
+    }
+
+    // Define index contextinstanceid (not unique) to be added to logstore_standard_log.
+    $table = new xmldb_table('logstore_standard_log');
+    $index = new xmldb_index('contextinstanceid', XMLDB_INDEX_NOTUNIQUE, array('contextinstanceid'));
+
+    // Conditionally launch add index contextinstanceid.
+    if (!$dbman->index_exists($table, $index)) {
+        $dbman->add_index($table, $index);
+    }
+
+    // Define index userid (not unique) to be added to logstore_standard_log.
+    $table = new xmldb_table('logstore_standard_log');
+    $index = new xmldb_index('userid', XMLDB_INDEX_NOTUNIQUE, array('userid'));
+
+    // Conditionally launch add index userid.
+    if (!$dbman->index_exists($table, $index)) {
+        $dbman->add_index($table, $index);
+    }
+
+    // Define index relateduserid (not unique) to be added to logstore_standard_log.
+    $table = new xmldb_table('logstore_standard_log');
+    $index = new xmldb_index('relateduserid', XMLDB_INDEX_NOTUNIQUE, array('relateduserid'));
+
+    // Conditionally launch add index relateduserid.
+    if (!$dbman->index_exists($table, $index)) {
+        $dbman->add_index($table, $index);
+    }
 
     return true;
 }
