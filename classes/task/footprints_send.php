@@ -24,8 +24,6 @@
 
 namespace local_kent\task;
 
-require_once($CFG->dirroot . "/local/kent/lib/footprints/src/API.php");
-
 /**
  * Sync a specified user's enrolments.
  */
