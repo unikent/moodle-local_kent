@@ -181,11 +181,11 @@ function xmldb_local_kent_install() {
         $dbman->add_index($table, $index);
     }
 
-    // Define index contextinstanceid (not unique) to be added to logstore_standard_log.
+    // Define index context (not unique) to be added to logstore_standard_log.
     $table = new xmldb_table('logstore_standard_log');
-    $index = new xmldb_index('contextinstanceid', XMLDB_INDEX_NOTUNIQUE, array('contextinstanceid'));
+    $index = new xmldb_index('context', XMLDB_INDEX_NOTUNIQUE, array('contextlevel', 'contextinstanceid'));
 
-    // Conditionally launch add index contextinstanceid.
+    // Conditionally launch add index context.
     if (!$dbman->index_exists($table, $index)) {
         $dbman->add_index($table, $index);
     }

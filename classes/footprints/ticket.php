@@ -18,8 +18,6 @@ namespace local_kent\footprints;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . "/local/kent/lib/footprints/src/Ticket.php");
-
 /**
  * Footprints ticket class.
  */

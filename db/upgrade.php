@@ -263,5 +263,32 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2014120600, 'local', 'kent');
     }
 
+    /*
+     * Add an index on some log table columns.
+     */
+    if ($oldversion < 2014121000) {
+
+        // Define index contextinstanceid (not unique) to be dropped from logstore_standard_log.
+        $table = new xmldb_table('logstore_standard_log');
+        $index = new xmldb_index('contextinstanceid', XMLDB_INDEX_NOTUNIQUE, array('contextinstanceid'));
+
+        // Conditionally launch drop index contextinstanceid.
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
+
+        // Define index context (not unique) to be added to logstore_standard_log.
+        $table = new xmldb_table('logstore_standard_log');
+        $index = new xmldb_index('context', XMLDB_INDEX_NOTUNIQUE, array('contextlevel', 'contextinstanceid'));
+
+        // Conditionally launch add index context.
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Connect savepoint reached.
+        upgrade_plugin_savepoint(true, 2014121000, 'local', 'kent');
+    }
+
     return true;
 }
