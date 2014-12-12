@@ -290,5 +290,22 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2014121000, 'local', 'kent');
     }
 
+    /*
+     * Add an index on some log table columns.
+     */
+    if ($oldversion < 2014121200) {
+        // Define index enablecompletion (not unique) to be dropped from course.
+        $table = new xmldb_table('course');
+        $index = new xmldb_index('enablecompletion', XMLDB_INDEX_NOTUNIQUE, array('enablecompletion'));
+
+        // Conditionally launch add index enablecompletion.
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Connect savepoint reached.
+        upgrade_plugin_savepoint(true, 2014121200, 'local', 'kent');
+    }
+
     return true;
 }
