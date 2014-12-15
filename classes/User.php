@@ -111,8 +111,8 @@ SQL;
     /**
      * Returns a user preference.
      */
-    public static function get_user_preference($name) {
+    public static function get_user_preference($name, $default = null) {
         $content = static::get_user_preferences();
-        return isset($content[$name]) ? $content[$name] : null;
+        return isset($content[$name]) ? $content[$name] : $default;
     }
 }
