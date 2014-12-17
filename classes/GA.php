@@ -76,7 +76,7 @@ class GA
             {$dimensions}
         });
 
-        kent_moodle_ga_uid = '{uid}';
+        kent_moodle_ga_uid = '{$uid}';
         kent_moodle_ga_dimensions = {{$dimensions}};
 
     </script>
