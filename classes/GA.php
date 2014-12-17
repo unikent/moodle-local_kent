@@ -46,6 +46,7 @@ class GA
             return "";
         }
 
+        $uid = $this->get_uid();
         $dimensions = $this->get_dimensions();
         $tracker = $this->get_tracker();
 
@@ -74,6 +75,9 @@ class GA
         ga('global.send', 'pageview', {
             {$dimensions}
         });
+
+        kent_moodle_ga_uid = '{uid}';
+        kent_moodle_ga_dimensions = {{$dimensions}};
 
     </script>
     <!-- End of Google Analytics -->
@@ -132,17 +136,33 @@ HTML;
      * Build tracker.
      */
     private function get_tracker() {
-        global $USER;
-
         $tracker = "";
 
         // Setup user tracking if logged in.
         if (isloggedin()) {
-            $ident = sha1($USER->username);
+            $ident = $this->get_uid();
             $tracker = "ga('set', '&uid', '{$ident}'); ga('global.set', '&uid', '{$ident}');";
         }
 
         return $tracker;
+    }
+
+    /**
+     * Return uid for user if logged in.
+     *
+     * @return string sha1 of username
+     */
+    private function get_uid() {
+        global $USER;
+
+        $ident = "";
+
+        // Setup user tracking if logged in.
+        if (isloggedin()) {
+            $ident = sha1($USER->username);
+        }
+
+        return $ident;
     }
 
     /**
