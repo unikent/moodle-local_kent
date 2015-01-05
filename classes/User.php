@@ -80,9 +80,10 @@ SQL;
             return null;
         }
 
-        static $content = null;
+        $cache = \cache::make('local_kent', 'userprefs');
+        $content = $cache->get($USER->id . "_prefs");
 
-        if ($content === null) {
+        if (!$content) {
             $content = array();
 
             $sql = <<<SQL
@@ -100,6 +101,8 @@ SQL;
             foreach ($prefs as $pref) {
                 $content[$pref->name] = $pref->value;
             }
+
+            $cache->set($USER->id . "_prefs", $content);
         }
 
         return $content;
