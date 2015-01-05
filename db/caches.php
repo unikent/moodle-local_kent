@@ -26,4 +26,9 @@
  * Our MUC caches
  */
 $definitions = array(
+    'userprefs' => array(
+        'mode' => cache_store::MODE_APPLICATION,
+        'staticacceleration' => true,
+        'staticaccelerationsize' => 2
+    )
 );

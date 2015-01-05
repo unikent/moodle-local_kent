@@ -24,3 +24,5 @@
 
 $string['pluginname'] = 'Kent Moodle Manager';
 $string['plugindesc'] = 'Various helpers to aid in the management of Kent Moodle.';
+
+$string['cachedef_userprefs'] = 'User Preference Cache';
