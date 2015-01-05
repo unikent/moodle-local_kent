@@ -25,6 +25,10 @@
 defined('MOODLE_INTERNAL') || die;
 
 // Inject the GA code for every request.
-if (!defined("CLI_SCRIPT") || (defined("CLI_SCRIPT") && !CLI_SCRIPT)) {
+if (
+    (!defined("CLI_SCRIPT") || (defined("CLI_SCRIPT") && !CLI_SCRIPT)) &&
+    (!defined("AJAX_SCRIPT") || (defined("AJAX_SCRIPT") && !AJAX_SCRIPT)) &&
+    (!defined("NO_MOODLE_COOKIES") || (defined("NO_MOODLE_COOKIES") && !NO_MOODLE_COOKIES))
+   ) {
     \local_kent\GA::inject();
 }
