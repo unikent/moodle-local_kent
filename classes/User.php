@@ -115,4 +115,38 @@ SQL;
         $content = static::get_user_preferences();
         return isset($content[$name]) ? $content[$name] : $default;
     }
+
+    /**
+     * Return beta preferences.
+     */
+    public static function get_beta_preferences() {
+        if (!isloggedin()) {
+            return array();
+        }
+
+        static $data = null;
+
+        if ($data !== null) {
+            return $data;
+        }
+
+        $prefs = get_user_preferences("betaprefs");
+        $prefs = explode(',', $prefs);
+
+        $data = array();
+        foreach ($prefs as $pref) {
+            list($k, $v) = $pref;
+            $data[$k] = $v;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Returns a beta preference.
+     */
+    public static function get_beta_preference($name, $default = null) {
+        $content = static::get_beta_preferences();
+        return isset($content[$name]) ? $content[$name] : $default;
+    }
 }
