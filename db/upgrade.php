@@ -307,5 +307,31 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2014121200, 'local', 'kent');
     }
 
+    // SSES have asked us to change their category name and category.
+    if ($oldversion < 2015010502 && $CFG->kent->distribution !== 'archive') {
+        $oldname = 'Centre for Sports Studies';
+        $newname = 'School of Sport and Exercise Sciences';
+
+        $newparent = $DB->get_record('course_categories', array(
+            'name' => 'Faculty of Sciences'
+        ), 'id');
+
+        $category = $DB->get_record('course_categories', array(
+            'name' => $oldname
+        ));
+
+        if ($category) {
+            $category->parent = $newparent->id;
+            $category->name = $newname;
+
+            require_once($CFG->libdir . '/coursecatlib.php');
+            $coursecat = \coursecat::get($category->id);
+            $coursecat->update($category);
+        }
+
+        // Connect savepoint reached.
+        upgrade_plugin_savepoint(true, 2015010502, 'local', 'kent');
+    }
+
     return true;
 }
