@@ -130,10 +130,14 @@ SQL;
             return $data;
         }
 
-        $prefs = get_user_preferences("betaprefs");
-        $prefs = explode(',', $prefs);
+        $prefs = get_user_preferences('betaprefs', '');
+        if (empty($prefs)) {
+            return array();
+        }
 
         $data = array();
+
+        $prefs = explode(',', $prefs);
         foreach ($prefs as $pref) {
             list($k, $v) = explode('=', $pref);
             $data[$k] = $v == '1' ? true : false;

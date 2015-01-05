@@ -40,4 +40,12 @@ class optin_form extends \moodleform
 
         $this->add_action_buttons(true);
     }
+
+    /**
+     * Set default.
+     */
+    public function set_field_efault($field, $val = 0) {
+        $mform =& $this->_form;
+        $mform->setDefault($field, $val);
+    }
 }

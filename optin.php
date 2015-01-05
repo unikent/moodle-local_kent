@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
+require_once(dirname(__FILE__) . '/../../config.php');
 
 require_login();
 
@@ -47,6 +47,12 @@ if ($data = $form->get_data()) {
     }
 
     set_user_preference("betaprefs", implode(',', $prefs));
+} else {
+    // Set defaults.
+    $prefs = \local_kent\User::get_beta_preferences();
+    foreach ($prefs as $k => $v) {
+        $form->set_field_efault($k, $v);
+    }
 }
 
 // Show form.
