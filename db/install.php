@@ -208,5 +208,14 @@ function xmldb_local_kent_install() {
         $dbman->add_index($table, $index);
     }
 
+    // Define index enablecompletion (not unique) to be added to course.
+    $table = new xmldb_table('course');
+    $index = new xmldb_index('enablecompletion', XMLDB_INDEX_NOTUNIQUE, array('enablecompletion'));
+
+    // Conditionally launch add index enablecompletion.
+    if (!$dbman->index_exists($table, $index)) {
+        $dbman->add_index($table, $index);
+    }
+
     return true;
 }
