@@ -135,8 +135,8 @@ SQL;
 
         $data = array();
         foreach ($prefs as $pref) {
-            list($k, $v) = $pref;
-            $data[$k] = $v;
+            list($k, $v) = explode('=', $pref);
+            $data[$k] = $v == '1' ? true : false;
         }
 
         return $data;
