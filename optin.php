@@ -21,13 +21,6 @@ require_login();
 $PAGE->set_context(context_user::instance($USER->id));
 $PAGE->set_url('/local/kent/optin.php');
 
-// Output header.
-echo $OUTPUT->header();
-echo $OUTPUT->heading("Beta Preferences");
-
-// Warning.
-echo \html_writer::tag("p", "Warning! These options enable features that may or may not be very unstable, we do not recommend you enable any of them.<br />But, it could be fun...");
-
 // Create form.
 $form = new \local_kent\form\optin_form();
 
@@ -54,6 +47,13 @@ if ($data = $form->get_data()) {
         $form->set_field_efault($k, $v);
     }
 }
+
+// Output header.
+echo $OUTPUT->header();
+echo $OUTPUT->heading("Beta Preferences");
+
+// Warning.
+echo \html_writer::tag("p", "Warning! These options enable features that may or may not be very unstable, we do not recommend you enable any of them.<br />But, it could be fun...");
 
 // Show form.
 $form->display();
