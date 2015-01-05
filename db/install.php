@@ -34,7 +34,7 @@ function xmldb_local_kent_install() {
     /**
      * Core settings.
      */
-    set_config('defaulthomepage', 1);
+    set_config('defaulthomepage', HOMEPAGE_MY);
     set_config('enablecourserequests', true);
     set_config('country', 'GB');
     set_config('loglifetime', 365, 'logstore_standard');
@@ -42,6 +42,7 @@ function xmldb_local_kent_install() {
     set_config('enablemobilewebservice', true);
     set_config('enableblogs', '0');
     set_config('enableportfolios', '1');
+    set_config('auth', 'email,kentsaml');
 
     /**
      * Theme settings.
@@ -163,6 +164,35 @@ function xmldb_local_kent_install() {
     set_config('grade_report_showuserimage', '0');
     set_config('messaginghidereadnotifications', '1');
 
+    // Create basic categories.
+    $localcatmap = array();
+
+    global $kentcategories;
+    require(dirname(__FILE__) . "/categories.php");
+
+    while (!empty($kentcategories)) {
+        foreach ($kentcategories as $category) {
+            $category = (object)$category;
+
+            if ($category->parent > 1) {
+                if (!isset($localcatmap[$category->parent])) {
+                    continue;
+                }
+
+                $category->parent = $localcatmap[$category->parent];
+            }
+
+            if (empty($category->idnumber)) {
+                $category->idnumber = $category->id;
+            }
+
+            $coursecat = \coursecat::create($category);
+            $localcatmap[$category->id] = $coursecat->id;
+
+            unset($kentcategories[$category->id]);
+        }
+    }
+
     // Define index ip (not unique) to be added to logstore_standard_log.
     $table = new xmldb_table('logstore_standard_log');
     $index = new xmldb_index('ip', XMLDB_INDEX_NOTUNIQUE, array('ip'));
@@ -204,6 +234,15 @@ function xmldb_local_kent_install() {
     $index = new xmldb_index('relateduserid', XMLDB_INDEX_NOTUNIQUE, array('relateduserid'));
 
     // Conditionally launch add index relateduserid.
+    if (!$dbman->index_exists($table, $index)) {
+        $dbman->add_index($table, $index);
+    }
+
+    // Define index enablecompletion (not unique) to be added to course.
+    $table = new xmldb_table('course');
+    $index = new xmldb_index('enablecompletion', XMLDB_INDEX_NOTUNIQUE, array('enablecompletion'));
+
+    // Conditionally launch add index enablecompletion.
     if (!$dbman->index_exists($table, $index)) {
         $dbman->add_index($table, $index);
     }
