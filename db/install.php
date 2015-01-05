@@ -34,7 +34,7 @@ function xmldb_local_kent_install() {
     /**
      * Core settings.
      */
-    set_config('defaulthomepage', 1);
+    set_config('defaulthomepage', HOMEPAGE_MY);
     set_config('enablecourserequests', true);
     set_config('country', 'GB');
     set_config('loglifetime', 365, 'logstore_standard');
