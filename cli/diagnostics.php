@@ -37,8 +37,8 @@ if ($CFG->kent->environment == 'live') {
 }
 
 if ($CFG->kent->environment == 'demo') {
-    $servers[] = array('dump', 20001);
-    $servers[] = array('dump', 20002);
+    $servers[] = array('dump', 20004);
+    $servers[] = array('dump', 20005);
 }
 
 if ($CFG->kent->environment == 'dev') {

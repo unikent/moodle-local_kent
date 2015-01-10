@@ -20,6 +20,7 @@ require_login();
 
 $PAGE->set_context(context_user::instance($USER->id));
 $PAGE->set_url('/local/kent/optin.php');
+$PAGE->set_title("Kent Beta Preferences");
 
 // Create form.
 $form = new \local_kent\form\optin_form();
