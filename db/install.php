@@ -58,7 +58,6 @@ function xmldb_local_kent_install() {
     /**
      * Experimental settings.
      */
-    set_config('enablegroupmembersonly', true);
     set_config('dndallowtextandlinks', true);
     set_config('enablecssoptimiser', true);
 
