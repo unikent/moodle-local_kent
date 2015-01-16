@@ -21,7 +21,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Role Manager.
  */
-class manager
+class RoleManager
 {
     /**
      * Migrate the action up to SHAREDB.

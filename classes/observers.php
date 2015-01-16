@@ -174,7 +174,7 @@ class observers
 
         // Ping the role manager?
         if ($context->contextlevel == CONTEXT_SYSTEM) {
-            \local_kent\role\manager::role_created($event->objectid, $event->relateduserid);
+            \local_kent\RoleManager::role_created($event->objectid, $event->relateduserid);
         }
 
         return true;
@@ -193,7 +193,7 @@ class observers
 
         // Ping the role manager?
         if ($context->contextlevel == CONTEXT_SYSTEM) {
-            \local_kent\role\manager::role_created($event->objectid, $event->relateduserid);
+            \local_kent\RoleManager::role_created($event->objectid, $event->relateduserid);
         }
     }
 
