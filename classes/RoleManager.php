@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_kent\role;
+namespace local_kent;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
  * Role Manager.
  */
-class manager
+class RoleManager
 {
     /**
      * Migrate the action up to SHAREDB.

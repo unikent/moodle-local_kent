@@ -34,7 +34,7 @@ class observers
         ));
 
         // Ping the group manager.
-        \local_kent\group\manager::course_created($course);
+        \local_kent\GroupManager::course_created($course);
 
         if (!util\sharedb::available()) {
             return true;
@@ -169,12 +169,12 @@ class observers
 
         // Ping the group manager?
         if ($context->contextlevel == CONTEXT_COURSE && strpos($role->shortname, 'student') !== false) {
-            \local_kent\group\manager::enrolment_created($context->instanceid, $event->relateduserid);
+            \local_kent\GroupManager::enrolment_created($context->instanceid, $event->relateduserid);
         }
 
         // Ping the role manager?
         if ($context->contextlevel == CONTEXT_SYSTEM) {
-            \local_kent\role\manager::role_created($event->objectid, $event->relateduserid);
+            \local_kent\RoleManager::role_created($event->objectid, $event->relateduserid);
         }
 
         return true;
@@ -193,7 +193,7 @@ class observers
 
         // Ping the role manager?
         if ($context->contextlevel == CONTEXT_SYSTEM) {
-            \local_kent\role\manager::role_created($event->objectid, $event->relateduserid);
+            \local_kent\RoleManager::role_created($event->objectid, $event->relateduserid);
         }
     }
 
