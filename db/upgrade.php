@@ -20,6 +20,7 @@ function xmldb_local_kent_upgrade($oldversion) {
     global $CFG, $DB;
 
     $dbman = $DB->get_manager();
+    $taskman = new \local_kent\TaskManager();
 
     if ($oldversion < 2014080100) {
         // Define table to be dropped.
@@ -205,7 +206,7 @@ function xmldb_local_kent_upgrade($oldversion) {
         $rs->close();
         unset($rs);
 
-        // Connect savepoint reached.
+        // local_kent savepoint reached.
         upgrade_plugin_savepoint(true, 2014100202, 'local', 'kent');
     }
 
@@ -258,7 +259,7 @@ function xmldb_local_kent_upgrade($oldversion) {
             $dbman->add_index($table, $index);
         }
 
-        // Connect savepoint reached.
+        // local_kent savepoint reached.
         upgrade_plugin_savepoint(true, 2014120600, 'local', 'kent');
     }
 
@@ -285,7 +286,7 @@ function xmldb_local_kent_upgrade($oldversion) {
             $dbman->add_index($table, $index);
         }
 
-        // Connect savepoint reached.
+        // local_kent savepoint reached.
         upgrade_plugin_savepoint(true, 2014121000, 'local', 'kent');
     }
 
@@ -302,7 +303,7 @@ function xmldb_local_kent_upgrade($oldversion) {
             $dbman->add_index($table, $index);
         }
 
-        // Connect savepoint reached.
+        // local_kent savepoint reached.
         upgrade_plugin_savepoint(true, 2014121200, 'local', 'kent');
     }
 
@@ -328,8 +329,16 @@ function xmldb_local_kent_upgrade($oldversion) {
             $coursecat->update($category);
         }
 
-        // Connect savepoint reached.
+        // local_kent savepoint reached.
         upgrade_plugin_savepoint(true, 2015010502, 'local', 'kent');
+    }
+
+    if ($oldversion < 2015010600) {
+        $taskman->yearly_rollover();
+        $taskman->configure_2015010600();
+
+        // local_kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015010600, 'local', 'kent');
     }
 
     return true;

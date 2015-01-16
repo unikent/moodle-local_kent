@@ -163,6 +163,10 @@ function xmldb_local_kent_install() {
     set_config('grade_report_showuserimage', '0');
     set_config('messaginghidereadnotifications', '1');
 
+    // Configure scheduled tasks to Kent defaults.
+    $taskman = new \local_kent\TaskManager();
+    $taskman->configure();
+
     // Create basic categories.
     $localcatmap = array();
 
