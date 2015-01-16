@@ -24,7 +24,7 @@ require_once($CFG->dirroot . '/group/lib.php');
 /**
  * Group Manager.
  */
-class manager
+class GroupManager
 {
     /**
      * Observe a course created event.

@@ -156,7 +156,7 @@ function xmldb_local_kent_upgrade($oldversion) {
         // Create any missing groups.
         $rs = $DB->get_recordset('course');
         foreach ($rs as $course) {
-            \local_kent\group\manager::course_created($course);
+            \local_kent\GroupManager::course_created($course);
         }
         $rs->close();
         unset($rs);
@@ -200,7 +200,7 @@ function xmldb_local_kent_upgrade($oldversion) {
             // These enrolments are missing.
             $userids = explode(',', $group->userids);
             foreach ($userids as $userid) {
-                \local_kent\group\manager::enrolment_created($group->courseid, $userid);
+                \local_kent\GroupManager::enrolment_created($group->courseid, $userid);
             }
         }
         $rs->close();
