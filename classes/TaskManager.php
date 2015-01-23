@@ -56,7 +56,6 @@ class TaskManager
 		$this->disable_task('\\enrol_connect\\task\\sync');
 		$this->disable_task('\\local_connect\\task\\course_sync');
 		$this->disable_task('\\local_connect\\task\\fix_mids');
-		$this->disable_task('\\local_connect\\task\\group_enrolment_sync');
 		$this->disable_task('\\local_connect\\task\\group_sync');
 		$this->disable_task('\\local_kent\\task\\memcached_purge');
 		$this->disable_task('\\local_kent\\task\\role_sync');
