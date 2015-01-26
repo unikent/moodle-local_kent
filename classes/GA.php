@@ -60,14 +60,14 @@ class GA
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
         ga('create', '{$CFG->google_analytics_global_code}', {
-            'name': 'global',
+            'name': 'kentmoodle',
             'cookieDomain': 'kent.ac.uk',
             'siteSpeedSampleRate': 5
         });
 
-        ga('global.require', 'displayfeatures');
+        ga('kentmoodle.require', 'displayfeatures');
         {$tracker}
-        ga('global.send', 'pageview', {
+        ga('kentmoodle.send', 'pageview', {
             {$dimensions}
         });
 
@@ -136,7 +136,7 @@ HTML;
         // Setup user tracking if logged in.
         if (isloggedin()) {
             $ident = $this->get_uid();
-            $tracker = "ga('set', '&uid', '{$ident}'); ga('global.set', '&uid', '{$ident}');";
+            $tracker = "ga('kentmoodle.set', '&uid', '{$ident}');";
         }
 
         return $tracker;
