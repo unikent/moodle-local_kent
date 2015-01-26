@@ -14,8 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+if (!defined('KENT_MOODLE')) {
+    define('CLI_SCRIPT', true);
+    require_once(dirname(__FILE__) . '/../../config.php');
+}
+
 /**
  * Anything that should run before an upgrade can be put here.
  */
 
 \local_nagios\Core::regenerate_list();
+
+// Do we need to downgrade hotpot extras?
+$version = get_config('hotpot', 'version');
+if ($version <= 2015010655) {
+    set_config('version', 2010012400, 'hotpotattempt_hp');
+    set_config('version', 2010012400, 'hotpotattempt_html');
+    set_config('version', 2010012400, 'hotpotattempt_qedoc');
+    set_config('version', 2010012400, 'hotpotreport_analysis');
+    set_config('version', 2010012400, 'hotpotreport_clicktrail');
+    set_config('version', 2010012400, 'hotpotreport_overview');
+    set_config('version', 2010012400, 'hotpotreport_responses');
+    set_config('version', 2010012400, 'hotpotreport_scores');
+    set_config('version', 2010012400, 'hotpotsource_hp');
+    set_config('version', 2010012400, 'hotpotsource_html');
+    set_config('version', 2010012400, 'hotpotsource_qedoc');
+}

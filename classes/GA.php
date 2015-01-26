@@ -42,7 +42,7 @@ class GA
     private function get_code() {
         global $CFG;
 
-        if (empty($CFG->google_analytics_code) || empty($CFG->google_analytics_global_code)) {
+        if (empty($CFG->google_analytics_global_code)) {
             return "";
         }
 
@@ -59,20 +59,15 @@ class GA
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-        ga('create', '{$CFG->google_analytics_code}', 'kent.ac.uk');
         ga('create', '{$CFG->google_analytics_global_code}', {
-            'name': 'global',
+            'name': 'kentmoodle',
             'cookieDomain': 'kent.ac.uk',
             'siteSpeedSampleRate': 5
         });
 
-        ga('require', 'displayfeatures');
-        ga('global.require', 'displayfeatures');
+        ga('kentmoodle.require', 'displayfeatures');
         {$tracker}
-        ga('send', 'pageview', {
-            {$dimensions}
-        });
-        ga('global.send', 'pageview', {
+        ga('kentmoodle.send', 'pageview', {
             {$dimensions}
         });
 
@@ -90,7 +85,7 @@ HTML;
     private function get_tagmanager_code() {
         global $CFG;
 
-        if (empty($CFG->google_analytics_code) || empty($CFG->google_analytics_global_code)) {
+        if (empty($CFG->google_analytics_global_code)) {
             return "";
         }
 
@@ -141,7 +136,7 @@ HTML;
         // Setup user tracking if logged in.
         if (isloggedin()) {
             $ident = $this->get_uid();
-            $tracker = "ga('set', '&uid', '{$ident}'); ga('global.set', '&uid', '{$ident}');";
+            $tracker = "ga('kentmoodle.set', '&uid', '{$ident}');";
         }
 
         return $tracker;
