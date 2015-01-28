@@ -24,19 +24,3 @@ if (!defined('KENT_MOODLE')) {
  */
 
 \local_nagios\Core::regenerate_list();
-
-// Do we need to downgrade hotpot extras?
-$version = get_config('hotpot', 'version');
-if ($version <= 2015010655) {
-    set_config('version', 2010012400, 'hotpotattempt_hp');
-    set_config('version', 2010012400, 'hotpotattempt_html');
-    set_config('version', 2010012400, 'hotpotattempt_qedoc');
-    set_config('version', 2010012400, 'hotpotreport_analysis');
-    set_config('version', 2010012400, 'hotpotreport_clicktrail');
-    set_config('version', 2010012400, 'hotpotreport_overview');
-    set_config('version', 2010012400, 'hotpotreport_responses');
-    set_config('version', 2010012400, 'hotpotreport_scores');
-    set_config('version', 2010012400, 'hotpotsource_hp');
-    set_config('version', 2010012400, 'hotpotsource_html');
-    set_config('version', 2010012400, 'hotpotsource_qedoc');
-}
