@@ -238,5 +238,24 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015010600, 'local', 'kent');
     }
 
+    if ($oldversion < 2015020900) {
+        // Find all questions with no stamp.
+        $questions = $DB->get_records_sql('SELECT * FROM {question} WHERE stamp="" OR version=""');
+        foreach ($questions as $question) {
+            if (empty($question->stamp)) {
+                $question->stamp = make_unique_id_code();
+            }
+
+            if (empty($question->version)) {
+                $question->version = make_unique_id_code();
+            }
+
+            $DB->update_record('question', $question);
+        }
+
+        // local_kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015020900, 'local', 'kent');
+    }
+
     return true;
 }
