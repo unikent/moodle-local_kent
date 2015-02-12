@@ -22,7 +22,9 @@ require_once($CFG->libdir . '/adminlib.php');
 
 list($options, $unrecognized) = cli_get_params(
     array(
-        'dry' => false
+        'dry' => false,
+        'clean' => false,
+        'downgrade' => false
     )
 );
 
@@ -30,28 +32,27 @@ if ($options['dry']) {
     echo "~ Running in DRY mode ~\n";
 }
 
-echo "Finding old plugins...\n";
-
 $pluginman = core_plugin_manager::instance();
 $plugininfo = $pluginman->get_plugins();
 foreach ($plugininfo as $type => $plugins) {
     foreach ($plugins as $name => $plugin) {
     	$status = $plugin->get_status();
-        if ($status !== core_plugin_manager::PLUGIN_STATUS_MISSING) {
-        	continue;
+
+        switch ($status) {
+            case core_plugin_manager::PLUGIN_STATUS_MISSING:
+                // Uninstall, if we can.
+                if ($options['clean'] && $pluginman->can_uninstall_plugin($plugin->component)) {
+                    echo "    Uninstalling '{$name}'...";
+
+                    if (!$options['dry']) {
+                        $progress = new progress_trace_buffer(new text_progress_trace(), false);
+                        $pluginman->uninstall_plugin($plugin->component, $progress);
+                        $progress->finished();
+                    }
+
+                    echo "done!\n";
+                }
+            break;
         }
-
-        // Uninstall, if we can.
-		if ($pluginman->can_uninstall_plugin($plugin->component)) {
-    		echo "    Uninstalling '{$name}'...";
-
-    		if (!$options['dry']) {
-		        $progress = new progress_trace_buffer(new text_progress_trace(), false);
-		        $pluginman->uninstall_plugin($plugin->component, $progress);
-		        $progress->finished();
-		    }
-
-    		echo "done!\n";
-		}
     }
 }
