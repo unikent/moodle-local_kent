@@ -23,6 +23,8 @@ require_once($CFG->libdir . '/adminlib.php');
 list($options, $unrecognized) = cli_get_params(
     array(
         'dry' => false,
+        'list' => false,
+        'fix' => false, // Same as `--clean --downgrade`.
         'clean' => false,
         'downgrade' => false
     )
@@ -32,6 +34,11 @@ if ($options['dry']) {
     echo "~ Running in DRY mode ~\n";
 }
 
+if ($options['fix']) {
+    $options['clean'] = true;
+    $options['downgrade'] = true;
+}
+
 $pluginman = core_plugin_manager::instance();
 $plugininfo = $pluginman->get_plugins();
 foreach ($plugininfo as $type => $plugins) {
@@ -39,7 +46,28 @@ foreach ($plugininfo as $type => $plugins) {
     	$status = $plugin->get_status();
 
         switch ($status) {
+            case core_plugin_manager::PLUGIN_STATUS_DOWNGRADE:
+                if ($options['list']) {
+                    echo "    '{$name}' requires downgrading.\n";
+                }
+
+                if ($options['downgrade']) {
+                    echo "    Downgrading '{$name}'...";
+
+                    if (!$options['dry']) {
+                        set_config('version', ((int)$plugin->versiondisk) - 1, $plugin->component);
+                    }
+
+                    echo "done!\n";
+                }
+            break;
+
+            case core_plugin_manager::PLUGIN_STATUS_DELETE:
             case core_plugin_manager::PLUGIN_STATUS_MISSING:
+                if ($options['list']) {
+                    echo "    '{$name}' requires uninstalling.\n";
+                }
+
                 // Uninstall, if we can.
                 if ($options['clean'] && $pluginman->can_uninstall_plugin($plugin->component)) {
                     echo "    Uninstalling '{$name}'...";
