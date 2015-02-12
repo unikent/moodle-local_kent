@@ -16,7 +16,7 @@
 
 if (!defined('KENT_MOODLE')) {
     define('CLI_SCRIPT', true);
-    require_once(dirname(__FILE__) . '/../../config.php');
+    require_once(dirname(__FILE__) . '/../../../config.php');
 }
 
 /**
