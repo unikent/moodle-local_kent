@@ -17,9 +17,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 function xmldb_local_kent_upgrade($oldversion) {
-    global $CFG, $DB;
+    global $CFG, $DB, $SHAREDB;
 
     $dbman = $DB->get_manager();
+    $sharedbman = $SHAREDB->get_manager();
+
     $taskman = new \local_kent\TaskManager();
     $configman = new \local_kent\ConfigManager();
 
@@ -256,6 +258,18 @@ function xmldb_local_kent_upgrade($oldversion) {
 
         // local_kent savepoint reached.
         upgrade_plugin_savepoint(true, 2015020900, 'local', 'kent');
+    }
+
+    // SHAREDB upgrade step.
+    if ($oldversion < 2015021600 && \local_kent\util\sharedb::available()) {
+        $table = new xmldb_table("notifications");
+        $field = new xmldb_field('uid', XMLDB_TYPE_CHAR, '255', null, null, null, '', 'id');
+        if ($sharedbman->field_exists($table, $field)) {
+            $sharedbman->rename_field($table, $field, 'username');
+        }
+
+        // local_kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015021600, 'local', 'kent');
     }
 
     return true;
