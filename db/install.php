@@ -17,7 +17,16 @@
 defined('MOODLE_INTERNAL') || die();
 
 function xmldb_local_kent_install() {
-    global $CFG, $DB;
+    global $CFG, $DB, $SHAREDB;
+
+    // Install SHAREDB if needs be.
+    $sharedbman = $SHAREDB->get_manager();
+    if (\local_kent\util\sharedb::available()) {
+        $table = new xmldb_table("shared_config");
+        if (!$sharedbman->table_exists($table)) {
+            $sharedbman->install_from_xmldb_file(dirname(__FILE__) . '/sharedb.xml');
+        }
+    }
 
     // Not if we are installing a phpunit test site.
     if (defined("PHPUNIT_UTIL") && PHPUNIT_UTIL) {

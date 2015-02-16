@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/kent/db" VERSION="20150216" COMMENT="XMLDB file for SHAREDB"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="shared_config" COMMENT="shared_config table retrofitted from MySQL">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="value" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="shared_config_on_name" UNIQUE="false" FIELDS="name"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="shared_notifications" COMMENT="shared_notifications table retrofitted from MySQL">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="username" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false"/>
+        <FIELD NAME="content" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="time" TYPE="datetime" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="seen" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="index_notifications_on_seen" UNIQUE="false" FIELDS="seen"/>
+        <INDEX NAME="index_notifications_on_uid" UNIQUE="false" FIELDS="username"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="shared_users" COMMENT="shared_users table retrofitted from MySQL">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="username" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="firstname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="lastname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="shared_users_on_username" UNIQUE="false" FIELDS="username"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="shared_courses" COMMENT="shared_courses table retrofitted from MySQL">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="moodle_env" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="moodle_dist" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="moodle_id" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="fullname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="summary" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="shared_courses_on_moodle_env" UNIQUE="false" FIELDS="moodle_env"/>
+        <INDEX NAME="shared_courses_on_moodle_dist" UNIQUE="false" FIELDS="moodle_dist"/>
+        <INDEX NAME="shared_courses_on_moodle_id" UNIQUE="false" FIELDS="moodle_id"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="shared_course_admins" COMMENT="shared_course_admins table retrofitted from MySQL">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="moodle_env" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="moodle_dist" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="username" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="shared_course_admins_on_moodle_env" UNIQUE="false" FIELDS="moodle_env"/>
+        <INDEX NAME="shared_course_admins_on_moodle_dist" UNIQUE="false" FIELDS="moodle_dist"/>
+        <INDEX NAME="shared_course_admins_on_courseid" UNIQUE="false" FIELDS="courseid"/>
+        <INDEX NAME="shared_course_admins_on_username" UNIQUE="false" FIELDS="username"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="shared_roles" COMMENT="shared_roles table retrofitted from MySQL">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="moodle_env" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="moodle_dist" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="roleid" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="shared_course_list_on_moodle_env" UNIQUE="false" FIELDS="moodle_env"/>
+        <INDEX NAME="shared_course_list_on_moodle_dist" UNIQUE="false" FIELDS="moodle_dist"/>
+        <INDEX NAME="shared_course_list_on_shortname" UNIQUE="false" FIELDS="shortname"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="shared_role_assignments" COMMENT="shared_role_assignments table retrofitted from MySQL">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="moodle_env" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="moodle_dist" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="roleid" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="username" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="action" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="migration" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="shared_role_assignments_on_moodle_env" UNIQUE="false" FIELDS="moodle_env"/>
+        <INDEX NAME="shared_role_assignments_on_moodle_dist" UNIQUE="false" FIELDS="moodle_dist"/>
+        <INDEX NAME="shared_role_assignments_on_roleid" UNIQUE="false" FIELDS="roleid"/>
+        <INDEX NAME="shared_role_assignments_on_migration" UNIQUE="false" FIELDS="migration"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="shared_rollovers" COMMENT="shared_rollovers table retrofitted from MySQL">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="created" TYPE="datetime" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="updated" TYPE="datetime" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="from_env" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="from_dist" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="from_course" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="to_env" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="to_dist" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="to_course" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="path" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="options" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="requester" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="index_rollovers_on_status" UNIQUE="false" FIELDS="status"/>
+        <INDEX NAME="index_rollovers_on_from_env" UNIQUE="false" FIELDS="from_env"/>
+        <INDEX NAME="index_rollovers_on_from_dist" UNIQUE="false" FIELDS="from_dist"/>
+        <INDEX NAME="index_rollovers_on_to_env" UNIQUE="false" FIELDS="to_env"/>
+        <INDEX NAME="index_rollovers_on_to_dist" UNIQUE="false" FIELDS="to_dist"/>
+        <INDEX NAME="index_rollovers_on_requester" UNIQUE="false" FIELDS="requester"/>
+        <INDEX NAME="index_rollovers_to_course" UNIQUE="false" FIELDS="to_course"/>
+        <INDEX NAME="index_rollovers_from_course" UNIQUE="false" FIELDS="from_course"/>
+        <INDEX NAME="index_rollovers_status" UNIQUE="false" FIELDS="status"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

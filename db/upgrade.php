@@ -17,9 +17,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 function xmldb_local_kent_upgrade($oldversion) {
-    global $CFG, $DB;
+    global $CFG, $DB, $SHAREDB;
 
     $dbman = $DB->get_manager();
+    $sharedbman = $SHAREDB->get_manager();
+
     $taskman = new \local_kent\TaskManager();
     $configman = new \local_kent\ConfigManager();
 
@@ -240,8 +242,8 @@ function xmldb_local_kent_upgrade($oldversion) {
 
     if ($oldversion < 2015020900) {
         // Find all questions with no stamp.
-        $questions = $DB->get_records_sql('SELECT * FROM {question} WHERE stamp="" OR version=""');
-        foreach ($questions as $question) {
+        $rs = $DB->get_recordset_sql('SELECT * FROM {question} WHERE stamp="" OR version=""');
+        foreach ($rs as $question) {
             if (empty($question->stamp)) {
                 $question->stamp = make_unique_id_code();
             }
@@ -252,9 +254,35 @@ function xmldb_local_kent_upgrade($oldversion) {
 
             $DB->update_record('question', $question);
         }
+        $rs->close();
 
         // local_kent savepoint reached.
         upgrade_plugin_savepoint(true, 2015020900, 'local', 'kent');
+    }
+
+    // SHAREDB upgrade step.
+    if ($oldversion < 2015021600 && \local_kent\util\sharedb::available()) {
+        // Rename notifications.uid -> notifications.username.
+        $table = new xmldb_table("notifications");
+        $field = new xmldb_field('uid', XMLDB_TYPE_CHAR, '255', null, null, null, '', 'id');
+        if ($sharedbman->field_exists($table, $field)) {
+            $sharedbman->rename_field($table, $field, 'username');
+        }
+
+        // Rename notifications -> shared_notifications.
+        $table = new xmldb_table("notifications");
+        if ($sharedbman->table_exists($table)) {
+            $sharedbman->rename_table($table, 'shared_notifications');
+        }
+
+        // Rename rollovers -> shared_rollovers.
+        $table = new xmldb_table("rollovers");
+        if ($sharedbman->table_exists($table)) {
+            $sharedbman->rename_table($table, 'shared_rollovers');
+        }
+
+        // local_kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015021600, 'local', 'kent');
     }
 
     return true;
