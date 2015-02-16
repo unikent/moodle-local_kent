@@ -10,6 +10,9 @@
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="value" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
       <INDEXES>
         <INDEX NAME="shared_config_on_name" UNIQUE="false" FIELDS="name"/>
       </INDEXES>
@@ -22,6 +25,9 @@
         <FIELD NAME="time" TYPE="datetime" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="seen" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
       <INDEXES>
         <INDEX NAME="index_notifications_on_seen" UNIQUE="false" FIELDS="seen"/>
         <INDEX NAME="index_notifications_on_uid" UNIQUE="false" FIELDS="username"/>
@@ -34,6 +40,9 @@
         <FIELD NAME="firstname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="lastname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
       <INDEXES>
         <INDEX NAME="shared_users_on_username" UNIQUE="false" FIELDS="username"/>
       </INDEXES>
@@ -48,6 +57,9 @@
         <FIELD NAME="fullname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="summary" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
       <INDEXES>
         <INDEX NAME="shared_courses_on_moodle_env" UNIQUE="false" FIELDS="moodle_env"/>
         <INDEX NAME="shared_courses_on_moodle_dist" UNIQUE="false" FIELDS="moodle_dist"/>
@@ -62,6 +74,9 @@
         <FIELD NAME="courseid" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="username" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
       <INDEXES>
         <INDEX NAME="shared_course_admins_on_moodle_env" UNIQUE="false" FIELDS="moodle_env"/>
         <INDEX NAME="shared_course_admins_on_moodle_dist" UNIQUE="false" FIELDS="moodle_dist"/>
@@ -77,6 +92,9 @@
         <FIELD NAME="roleid" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
       <INDEXES>
         <INDEX NAME="shared_course_list_on_moodle_env" UNIQUE="false" FIELDS="moodle_env"/>
         <INDEX NAME="shared_course_list_on_moodle_dist" UNIQUE="false" FIELDS="moodle_dist"/>
@@ -93,6 +111,9 @@
         <FIELD NAME="action" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="migration" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
       <INDEXES>
         <INDEX NAME="shared_role_assignments_on_moodle_env" UNIQUE="false" FIELDS="moodle_env"/>
         <INDEX NAME="shared_role_assignments_on_moodle_dist" UNIQUE="false" FIELDS="moodle_dist"/>
@@ -116,6 +137,9 @@
         <FIELD NAME="options" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="requester" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
       <INDEXES>
         <INDEX NAME="index_rollovers_on_status" UNIQUE="false" FIELDS="status"/>
         <INDEX NAME="index_rollovers_on_from_env" UNIQUE="false" FIELDS="from_env"/>
