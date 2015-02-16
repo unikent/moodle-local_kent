@@ -264,14 +264,13 @@ function xmldb_local_kent_upgrade($oldversion) {
     if ($oldversion < 2015021600 && \local_kent\util\sharedb::available()) {
         // Rename notifications.uid -> notifications.username.
         $table = new xmldb_table("notifications");
-        $field = new xmldb_field('uid', XMLDB_TYPE_CHAR, '255', null, null, null, '', 'id');
-        if ($sharedbman->field_exists($table, $field)) {
-            $sharedbman->rename_field($table, $field, 'username');
-        }
-
-        // Rename notifications -> shared_notifications.
-        $table = new xmldb_table("notifications");
         if ($sharedbman->table_exists($table)) {
+            $field = new xmldb_field('uid', XMLDB_TYPE_CHAR, '255', null, null, null, '', 'id');
+            if ($sharedbman->field_exists($table, $field)) {
+                $sharedbman->rename_field($table, $field, 'username');
+            }
+
+            // Rename notifications -> shared_notifications.
             $sharedbman->rename_table($table, 'shared_notifications');
         }
 
