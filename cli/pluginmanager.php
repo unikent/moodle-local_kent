@@ -27,6 +27,10 @@ list($options, $unrecognized) = cli_get_params(
         'fix' => false, // Same as `--clean --downgrade`.
         'clean' => false,
         'downgrade' => false
+    ),
+    array(
+        'l' => 'list',
+        'f' => 'fix'
     )
 );
 
