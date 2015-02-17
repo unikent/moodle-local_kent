@@ -20,7 +20,10 @@ function xmldb_local_kent_upgrade($oldversion) {
     global $CFG, $DB, $SHAREDB;
 
     $dbman = $DB->get_manager();
-    $sharedbman = $SHAREDB->get_manager();
+
+    if (\local_kent\util\sharedb::available()) {
+        $sharedbman = $SHAREDB->get_manager();
+    }
 
     $taskman = new \local_kent\TaskManager();
     $configman = new \local_kent\ConfigManager();
@@ -261,7 +264,7 @@ function xmldb_local_kent_upgrade($oldversion) {
     }
 
     // SHAREDB upgrade step.
-    if ($oldversion < 2015021600 && \local_kent\util\sharedb::available()) {
+    if ($oldversion < 2015021600 && isset($sharedbman)) {
         // Rename notifications.uid -> notifications.username.
         $table = new xmldb_table("notifications");
         if ($sharedbman->table_exists($table)) {
