@@ -56,7 +56,7 @@ foreach ($plugininfo as $type => $plugins) {
                 }
 
                 if ($options['downgrade']) {
-                    echo "    Downgrading '{$name}'...";
+                    echo "    Downgrading '{$plugin->component}'...";
 
                     if (!$options['dry']) {
                         set_config('version', ((int)$plugin->versiondisk) - 1, $plugin->component);
@@ -88,3 +88,5 @@ foreach ($plugininfo as $type => $plugins) {
         }
     }
 }
+
+core_plugin_manager::reset_caches();

@@ -44,7 +44,7 @@ class optin_form extends \moodleform
     /**
      * Set default.
      */
-    public function set_field_efault($field, $val = 0) {
+    public function set_field_default($field, $val = 0) {
         $mform =& $this->_form;
         $mform->setDefault($field, $val);
     }

@@ -41,11 +41,12 @@ if ($data = $form->get_data()) {
     }
 
     set_user_preference("betaprefs", implode(',', $prefs));
+    redirect(new \moodle_url('/local/kent/optin.php'));
 } else {
     // Set defaults.
     $prefs = \local_kent\User::get_beta_preferences();
     foreach ($prefs as $k => $v) {
-        $form->set_field_efault($k, $v);
+        $form->set_field_default($k, $v);
     }
 }
 
