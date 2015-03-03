@@ -122,7 +122,7 @@ SQL;
     public static function get_beta_preferences() {
         global $USER;
 
-        if (!isloggedin()) {
+        if (!isloggedin() || !isset($USER->preference)) {
             return array();
         }
 
