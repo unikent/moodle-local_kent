@@ -23,149 +23,162 @@ defined('MOODLE_INTERNAL') || die();
  */
 class ConfigManager
 {
-	/**
-	 * Run all upgrade steps.
-	 */
-	public function configure() {
-		$this->configure_initial();
-	}
+    /**
+     * Run all upgrade steps.
+     */
+    public function configure() {
+        $this->configure_initial();
+        $this->configure_20150305();
+    }
 
-	/**
-	 * Upgrade step for 2015010600.
-	 */
-	public function configure_initial() {
-		global $CFG;
+    /**
+     * Upgrade step for 2015010600.
+     */
+    public function configure_initial() {
+        global $CFG;
 
-	    /**
-	     * Core settings.
-	     */
-	    set_config('defaulthomepage', \HOMEPAGE_MY);
-	    set_config('enablecourserequests', true);
-	    set_config('country', 'GB');
-	    set_config('loglifetime', 365, 'logstore_standard');
-	    set_config('texteditors', 'atto,tinymce,textarea');
-	    set_config('enablemobilewebservice', true);
-	    set_config('enableblogs', '0');
-	    set_config('enableportfolios', '1');
-	    set_config('auth', 'email,kentsaml');
+        /**
+         * Core settings.
+         */
+        set_config('defaulthomepage', \HOMEPAGE_MY);
+        set_config('enablecourserequests', true);
+        set_config('country', 'GB');
+        set_config('loglifetime', 365, 'logstore_standard');
+        set_config('texteditors', 'atto,tinymce,textarea');
+        set_config('enablemobilewebservice', true);
+        set_config('enableblogs', '0');
+        set_config('enableportfolios', '1');
+        set_config('auth', 'email,kentsaml');
 
-	    /**
-	     * Theme settings.
-	     */
-	    set_config('theme', 'kent');
-	    set_config('enabledevicedetection', true);
-	    set_config('frontpagecourselimit', 20);
-	    set_config('newsitems', 2);
-	    set_config('calendar_adminseesall', true);
-	    set_config('calendar_startwday', 1);
-	    set_config('enablegravatar', true);
+        /**
+         * Theme settings.
+         */
+        set_config('theme', 'kent');
+        set_config('enabledevicedetection', true);
+        set_config('frontpagecourselimit', 20);
+        set_config('newsitems', 2);
+        set_config('calendar_adminseesall', true);
+        set_config('calendar_startwday', 1);
+        set_config('enablegravatar', true);
 
-	    /**
-	     * Experimental settings.
-	     */
-	    set_config('dndallowtextandlinks', true);
-	    set_config('enablecssoptimiser', true);
+        /**
+         * Experimental settings.
+         */
+        set_config('dndallowtextandlinks', true);
+        set_config('enablecssoptimiser', true);
 
-	    /**
-	     * Security policy.
-	     */
-	    set_config('protectusernames', true);
-	    set_config('forcelogin', false);
-	    set_config('forceloginforprofiles', true);
-	    set_config('runclamonupload', true);
-	    set_config('clamfailureonupload', 'donothing');
-	    set_config('sessioncookie', 'km' . $CFG->kent->distribution);
-	    set_config('sessioncookiepath', '/' . $CFG->kent->distribution . '/');
+        /**
+         * Security policy.
+         */
+        set_config('protectusernames', true);
+        set_config('forcelogin', false);
+        set_config('forceloginforprofiles', true);
+        set_config('runclamonupload', true);
+        set_config('clamfailureonupload', 'donothing');
+        set_config('sessioncookie', 'km' . $CFG->kent->distribution);
+        set_config('sessioncookiepath', '/' . $CFG->kent->distribution . '/');
 
-	    /**
-	     * Navigation.
-	     */
-	    set_config('navshowmycoursecategories', true);
-	    set_config('navshowallcourses', true);
-	    set_config('navsortmycoursessort', 'shortname');
-	    set_config('navcourselimit', 20);
-	    set_config('courselistshortnames', true);
+        /**
+         * Navigation.
+         */
+        set_config('navshowmycoursecategories', true);
+        set_config('navshowallcourses', true);
+        set_config('navsortmycoursessort', 'shortname');
+        set_config('navcourselimit', 20);
+        set_config('courselistshortnames', true);
 
-	    /**
-	     * Support.
-	     */
-	    set_config('supportname', 'IT Helpdesk');
-	    set_config('supportemail', 'helpdesk@kent.ac.uk');
-	    set_config('supportpage', 'http://www.kent.ac.uk/itservices');
+        /**
+         * Support.
+         */
+        set_config('supportname', 'IT Helpdesk');
+        set_config('supportemail', 'helpdesk@kent.ac.uk');
+        set_config('supportpage', 'http://www.kent.ac.uk/itservices');
 
-	    /**
-	     * Hipchat.
-	     */
-	    set_config('default_name', 'Moodle ' . ucwords($CFG->kent->distribution), 'local_hipchat');
+        /**
+         * Hipchat.
+         */
+        set_config('default_name', 'Moodle ' . ucwords($CFG->kent->distribution), 'local_hipchat');
 
-	    /**
-	     * Aspire Lists.
-	     */
-	    set_config('baseurl', 'http://resourcelists.kent.ac.uk', 'aspirelists');
-	    set_config('altBaseurl', 'http://medwaylists.kent.ac.uk', 'aspirelists');
+        /**
+         * Aspire Lists.
+         */
+        set_config('baseurl', 'http://resourcelists.kent.ac.uk', 'aspirelists');
+        set_config('altBaseurl', 'http://medwaylists.kent.ac.uk', 'aspirelists');
 
-	    /**
-	     * OnlineSurvey.
-	     */
-	    set_config('block_onlinesurvey_survey_server', 'http://evasys-dmz.kent.ac.uk/evasys/services/soapserver-v60.wsdl');
-	    set_config('block_onlinesurvey_survey_login', 'https://moduleeval.kent.ac.uk/evasys/');
-	    set_config('block_onlinesurvey_survey_user', 'soap');
+        /**
+         * OnlineSurvey.
+         */
+        set_config('block_onlinesurvey_survey_server', 'http://evasys-dmz.kent.ac.uk/evasys/services/soapserver-v60.wsdl');
+        set_config('block_onlinesurvey_survey_login', 'https://moduleeval.kent.ac.uk/evasys/');
+        set_config('block_onlinesurvey_survey_user', 'soap');
 
-	    /**
-	     * Panopto.
-	     */
-	    set_config('block_panopto_instance_name', 'Moodle');
-	    set_config('block_panopto_server_name', 'player.kent.ac.uk');
+        /**
+         * Panopto.
+         */
+        set_config('block_panopto_instance_name', 'Moodle');
+        set_config('block_panopto_server_name', 'player.kent.ac.uk');
 
-	    /**
-	     * Streaming server.
-	     */
-	    set_config('strserver', 'cow.kent.ac.uk', 'mod_streamingvideo');
+        /**
+         * Streaming server.
+         */
+        set_config('strserver', 'cow.kent.ac.uk', 'mod_streamingvideo');
 
-	    /**
-	     * Turnitin.
-	     */
-	    set_config('turnitin_apiurl', 'https://submit.ac.uk/api.asp');
-	    set_config('turnitin_account_id', 2642);
-	    set_config('turnitin_useanon', true);
+        /**
+         * Turnitin.
+         */
+        set_config('turnitin_apiurl', 'https://submit.ac.uk/api.asp');
+        set_config('turnitin_account_id', 2642);
+        set_config('turnitin_useanon', true);
 
-	    /**
-	     * Quiz.
-	     */
-	    set_config('overduehandling', 'autosubmit', 'quiz');
-	    set_config('maximumgrade', 100, 'quiz');
-	    set_config('attempts', 1, 'quiz');
-	    set_config('questionsperpage', 5, 'quiz');
-	    set_config('decimalpoints', 0, 'quiz');
+        /**
+         * Quiz.
+         */
+        set_config('overduehandling', 'autosubmit', 'quiz');
+        set_config('maximumgrade', 100, 'quiz');
+        set_config('attempts', 1, 'quiz');
+        set_config('questionsperpage', 5, 'quiz');
+        set_config('decimalpoints', 0, 'quiz');
 
-	    /**
-	     * Default module settings.
-	     */
-	    set_config('visible', false, 'moodlecourse');
-	    set_config('format', 'topics', 'moodlecourse');
-	    set_config('numsections', 12, 'moodlecourse');
+        /**
+         * Default module settings.
+         */
+        set_config('visible', false, 'moodlecourse');
+        set_config('format', 'topics', 'moodlecourse');
+        set_config('numsections', 12, 'moodlecourse');
 
-	    /**
-	     * Misc.
-	     */
-	    set_config('filter_tex_convertformat', 'png');
-	    set_config('syncall', false, 'enrol_meta');
-	    set_config('doctonewwindow', true);
-	    set_config('hiddenuserfields', 'city,country,icqnumber,skypeid,yahooid,aimid,msnid,firstaccess,lastaccess,mycourses,groups,suspended');
-	    set_config('hotpot_enablemymoodle', 0);
-	    set_config('hotpot_enablemymoodle', '0');
-	    set_config('glossary_defaultapproval', '0');
-	    set_config('forum_maxattachments', '2');
-	    set_config('core_media_enable_vimeo', '1');
-	    set_config('core_media_enable_qt', '0');
-	    set_config('core_media_enable_wmp', '0');
-	    set_config('core_media_enable_rm', '0');
-	    set_config('grade_report_showquickfeedback', '1');
-	    set_config('grade_report_enableajax', '1');
-	    set_config('grade_report_showcalculations', '1');
-	    set_config('grade_report_showeyecons', '1');
-	    set_config('grade_report_showlocks', '1');
-	    set_config('grade_report_showuserimage', '0');
-	    set_config('messaginghidereadnotifications', '1');
-	}
+        /**
+         * Misc.
+         */
+        set_config('filter_tex_convertformat', 'png');
+        set_config('syncall', false, 'enrol_meta');
+        set_config('doctonewwindow', true);
+        set_config('hiddenuserfields', 'city,country,icqnumber,skypeid,yahooid,aimid,msnid,firstaccess,lastaccess,mycourses,groups,suspended');
+        set_config('hotpot_enablemymoodle', 0);
+        set_config('hotpot_enablemymoodle', '0');
+        set_config('glossary_defaultapproval', '0');
+        set_config('forum_maxattachments', '2');
+        set_config('core_media_enable_vimeo', '1');
+        set_config('core_media_enable_qt', '0');
+        set_config('core_media_enable_wmp', '0');
+        set_config('core_media_enable_rm', '0');
+        set_config('grade_report_showquickfeedback', '1');
+        set_config('grade_report_enableajax', '1');
+        set_config('grade_report_showcalculations', '1');
+        set_config('grade_report_showeyecons', '1');
+        set_config('grade_report_showlocks', '1');
+        set_config('grade_report_showuserimage', '0');
+        set_config('messaginghidereadnotifications', '1');
+    }
+
+    /**
+     * Upgrade step for 20150305.
+     */
+    public function configure_20150305() {
+        global $CFG;
+
+        set_config('enablecompletion', '1');
+        set_config('enableoutcomes', '1');
+        set_config('enableavailability', '1');
+        set_config('enableplagiarism', '1');
+    }
 }
