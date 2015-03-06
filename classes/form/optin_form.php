@@ -36,7 +36,8 @@ class optin_form extends \moodleform
     public function definition() {
         $mform =& $this->_form;
 
-        $mform->addElement('checkbox', 'theme', 'Kent theme V3', 'Note: This is under heavy development and may change significantly with no warning.');
+        $mform->addElement('checkbox', 'theme', 'Kent Theme 3 (Beta)', 'Note: This is under heavy development and may be unstable.');
+        $mform->addElement('checkbox', 'theme_fullscreen', 'Full Screen Theme', 'Note: This requires Kent Theme 3 to be enabled.');
 
         $this->add_action_buttons(true);
     }

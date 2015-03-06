@@ -120,24 +120,20 @@ SQL;
      * Return beta preferences.
      */
     public static function get_beta_preferences() {
-        if (!isloggedin()) {
+        global $USER;
+
+        if (!isloggedin() || !isset($USER->preference)) {
             return array();
         }
 
-        static $data = null;
-
-        if ($data !== null) {
-            return $data;
-        }
-
-        $prefs = get_user_preferences('betaprefs', '');
-        if (empty($prefs)) {
+        $prefs = $USER->preference;
+        if (empty($prefs['betaprefs'])) {
             return array();
         }
 
         $data = array();
 
-        $prefs = explode(',', $prefs);
+        $prefs = explode(',', $prefs['betaprefs']);
         foreach ($prefs as $pref) {
             list($k, $v) = explode('=', $pref);
             $data[$k] = $v == '1' ? true : false;
@@ -150,7 +146,11 @@ SQL;
      * Returns a beta preference.
      */
     public static function get_beta_preference($name, $default = null) {
-        $content = static::get_beta_preferences();
+        static $content = null;
+        if (!isset($content)) {
+            $content = static::get_beta_preferences();
+        }
+
         return isset($content[$name]) ? $content[$name] : $default;
     }
 }
