@@ -164,13 +164,13 @@ HTML;
      * Returns user information.
      */
     private function get_user_type() {
-        global $SESSION;
+        global $USER;
 
         // Cant do much if we arent logged in.
         if (!isloggedin() || isguestuser()) {
             return "guest";
         }
 
-        return isset($SESSION->account_type) ? s($SESSION->account_type) : null;
+        return isset($USER->profile) && isset($USER->profile['kentacctype']) ? s($USER->profile['kentacctype']) : null;
     }
 }
