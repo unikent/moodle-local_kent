@@ -114,14 +114,26 @@ HTML;
             "'dimension2': '{$CFG->kent->distribution}'"
         );
 
-        // Add current user details to dimensions.
-        $usertype = $this->get_user_type();
-        if ($usertype !== null) {
+        // Add current user type to dimensions.
+        $usertype = false;
+        if (!isloggedin() || isguestuser()) {
+            $usertype = 'guest';
+        } else {
+            $usertype = $this->get_user_var('kentacctype');
+        }
+
+        if ($usertype !== false) {
             $dimensions[] = "'dimension3': '{$usertype}'";
         }
 
         // Add hostname.
         $dimensions[] = "'dimension4': '{$CFG->kent->hostname}'";
+
+        // Add current user department to dimensions.
+        $userdepartment = $this->get_user_var('department');
+        if ($userdepartment !== false) {
+            $dimensions[] = "'dimension5': '{$userdepartment}'";
+        }
 
         // Join it up.
         return join(",", $dimensions);
@@ -163,14 +175,17 @@ HTML;
     /**
      * Returns user information.
      */
-    private function get_user_type() {
-        global $SESSION;
+    private function get_user_var($var) {
+        global $USER;
 
-        // Cant do much if we arent logged in.
-        if (!isloggedin() || isguestuser()) {
-            return "guest";
+        if (isset($USER->profile) && isset($USER->profile[$var])) {
+            return s($USER->profile[$var]);
         }
 
-        return isset($SESSION->account_type) ? s($SESSION->account_type) : null;
+        if (isset($USER->$var) && isset($USER->$var)) {
+            return s($USER->$var);
+        }
+
+        return false;
     }
 }
