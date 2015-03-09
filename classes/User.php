@@ -56,17 +56,16 @@ class User
 
         $sql = <<<SQL
             SELECT COUNT(ra.id)
-            FROM mdl_role_assignments ra
-            INNER JOIN mdl_context ctx
+            FROM {role_assignments} ra
+            INNER JOIN {context} ctx
                 ON ctx.id = ra.contextid
-            INNER JOIN mdl_role_capabilities rc
+            INNER JOIN {role_capabilities} rc
                 ON rc.roleid = ra.roleid
                 AND (
                     ctx.path LIKE CONCAT("%/", rc.contextid, "/%")
                     OR ctx.path LIKE CONCAT("%/", rc.contextid)
                 )
             WHERE ra.userid = :userid AND rc.capability = :capability AND rc.permission = 1
-            GROUP BY rc.roleid
 SQL;
         return $DB->count_records_sql($sql, array(
             'userid' => $userid,
