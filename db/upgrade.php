@@ -294,5 +294,30 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015030500, 'local', 'kent');
     }
 
+    if ($oldversion < 2015031000 && isset($sharedbman)) {
+        // Define table shared_users to be created.
+        $table = new xmldb_table('shared_users');
+
+        // Adding fields to table shared_users.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '9', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('username', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('firstname', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('lastname', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+
+        // Adding keys to table shared_users.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table shared_users.
+        $table->add_index('shared_users_on_username', XMLDB_INDEX_NOTUNIQUE, array('username'));
+
+        // Conditionally launch create table for shared_users.
+        if (!$sharedbman->table_exists($table)) {
+            $sharedbman->create_table($table);
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015031000, 'local', 'kent');
+    }
+
     return true;
 }
