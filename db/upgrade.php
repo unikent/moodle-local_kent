@@ -319,5 +319,28 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015031000, 'local', 'kent');
     }
 
+    if ($oldversion < 2015031100) {
+        // Define table memcached_log to be created.
+        $table = new xmldb_table('memcached_log');
+
+        // Adding fields to table memcached_log.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('definition', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+
+        // Adding keys to table memcached_log.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table definition.
+        $table->add_index('memcached_log_on_definition', XMLDB_INDEX_NOTUNIQUE, array('definition'));
+
+        // Conditionally launch create table for memcached_log.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015031100, 'local', 'kent');
+    }
+
     return true;
 }
