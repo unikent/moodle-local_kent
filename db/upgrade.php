@@ -342,5 +342,16 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015031100, 'local', 'kent');
     }
 
+    if ($oldversion < 2015031200) {
+        // Define table memcached_log to be created.
+        $table = new xmldb_table('memcached_log');
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015031200, 'local', 'kent');
+    }
+
     return true;
 }
