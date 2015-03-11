@@ -121,11 +121,7 @@ class RoleManager
     private static function share_user($user) {
         global $SHAREDB;
 
-        $user = $SHAREDB->get_record('shared_users', array(
-            'username' => $user->username
-        ));
-
-        if (!$user) {
+        if (!$SHAREDB->record_exists('shared_users', array('username' => $user->username))) {
             $SHAREDB->insert_record('shared_users', array(
                 'username' => $user->username,
                 'firstname' => $user->firstname,
