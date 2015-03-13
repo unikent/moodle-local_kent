@@ -23,6 +23,10 @@ defined('MOODLE_INTERNAL') || die();
  */
 class RoleManager
 {
+    private static $_managed_roles = array(
+        'flt'
+    );
+
     /**
      * Migrate the action up to SHAREDB.
      */
@@ -131,9 +135,19 @@ class RoleManager
     }
 
     /**
+     * Configure all managed roles, call this from an upgrade script when
+     * you change something.
+     */
+    public function configure() {
+        foreach (static::$_managed_roles as $shortname) {
+            $this->install_or_update_role($shortname);
+        }
+    }
+
+    /**
      * Either update or install a managed role.
      */
-    public function install_or_update_role($shortname) {
+    private function install_or_update_role($shortname) {
         global $CFG, $DB;
 
         require_once($CFG->libdir . '/adminlib.php');
