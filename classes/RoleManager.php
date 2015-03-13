@@ -29,6 +29,60 @@ class RoleManager
     );
 
     /**
+     * Configure all managed roles, call this from an upgrade script when
+     * you change something.
+     */
+    public function configure() {
+        foreach (static::$_managed_roles as $shortname => $archetype) {
+            $this->install_or_update_role($shortname, $archetype);
+        }
+    }
+
+    /**
+     * Either update or install a managed role.
+     */
+    private function install_or_update_role($shortname, $archetype) {
+        global $CFG, $DB;
+
+        $xml = $CFG->dirroot . "/local/kent/db/roles/{$shortname}.xml";
+        if (!file_exists($xml)) {
+            debugging("'{$shortname}' is not a managed role!");
+            return false;
+        }
+
+        $role = $DB->get_record('role', array(
+            'shortname' => $shortname
+        ));
+
+        $xml = file_get_contents($xml);
+
+        $options = array(
+            'shortname'     => $role ? $role->shortname : 1,
+            'name'          => $role ? $role->name : 1,
+            'description'   => $role ? $role->description : 1,
+            'permissions'   => 1,
+            'archetype'     => $role ? $role->archetype : 1,
+            'contextlevels' => 1,
+            'allowassign'   => 1,
+            'allowoverride' => 1,
+            'allowswitch'   => 1
+        );
+
+        $definitiontable = new \local_kent\util\define_role_table_kent(\context_system::instance(), $role ? $role->id : 0);
+        $definitiontable->force_archetype($archetype, $options);
+        $definitiontable->force_preset($xml, $options);
+        $definitiontable->read_submitted_permissions();
+
+        if (!$definitiontable->is_submission_valid()) {
+            debugging("'{$shortname}' Not configured properly! Invalid definition.");
+            return false;
+        }
+
+        $definitiontable->save_changes();
+        return $definitiontable->get_role_id();
+    }
+
+    /**
      * Migrate the action up to SHAREDB.
      */
     public static function role_created($roleid, $userid) {
@@ -133,59 +187,5 @@ class RoleManager
                 'lastname' => $user->lastname
             ));
         }
-    }
-
-    /**
-     * Configure all managed roles, call this from an upgrade script when
-     * you change something.
-     */
-    public function configure() {
-        foreach (static::$_managed_roles as $shortname => $archetype) {
-            $this->install_or_update_role($shortname, $archetype);
-        }
-    }
-
-    /**
-     * Either update or install a managed role.
-     */
-    private function install_or_update_role($shortname, $archetype) {
-        global $CFG, $DB;
-
-        $xml = $CFG->dirroot . "/local/kent/db/roles/{$shortname}.xml";
-        if (!file_exists($xml)) {
-            debugging("'{$shortname}' is not a managed role!");
-            return false;
-        }
-
-        $role = $DB->get_record('role', array(
-            'shortname' => $shortname
-        ));
-
-        $xml = file_get_contents($xml);
-
-        $options = array(
-            'shortname'     => $role ? $role->shortname : 1,
-            'name'          => $role ? $role->name : 1,
-            'description'   => $role ? $role->description : 1,
-            'permissions'   => 1,
-            'archetype'     => $role ? $role->archetype : 1,
-            'contextlevels' => 1,
-            'allowassign'   => 1,
-            'allowoverride' => 1,
-            'allowswitch'   => 1
-        );
-
-        $definitiontable = new \local_kent\util\define_role_table_kent(\context_system::instance(), $role ? $role->id : 0);
-        $definitiontable->force_archetype($archetype, $options);
-        $definitiontable->force_preset($xml, $options);
-        $definitiontable->read_submitted_permissions();
-
-        if (!$definitiontable->is_submission_valid()) {
-            debugging("'{$shortname}' Not configured properly! Invalid definition.");
-            return false;
-        }
-
-        $definitiontable->save_changes();
-        return $definitiontable->get_role_id();
     }
 }
