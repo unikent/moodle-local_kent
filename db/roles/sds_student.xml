@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <role>
-	<shortname>cla_admin</shortname>
-	<name>CLA Administrator</name>
-	<description>The CLA Administrator is for library staff involved in the approval and creation of CLA copyrighted book or journal extracts to Moodle modules.</description>
-	<archetype/>
+	<shortname>sds_student</shortname>
+	<name>Student (SDS)</name>
+	<description>Students generally have fewer privileges within a course.</description>
+	<archetype>student</archetype>
 	<contextlevels>
-		<level>system</level>
+		<level>course</level>
+		<level>module</level>
 	</contextlevels>
 	<allowassign/>
 	<allowoverride/>
@@ -73,11 +74,9 @@
 		<inherit>block/onlinesurvey:myaddinstance</inherit>
 		<inherit>block/online_users:addinstance</inherit>
 		<inherit>block/online_users:myaddinstance</inherit>
-		<inherit>block/online_users:viewlist</inherit>
 		<inherit>block/panopto:addinstance</inherit>
 		<inherit>block/panopto:myaddinstance</inherit>
 		<inherit>block/panopto:panoptocreator</inherit>
-		<inherit>block/panopto:panoptoviewer</inherit>
 		<inherit>block/panopto:provision_aspublisher</inherit>
 		<inherit>block/panopto:provision_asteacher</inherit>
 		<inherit>block/panopto:provision_course</inherit>
@@ -87,6 +86,8 @@
 		<inherit>block/private_files:myaddinstance</inherit>
 		<inherit>block/quiz_results:addinstance</inherit>
 		<inherit>block/recent_activity:addinstance</inherit>
+		<inherit>block/recent_activity:viewaddupdatemodule</inherit>
+		<inherit>block/recent_activity:viewdeletemodule</inherit>
 		<inherit>block/rss_client:addinstance</inherit>
 		<inherit>block/rss_client:manageanyfeeds</inherit>
 		<inherit>block/rss_client:manageownfeeds</inherit>
@@ -106,7 +107,6 @@
 		<inherit>block/turnitin:myaddinstance</inherit>
 		<inherit>booktool/exportimscp:export</inherit>
 		<inherit>booktool/importhtml:import</inherit>
-		<inherit>booktool/print:print</inherit>
 		<inherit>enrol/category:config</inherit>
 		<inherit>enrol/category:synchronised</inherit>
 		<inherit>enrol/cohort:config</inherit>
@@ -135,7 +135,6 @@
 		<inherit>enrol/self:config</inherit>
 		<inherit>enrol/self:manage</inherit>
 		<inherit>enrol/self:unenrol</inherit>
-		<inherit>enrol/self:unenrolself</inherit>
 		<inherit>format/topcoll:changecolour</inherit>
 		<inherit>format/topcoll:changelayout</inherit>
 		<inherit>format/topcoll:changetogglealignment</inherit>
@@ -155,11 +154,9 @@
 		<inherit>gradereport/grader:view</inherit>
 		<inherit>gradereport/history:view</inherit>
 		<inherit>gradereport/outcomes:view</inherit>
-		<inherit>gradereport/overview:view</inherit>
 		<inherit>gradereport/singleview:view</inherit>
-		<inherit>gradereport/user:view</inherit>
 		<inherit>local/connect:helpdesk</inherit>
-		<inherit>local/connect:manage</inherit>
+		<inherit>message/airnotifier:managedevice</inherit>
 		<inherit>mod/aspirelists:addinstance</inherit>
 		<inherit>mod/assign:addinstance</inherit>
 		<inherit>mod/assign:editothersubmission</inherit>
@@ -174,27 +171,21 @@
 		<inherit>mod/assign:viewblinddetails</inherit>
 		<inherit>mod/assign:viewgrades</inherit>
 		<inherit>mod/assignment:addinstance</inherit>
-		<inherit>mod/assignment:exportownsubmission</inherit>
 		<inherit>mod/assignment:grade</inherit>
-		<inherit>mod/assignment:submit</inherit>
-		<inherit>mod/assignment:view</inherit>
 		<inherit>mod/book:addinstance</inherit>
 		<inherit>mod/book:edit</inherit>
 		<inherit>mod/book:viewhiddenchapters</inherit>
 		<inherit>mod/boxofbroadcasts:addinstance</inherit>
+		<inherit>mod/boxofbroadcasts:view</inherit>
 		<inherit>mod/chat:addinstance</inherit>
-		<inherit>mod/chat:chat</inherit>
 		<inherit>mod/chat:deletelog</inherit>
 		<inherit>mod/chat:exportparticipatedsession</inherit>
 		<inherit>mod/chat:exportsession</inherit>
-		<inherit>mod/chat:readlog</inherit>
 		<inherit>mod/choice:addinstance</inherit>
-		<inherit>mod/choice:choose</inherit>
 		<inherit>mod/choice:deleteresponses</inherit>
 		<inherit>mod/choice:downloadresponses</inherit>
 		<inherit>mod/choice:readresponses</inherit>
 		<inherit>mod/choicegroup:addinstance</inherit>
-		<inherit>mod/choicegroup:choose</inherit>
 		<inherit>mod/choicegroup:deleteresponses</inherit>
 		<inherit>mod/choicegroup:downloadresponses</inherit>
 		<inherit>mod/choicegroup:readresponses</inherit>
@@ -202,10 +193,8 @@
 		<inherit>mod/cla:clanotification</inherit>
 		<inherit>mod/data:addinstance</inherit>
 		<inherit>mod/data:approve</inherit>
-		<inherit>mod/data:comment</inherit>
 		<inherit>mod/data:exportallentries</inherit>
 		<inherit>mod/data:exportentry</inherit>
-		<inherit>mod/data:exportownentry</inherit>
 		<inherit>mod/data:exportuserinfo</inherit>
 		<inherit>mod/data:managecomments</inherit>
 		<inherit>mod/data:manageentries</inherit>
@@ -215,22 +204,17 @@
 		<inherit>mod/data:viewallratings</inherit>
 		<inherit>mod/data:viewalluserpresets</inherit>
 		<inherit>mod/data:viewanyrating</inherit>
-		<inherit>mod/data:viewentry</inherit>
 		<inherit>mod/data:viewrating</inherit>
-		<inherit>mod/data:writeentry</inherit>
 		<inherit>mod/facetoface:addattendees</inherit>
 		<inherit>mod/facetoface:addinstance</inherit>
 		<inherit>mod/facetoface:editsessions</inherit>
 		<inherit>mod/facetoface:overbook</inherit>
 		<inherit>mod/facetoface:removeattendees</inherit>
-		<inherit>mod/facetoface:signup</inherit>
 		<inherit>mod/facetoface:takeattendance</inherit>
-		<inherit>mod/facetoface:view</inherit>
 		<inherit>mod/facetoface:viewattendees</inherit>
 		<inherit>mod/facetoface:viewcancellations</inherit>
 		<inherit>mod/facetoface:viewemptyactivities</inherit>
 		<inherit>mod/feedback:addinstance</inherit>
-		<inherit>mod/feedback:complete</inherit>
 		<inherit>mod/feedback:createprivatetemplate</inherit>
 		<inherit>mod/feedback:createpublictemplate</inherit>
 		<inherit>mod/feedback:deletesubmissions</inherit>
@@ -238,43 +222,31 @@
 		<inherit>mod/feedback:edititems</inherit>
 		<inherit>mod/feedback:mapcourse</inherit>
 		<inherit>mod/feedback:receivemail</inherit>
-		<inherit>mod/feedback:view</inherit>
-		<inherit>mod/feedback:viewanalysepage</inherit>
 		<inherit>mod/feedback:viewreports</inherit>
 		<inherit>mod/folder:addinstance</inherit>
 		<inherit>mod/folder:managefiles</inherit>
 		<inherit>mod/folder:view</inherit>
 		<inherit>mod/forum:addinstance</inherit>
-		<inherit>mod/forum:addnews</inherit>
 		<inherit>mod/forum:addquestion</inherit>
-		<inherit>mod/forum:createattachment</inherit>
 		<inherit>mod/forum:deleteanypost</inherit>
-		<inherit>mod/forum:deleteownpost</inherit>
 		<inherit>mod/forum:editanypost</inherit>
 		<inherit>mod/forum:exportdiscussion</inherit>
-		<inherit>mod/forum:exportownpost</inherit>
 		<inherit>mod/forum:exportpost</inherit>
 		<inherit>mod/forum:managesubscriptions</inherit>
 		<inherit>mod/forum:movediscussions</inherit>
 		<inherit>mod/forum:postwithoutthrottling</inherit>
 		<inherit>mod/forum:rate</inherit>
 		<inherit>mod/forum:replynews</inherit>
-		<inherit>mod/forum:replypost</inherit>
 		<inherit>mod/forum:splitdiscussions</inherit>
-		<inherit>mod/forum:startdiscussion</inherit>
 		<inherit>mod/forum:viewallratings</inherit>
 		<inherit>mod/forum:viewanyrating</inherit>
-		<inherit>mod/forum:viewdiscussion</inherit>
 		<inherit>mod/forum:viewhiddentimedposts</inherit>
 		<inherit>mod/forum:viewqandawithoutposting</inherit>
-		<inherit>mod/forum:viewrating</inherit>
 		<inherit>mod/forum:viewsubscribers</inherit>
 		<inherit>mod/glossary:addinstance</inherit>
 		<inherit>mod/glossary:approve</inherit>
-		<inherit>mod/glossary:comment</inherit>
 		<inherit>mod/glossary:export</inherit>
 		<inherit>mod/glossary:exportentry</inherit>
-		<inherit>mod/glossary:exportownentry</inherit>
 		<inherit>mod/glossary:import</inherit>
 		<inherit>mod/glossary:managecategories</inherit>
 		<inherit>mod/glossary:managecomments</inherit>
@@ -283,16 +255,12 @@
 		<inherit>mod/glossary:viewallratings</inherit>
 		<inherit>mod/glossary:viewanyrating</inherit>
 		<inherit>mod/glossary:viewrating</inherit>
-		<inherit>mod/glossary:write</inherit>
 		<inherit>mod/hotpot:addinstance</inherit>
-		<inherit>mod/hotpot:attempt</inherit>
 		<inherit>mod/hotpot:deleteallattempts</inherit>
 		<inherit>mod/hotpot:deletemyattempts</inherit>
 		<inherit>mod/hotpot:manage</inherit>
 		<inherit>mod/hotpot:preview</inherit>
 		<inherit>mod/hotpot:reviewallattempts</inherit>
-		<inherit>mod/hotpot:reviewmyattempts</inherit>
-		<inherit>mod/hotpot:view</inherit>
 		<inherit>mod/imscp:addinstance</inherit>
 		<inherit>mod/imscp:view</inherit>
 		<inherit>mod/label:addinstance</inherit>
@@ -304,18 +272,15 @@
 		<inherit>mod/lti:addinstance</inherit>
 		<inherit>mod/lti:manage</inherit>
 		<inherit>mod/lti:requesttooladd</inherit>
-		<inherit>mod/lti:view</inherit>
 		<inherit>mod/nagios:configure</inherit>
 		<inherit>mod/ouwiki:addinstance</inherit>
 		<inherit>mod/ouwiki:annotate</inherit>
 		<inherit>mod/ouwiki:annotateothers</inherit>
 		<inherit>mod/ouwiki:deletepage</inherit>
-		<inherit>mod/ouwiki:edit</inherit>
 		<inherit>mod/ouwiki:editothers</inherit>
 		<inherit>mod/ouwiki:grade</inherit>
 		<inherit>mod/ouwiki:lock</inherit>
 		<inherit>mod/ouwiki:overridelock</inherit>
-		<inherit>mod/ouwiki:view</inherit>
 		<inherit>mod/ouwiki:viewallindividuals</inherit>
 		<inherit>mod/ouwiki:viewgroupindividuals</inherit>
 		<inherit>mod/ouwiki:viewparticipation</inherit>
@@ -330,15 +295,10 @@
 		<inherit>mod/questionnaire:manage</inherit>
 		<inherit>mod/questionnaire:message</inherit>
 		<inherit>mod/questionnaire:preview</inherit>
-		<inherit>mod/questionnaire:printblank</inherit>
 		<inherit>mod/questionnaire:readallresponseanytime</inherit>
 		<inherit>mod/questionnaire:readallresponses</inherit>
-		<inherit>mod/questionnaire:readownresponses</inherit>
-		<inherit>mod/questionnaire:submit</inherit>
-		<inherit>mod/questionnaire:view</inherit>
 		<inherit>mod/questionnaire:viewsingleresponse</inherit>
 		<inherit>mod/quiz:addinstance</inherit>
-		<inherit>mod/quiz:attempt</inherit>
 		<inherit>mod/quiz:deleteattempts</inherit>
 		<inherit>mod/quiz:emailconfirmsubmission</inherit>
 		<inherit>mod/quiz:emailnotifysubmission</inherit>
@@ -349,73 +309,48 @@
 		<inherit>mod/quiz:manageoverrides</inherit>
 		<inherit>mod/quiz:preview</inherit>
 		<inherit>mod/quiz:regrade</inherit>
-		<inherit>mod/quiz:reviewmyattempts</inherit>
-		<inherit>mod/quiz:view</inherit>
 		<inherit>mod/quiz:viewreports</inherit>
 		<inherit>mod/resource:addinstance</inherit>
 		<inherit>mod/resource:view</inherit>
 		<inherit>mod/scorm:addinstance</inherit>
 		<inherit>mod/scorm:deleteownresponses</inherit>
 		<inherit>mod/scorm:deleteresponses</inherit>
-		<inherit>mod/scorm:savetrack</inherit>
-		<inherit>mod/scorm:skipview</inherit>
 		<inherit>mod/scorm:viewreport</inherit>
-		<inherit>mod/scorm:viewscores</inherit>
 		<inherit>mod/streamingvideo:addinstance</inherit>
 		<inherit>mod/survey:addinstance</inherit>
 		<inherit>mod/survey:download</inherit>
-		<inherit>mod/survey:participate</inherit>
 		<inherit>mod/survey:readresponses</inherit>
 		<inherit>mod/taskchain:addinstance</inherit>
-		<inherit>mod/taskchain:attempt</inherit>
 		<inherit>mod/taskchain:deleteallattempts</inherit>
 		<inherit>mod/taskchain:deletemyattempts</inherit>
 		<inherit>mod/taskchain:manage</inherit>
 		<inherit>mod/taskchain:preview</inherit>
 		<inherit>mod/taskchain:regrade</inherit>
 		<inherit>mod/taskchain:reviewallattempts</inherit>
-		<inherit>mod/taskchain:reviewmyattempts</inherit>
-		<inherit>mod/taskchain:view</inherit>
 		<inherit>mod/thesis:addinstance</inherit>
 		<inherit>mod/thesis:emailupdated</inherit>
 		<inherit>mod/turnitintool:addinstance</inherit>
 		<inherit>mod/turnitintool:grade</inherit>
-		<inherit>mod/turnitintool:submit</inherit>
-		<inherit>mod/turnitintool:view</inherit>
 		<inherit>mod/turnitintooltwo:addinstance</inherit>
 		<inherit>mod/turnitintooltwo:grade</inherit>
-		<inherit>mod/turnitintooltwo:read</inherit>
-		<inherit>mod/turnitintooltwo:submit</inherit>
-		<inherit>mod/turnitintooltwo:view</inherit>
 		<inherit>mod/url:addinstance</inherit>
 		<inherit>mod/url:view</inherit>
 		<inherit>mod/vimeo:addinstance</inherit>
 		<inherit>mod/wiki:addinstance</inherit>
-		<inherit>mod/wiki:createpage</inherit>
-		<inherit>mod/wiki:editcomment</inherit>
-		<inherit>mod/wiki:editpage</inherit>
 		<inherit>mod/wiki:managecomment</inherit>
 		<inherit>mod/wiki:managefiles</inherit>
 		<inherit>mod/wiki:managewiki</inherit>
 		<inherit>mod/wiki:overridelock</inherit>
-		<inherit>mod/wiki:viewcomment</inherit>
-		<inherit>mod/wiki:viewpage</inherit>
 		<inherit>mod/workshop:addinstance</inherit>
 		<inherit>mod/workshop:allocate</inherit>
 		<inherit>mod/workshop:editdimensions</inherit>
 		<inherit>mod/workshop:ignoredeadlines</inherit>
 		<inherit>mod/workshop:manageexamples</inherit>
 		<inherit>mod/workshop:overridegrades</inherit>
-		<inherit>mod/workshop:peerassess</inherit>
 		<inherit>mod/workshop:publishsubmissions</inherit>
-		<inherit>mod/workshop:submit</inherit>
 		<inherit>mod/workshop:switchphase</inherit>
-		<inherit>mod/workshop:view</inherit>
 		<inherit>mod/workshop:viewallassessments</inherit>
 		<inherit>mod/workshop:viewallsubmissions</inherit>
-		<inherit>mod/workshop:viewauthornames</inherit>
-		<inherit>mod/workshop:viewauthorpublished</inherit>
-		<inherit>mod/workshop:viewpublishedsubmissions</inherit>
 		<inherit>mod/workshop:viewreviewernames</inherit>
 		<inherit>moodle/backup:anonymise</inherit>
 		<inherit>moodle/backup:backupactivity</inherit>
@@ -439,14 +374,8 @@
 		<inherit>moodle/badges:viewbadges</inherit>
 		<inherit>moodle/badges:viewotherbadges</inherit>
 		<inherit>moodle/block:edit</inherit>
-		<inherit>moodle/block:view</inherit>
-		<inherit>moodle/blog:associatecourse</inherit>
-		<inherit>moodle/blog:associatemodule</inherit>
 		<inherit>moodle/blog:create</inherit>
 		<inherit>moodle/blog:manageentries</inherit>
-		<inherit>moodle/blog:manageexternal</inherit>
-		<inherit>moodle/blog:search</inherit>
-		<inherit>moodle/blog:view</inherit>
 		<inherit>moodle/blog:viewdrafts</inherit>
 		<inherit>moodle/calendar:manageentries</inherit>
 		<inherit>moodle/calendar:managegroupentries</inherit>
@@ -457,8 +386,6 @@
 		<inherit>moodle/cohort:manage</inherit>
 		<inherit>moodle/cohort:view</inherit>
 		<inherit>moodle/comment:delete</inherit>
-		<inherit>moodle/comment:post</inherit>
-		<inherit>moodle/comment:view</inherit>
 		<inherit>moodle/community:add</inherit>
 		<inherit>moodle/community:download</inherit>
 		<inherit>moodle/course:activityvisibility</inherit>
@@ -487,6 +414,11 @@
 		<inherit>moodle/course:setcurrentsection</inherit>
 		<inherit>moodle/course:update</inherit>
 		<inherit>moodle/course:useremail</inherit>
+		<inherit>moodle/course:view</inherit>
+		<inherit>moodle/course:viewhiddenactivities</inherit>
+		<inherit>moodle/course:viewhiddencourses</inherit>
+		<inherit>moodle/course:viewhiddensections</inherit>
+		<inherit>moodle/course:viewhiddenuserfields</inherit>
 		<inherit>moodle/course:viewsuspendedusers</inherit>
 		<inherit>moodle/course:visibility</inherit>
 		<inherit>moodle/filter:manage</inherit>
@@ -502,19 +434,16 @@
 		<inherit>moodle/grade:managesharedforms</inherit>
 		<inherit>moodle/grade:sharegradingforms</inherit>
 		<inherit>moodle/grade:unlock</inherit>
-		<inherit>moodle/grade:view</inherit>
 		<inherit>moodle/grade:viewall</inherit>
 		<inherit>moodle/grade:viewhidden</inherit>
 		<inherit>moodle/my:configsyspages</inherit>
 		<inherit>moodle/my:manageblocks</inherit>
 		<inherit>moodle/notes:manage</inherit>
 		<inherit>moodle/notes:view</inherit>
-		<inherit>moodle/portfolio:export</inherit>
 		<inherit>moodle/question:add</inherit>
 		<inherit>moodle/question:config</inherit>
 		<inherit>moodle/question:editall</inherit>
 		<inherit>moodle/question:editmine</inherit>
-		<inherit>moodle/question:flag</inherit>
 		<inherit>moodle/question:managecategory</inherit>
 		<inherit>moodle/question:moveall</inherit>
 		<inherit>moodle/question:movemine</inherit>
@@ -522,10 +451,6 @@
 		<inherit>moodle/question:usemine</inherit>
 		<inherit>moodle/question:viewall</inherit>
 		<inherit>moodle/question:viewmine</inherit>
-		<inherit>moodle/rating:rate</inherit>
-		<inherit>moodle/rating:view</inherit>
-		<inherit>moodle/rating:viewall</inherit>
-		<inherit>moodle/rating:viewany</inherit>
 		<inherit>moodle/restore:configure</inherit>
 		<inherit>moodle/restore:createuser</inherit>
 		<inherit>moodle/restore:restoreactivity</inherit>
@@ -576,11 +501,8 @@
 		<inherit>moodle/user:manageownblocks</inherit>
 		<inherit>moodle/user:manageownfiles</inherit>
 		<inherit>moodle/user:managesyspages</inherit>
-		<inherit>moodle/user:readuserblogs</inherit>
-		<inherit>moodle/user:readuserposts</inherit>
 		<inherit>moodle/user:update</inherit>
 		<inherit>moodle/user:viewalldetails</inherit>
-		<inherit>moodle/user:viewdetails</inherit>
 		<inherit>moodle/user:viewhiddendetails</inherit>
 		<inherit>moodle/user:viewlastip</inherit>
 		<inherit>moodle/user:viewuseractivitiesreport</inherit>
@@ -641,28 +563,107 @@
 		<inherit>webservice/rest:use</inherit>
 		<inherit>webservice/soap:use</inherit>
 		<inherit>webservice/xmlrpc:use</inherit>
-		<allow>block/recent_activity:viewaddupdatemodule</allow>
-		<allow>block/recent_activity:viewdeletemodule</allow>
-		<allow>message/airnotifier:managedevice</allow>
+		<allow>block/online_users:viewlist</allow>
+		<allow>block/panopto:panoptoviewer</allow>
+		<allow>booktool/print:print</allow>
+		<allow>enrol/self:unenrolself</allow>
+		<allow>gradereport/overview:view</allow>
+		<allow>gradereport/user:view</allow>
 		<allow>mod/assign:exportownsubmission</allow>
 		<allow>mod/assign:submit</allow>
 		<allow>mod/assign:view</allow>
+		<allow>mod/assignment:exportownsubmission</allow>
+		<allow>mod/assignment:submit</allow>
+		<allow>mod/assignment:view</allow>
 		<allow>mod/book:read</allow>
-		<allow>mod/boxofbroadcasts:view</allow>
-		<allow>mod/cla:manage</allow>
-		<allow>mod/cla:report</allow>
+		<allow>mod/chat:chat</allow>
+		<allow>mod/chat:readlog</allow>
+		<allow>mod/choice:choose</allow>
+		<allow>mod/choicegroup:choose</allow>
 		<allow>mod/cla:viewresource</allow>
+		<allow>mod/data:comment</allow>
+		<allow>mod/data:exportownentry</allow>
+		<allow>mod/data:viewentry</allow>
+		<allow>mod/data:writeentry</allow>
+		<allow>mod/facetoface:signup</allow>
+		<allow>mod/facetoface:view</allow>
+		<allow>mod/feedback:complete</allow>
+		<allow>mod/feedback:view</allow>
+		<allow>mod/feedback:viewanalysepage</allow>
+		<allow>mod/forum:addnews</allow>
 		<allow>mod/forum:allowforcesubscribe</allow>
+		<allow>mod/forum:createattachment</allow>
+		<allow>mod/forum:deleteownpost</allow>
+		<allow>mod/forum:exportownpost</allow>
+		<allow>mod/forum:replypost</allow>
+		<allow>mod/forum:startdiscussion</allow>
+		<allow>mod/forum:viewdiscussion</allow>
+		<allow>mod/forum:viewrating</allow>
+		<allow>mod/glossary:comment</allow>
+		<allow>mod/glossary:exportownentry</allow>
 		<allow>mod/glossary:view</allow>
+		<allow>mod/glossary:write</allow>
+		<allow>mod/hotpot:attempt</allow>
+		<allow>mod/hotpot:reviewmyattempts</allow>
+		<allow>mod/hotpot:view</allow>
+		<allow>mod/lti:view</allow>
+		<allow>mod/ouwiki:edit</allow>
+		<allow>mod/ouwiki:view</allow>
+		<allow>mod/questionnaire:printblank</allow>
+		<allow>mod/questionnaire:readownresponses</allow>
+		<allow>mod/questionnaire:submit</allow>
+		<allow>mod/questionnaire:view</allow>
+		<allow>mod/quiz:attempt</allow>
+		<allow>mod/quiz:reviewmyattempts</allow>
+		<allow>mod/quiz:view</allow>
+		<allow>mod/scorm:savetrack</allow>
+		<allow>mod/scorm:skipview</allow>
+		<allow>mod/scorm:viewscores</allow>
+		<allow>mod/survey:participate</allow>
+		<allow>mod/taskchain:attempt</allow>
+		<allow>mod/taskchain:reviewmyattempts</allow>
+		<allow>mod/taskchain:view</allow>
 		<allow>mod/thesis:emailnotes</allow>
+		<allow>mod/turnitintool:submit</allow>
+		<allow>mod/turnitintool:view</allow>
+		<allow>mod/turnitintooltwo:read</allow>
+		<allow>mod/turnitintooltwo:submit</allow>
+		<allow>mod/turnitintooltwo:view</allow>
+		<allow>mod/wiki:createpage</allow>
+		<allow>mod/wiki:editcomment</allow>
+		<allow>mod/wiki:editpage</allow>
+		<allow>mod/wiki:viewcomment</allow>
+		<allow>mod/wiki:viewpage</allow>
+		<allow>mod/workshop:peerassess</allow>
+		<allow>mod/workshop:submit</allow>
+		<allow>mod/workshop:view</allow>
+		<allow>mod/workshop:viewauthornames</allow>
+		<allow>mod/workshop:viewauthorpublished</allow>
+		<allow>mod/workshop:viewpublishedsubmissions</allow>
+		<allow>moodle/block:view</allow>
+		<allow>moodle/blog:associatecourse</allow>
+		<allow>moodle/blog:associatemodule</allow>
+		<allow>moodle/blog:manageexternal</allow>
+		<allow>moodle/blog:search</allow>
+		<allow>moodle/blog:view</allow>
+		<allow>moodle/comment:post</allow>
+		<allow>moodle/comment:view</allow>
 		<allow>moodle/course:isincompletionreports</allow>
-		<allow>moodle/course:view</allow>
-		<allow>moodle/course:viewhiddenactivities</allow>
-		<allow>moodle/course:viewhiddencourses</allow>
-		<allow>moodle/course:viewhiddensections</allow>
-		<allow>moodle/course:viewhiddenuserfields</allow>
 		<allow>moodle/course:viewparticipants</allow>
 		<allow>moodle/course:viewscales</allow>
+		<allow>moodle/grade:view</allow>
+		<allow>moodle/portfolio:export</allow>
+		<allow>moodle/question:flag</allow>
+		<allow>moodle/rating:rate</allow>
+		<allow>moodle/rating:view</allow>
+		<allow>moodle/rating:viewall</allow>
+		<allow>moodle/rating:viewany</allow>
+		<allow>moodle/user:readuserblogs</allow>
+		<allow>moodle/user:readuserposts</allow>
+		<allow>moodle/user:viewdetails</allow>
+		<prevent>local/connect:manage</prevent>
+		<prevent>mod/cla:manage</prevent>
+		<prevent>mod/cla:report</prevent>
 		<prevent>mod/talis:pub</prevent>
 	</permissions>
 </role>

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <role>
-	<shortname>cla_admin</shortname>
-	<name>CLA Administrator</name>
-	<description>The CLA Administrator is for library staff involved in the approval and creation of CLA copyrighted book or journal extracts to Moodle modules.</description>
+	<shortname>panopto_creator</shortname>
+	<name>KentPlayer Recorder</name>
+	<description/>
 	<archetype/>
 	<contextlevels>
 		<level>system</level>
+		<level>coursecat</level>
+		<level>course</level>
 	</contextlevels>
 	<allowassign/>
 	<allowoverride/>
@@ -76,8 +78,6 @@
 		<inherit>block/online_users:viewlist</inherit>
 		<inherit>block/panopto:addinstance</inherit>
 		<inherit>block/panopto:myaddinstance</inherit>
-		<inherit>block/panopto:panoptocreator</inherit>
-		<inherit>block/panopto:panoptoviewer</inherit>
 		<inherit>block/panopto:provision_aspublisher</inherit>
 		<inherit>block/panopto:provision_asteacher</inherit>
 		<inherit>block/panopto:provision_course</inherit>
@@ -87,6 +87,8 @@
 		<inherit>block/private_files:myaddinstance</inherit>
 		<inherit>block/quiz_results:addinstance</inherit>
 		<inherit>block/recent_activity:addinstance</inherit>
+		<inherit>block/recent_activity:viewaddupdatemodule</inherit>
+		<inherit>block/recent_activity:viewdeletemodule</inherit>
 		<inherit>block/rss_client:addinstance</inherit>
 		<inherit>block/rss_client:manageanyfeeds</inherit>
 		<inherit>block/rss_client:manageownfeeds</inherit>
@@ -160,9 +162,11 @@
 		<inherit>gradereport/user:view</inherit>
 		<inherit>local/connect:helpdesk</inherit>
 		<inherit>local/connect:manage</inherit>
+		<inherit>message/airnotifier:managedevice</inherit>
 		<inherit>mod/aspirelists:addinstance</inherit>
 		<inherit>mod/assign:addinstance</inherit>
 		<inherit>mod/assign:editothersubmission</inherit>
+		<inherit>mod/assign:exportownsubmission</inherit>
 		<inherit>mod/assign:grade</inherit>
 		<inherit>mod/assign:grantextension</inherit>
 		<inherit>mod/assign:manageallocations</inherit>
@@ -171,6 +175,8 @@
 		<inherit>mod/assign:releasegrades</inherit>
 		<inherit>mod/assign:revealidentities</inherit>
 		<inherit>mod/assign:reviewgrades</inherit>
+		<inherit>mod/assign:submit</inherit>
+		<inherit>mod/assign:view</inherit>
 		<inherit>mod/assign:viewblinddetails</inherit>
 		<inherit>mod/assign:viewgrades</inherit>
 		<inherit>mod/assignment:addinstance</inherit>
@@ -180,8 +186,10 @@
 		<inherit>mod/assignment:view</inherit>
 		<inherit>mod/book:addinstance</inherit>
 		<inherit>mod/book:edit</inherit>
+		<inherit>mod/book:read</inherit>
 		<inherit>mod/book:viewhiddenchapters</inherit>
 		<inherit>mod/boxofbroadcasts:addinstance</inherit>
+		<inherit>mod/boxofbroadcasts:view</inherit>
 		<inherit>mod/chat:addinstance</inherit>
 		<inherit>mod/chat:chat</inherit>
 		<inherit>mod/chat:deletelog</inherit>
@@ -200,6 +208,9 @@
 		<inherit>mod/choicegroup:readresponses</inherit>
 		<inherit>mod/cla:addinstance</inherit>
 		<inherit>mod/cla:clanotification</inherit>
+		<inherit>mod/cla:manage</inherit>
+		<inherit>mod/cla:report</inherit>
+		<inherit>mod/cla:viewresource</inherit>
 		<inherit>mod/data:addinstance</inherit>
 		<inherit>mod/data:approve</inherit>
 		<inherit>mod/data:comment</inherit>
@@ -247,6 +258,7 @@
 		<inherit>mod/forum:addinstance</inherit>
 		<inherit>mod/forum:addnews</inherit>
 		<inherit>mod/forum:addquestion</inherit>
+		<inherit>mod/forum:allowforcesubscribe</inherit>
 		<inherit>mod/forum:createattachment</inherit>
 		<inherit>mod/forum:deleteanypost</inherit>
 		<inherit>mod/forum:deleteownpost</inherit>
@@ -280,6 +292,7 @@
 		<inherit>mod/glossary:managecomments</inherit>
 		<inherit>mod/glossary:manageentries</inherit>
 		<inherit>mod/glossary:rate</inherit>
+		<inherit>mod/glossary:view</inherit>
 		<inherit>mod/glossary:viewallratings</inherit>
 		<inherit>mod/glossary:viewanyrating</inherit>
 		<inherit>mod/glossary:viewrating</inherit>
@@ -366,6 +379,7 @@
 		<inherit>mod/survey:download</inherit>
 		<inherit>mod/survey:participate</inherit>
 		<inherit>mod/survey:readresponses</inherit>
+		<inherit>mod/talis:pub</inherit>
 		<inherit>mod/taskchain:addinstance</inherit>
 		<inherit>mod/taskchain:attempt</inherit>
 		<inherit>mod/taskchain:deleteallattempts</inherit>
@@ -377,6 +391,7 @@
 		<inherit>mod/taskchain:reviewmyattempts</inherit>
 		<inherit>mod/taskchain:view</inherit>
 		<inherit>mod/thesis:addinstance</inherit>
+		<inherit>mod/thesis:emailnotes</inherit>
 		<inherit>mod/thesis:emailupdated</inherit>
 		<inherit>mod/turnitintool:addinstance</inherit>
 		<inherit>mod/turnitintool:grade</inherit>
@@ -473,6 +488,7 @@
 		<inherit>moodle/course:enrolconfig</inherit>
 		<inherit>moodle/course:enrolreview</inherit>
 		<inherit>moodle/course:ignorefilesizelimits</inherit>
+		<inherit>moodle/course:isincompletionreports</inherit>
 		<inherit>moodle/course:manageactivities</inherit>
 		<inherit>moodle/course:managefiles</inherit>
 		<inherit>moodle/course:managegroups</inherit>
@@ -487,6 +503,13 @@
 		<inherit>moodle/course:setcurrentsection</inherit>
 		<inherit>moodle/course:update</inherit>
 		<inherit>moodle/course:useremail</inherit>
+		<inherit>moodle/course:view</inherit>
+		<inherit>moodle/course:viewhiddenactivities</inherit>
+		<inherit>moodle/course:viewhiddencourses</inherit>
+		<inherit>moodle/course:viewhiddensections</inherit>
+		<inherit>moodle/course:viewhiddenuserfields</inherit>
+		<inherit>moodle/course:viewparticipants</inherit>
+		<inherit>moodle/course:viewscales</inherit>
 		<inherit>moodle/course:viewsuspendedusers</inherit>
 		<inherit>moodle/course:visibility</inherit>
 		<inherit>moodle/filter:manage</inherit>
@@ -641,28 +664,7 @@
 		<inherit>webservice/rest:use</inherit>
 		<inherit>webservice/soap:use</inherit>
 		<inherit>webservice/xmlrpc:use</inherit>
-		<allow>block/recent_activity:viewaddupdatemodule</allow>
-		<allow>block/recent_activity:viewdeletemodule</allow>
-		<allow>message/airnotifier:managedevice</allow>
-		<allow>mod/assign:exportownsubmission</allow>
-		<allow>mod/assign:submit</allow>
-		<allow>mod/assign:view</allow>
-		<allow>mod/book:read</allow>
-		<allow>mod/boxofbroadcasts:view</allow>
-		<allow>mod/cla:manage</allow>
-		<allow>mod/cla:report</allow>
-		<allow>mod/cla:viewresource</allow>
-		<allow>mod/forum:allowforcesubscribe</allow>
-		<allow>mod/glossary:view</allow>
-		<allow>mod/thesis:emailnotes</allow>
-		<allow>moodle/course:isincompletionreports</allow>
-		<allow>moodle/course:view</allow>
-		<allow>moodle/course:viewhiddenactivities</allow>
-		<allow>moodle/course:viewhiddencourses</allow>
-		<allow>moodle/course:viewhiddensections</allow>
-		<allow>moodle/course:viewhiddenuserfields</allow>
-		<allow>moodle/course:viewparticipants</allow>
-		<allow>moodle/course:viewscales</allow>
-		<prevent>mod/talis:pub</prevent>
+		<allow>block/panopto:panoptocreator</allow>
+		<allow>block/panopto:panoptoviewer</allow>
 	</permissions>
 </role>

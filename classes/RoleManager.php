@@ -25,7 +25,21 @@ class RoleManager
 {
     private static $_managed_roles = array(
         'flt' => 'manager',
-        'cla_admin' => 'user'
+        'cla_admin' => null,
+        'cla_viewer' => null,
+        'academic_advisor' => 'teacher',
+        'dep_admin' => 'editingteacher',
+        'extexam' => 'teacher',
+        'support_staff' => 'editingteacher',
+        'sds_convenor' => 'editingteacher',
+        'sds_teacher' => 'editingteacher',
+        'sds_student' => 'student',
+        'marker' => null,
+        'panopto_academic' => null,
+        'panopto_creator' => null,
+        'panopto_non_academic' => null,
+        'readinglist' => null,
+        'support' => null
     );
 
     /**
@@ -69,7 +83,11 @@ class RoleManager
         );
 
         $definitiontable = new \local_kent\util\define_role_table_kent(\context_system::instance(), $role ? $role->id : 0);
-        $definitiontable->force_archetype($archetype, $options);
+
+        if ($archetype) {
+            $definitiontable->force_archetype($archetype, $options);
+        }
+
         $definitiontable->force_preset($xml, $options);
         $definitiontable->read_submitted_permissions();
 
