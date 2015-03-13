@@ -50,4 +50,16 @@ class define_role_table_kent extends \core_role_define_role_table_advanced
             $this->changed[] = $cap->name;
         }
     }
+
+    protected function save_allow($type) {
+        global $DB;
+
+        $arr = $this->{'allow'.$type};
+        if (in_array($this->roleid, $arr) && in_array(-1, $arr)) {
+            $key = array_search($this->roleid, $arr);
+            unset($this->{'allow'.$type}[$key]);
+        }
+
+        return parent::save_allow($type);
+    }
 }
