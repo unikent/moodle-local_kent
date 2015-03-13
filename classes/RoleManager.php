@@ -57,11 +57,11 @@ class RoleManager
         $xml = file_get_contents($xml);
 
         $options = array(
-            'shortname'     => $role ? $role->shortname : 1,
-            'name'          => $role ? $role->name : 1,
-            'description'   => $role ? $role->description : 1,
+            'shortname'     => 1,
+            'name'          => 1,
+            'description'   => 1,
             'permissions'   => 1,
-            'archetype'     => $role ? $role->archetype : 1,
+            'archetype'     => 1,
             'contextlevels' => 1,
             'allowassign'   => 1,
             'allowoverride' => 1,
