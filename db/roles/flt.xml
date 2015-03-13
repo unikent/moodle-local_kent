@@ -2,7 +2,7 @@
 <role>
 	<shortname>flt</shortname>
 	<name>Faculty Learning Technologist</name>
-	<description/>
+	<description>Special role for the FLTs</description>
 	<archetype>manager</archetype>
 	<contextlevels>
 		<level>system</level>

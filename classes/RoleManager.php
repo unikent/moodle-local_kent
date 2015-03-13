@@ -24,7 +24,8 @@ defined('MOODLE_INTERNAL') || die();
 class RoleManager
 {
     private static $_managed_roles = array(
-        'flt' => 'manager'
+        'flt' => 'manager',
+        'cla_admin' => 'user'
     );
 
     /**
