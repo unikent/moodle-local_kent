@@ -17,4 +17,8 @@
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once($CFG->libdir . '/filelib.php');
 
-send_file_not_found();
+$roleman = new \local_kent\RoleManager();
+$roleman->configure();
+echo "done";
+
+//send_file_not_found();
