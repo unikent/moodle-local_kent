@@ -129,4 +129,45 @@ class RoleManager
             ));
         }
     }
+
+    /**
+     * Either update or install a managed role.
+     */
+    public function install_or_update_role($shortname) {
+        global $CFG, $DB;
+
+        require_once($CFG->libdir . '/adminlib.php');
+
+        $xml = $CFG->dirroot . "/local/kent/db/roles/{$shortname}.xml";
+        if (!file_exists($xml)) {
+            debugging("'{$shortname}' is not a managed role!");
+            return false;
+        }
+
+        $roleid = $DB->get_field('role', 'id', array(
+            'shortname' => $shortname
+        ));
+
+        if (!$roleid) {
+            $roleid = 0;
+        }
+
+        $xml = file_get_contents($xml);
+
+        $definitiontable = new \core_role_define_role_table_advanced(\context_system::instance(), $roleid);
+        $definitiontable->force_preset($xml, array(
+            'shortname'     => 1,
+            'name'          => 1,
+            'description'   => 1,
+            'permissions'   => 1,
+            'archetype'     => 1,
+            'contextlevels' => 1,
+            'allowassign'   => 1,
+            'allowoverride' => 1,
+            'allowswitch'   => 1
+        ));
+
+        $definitiontable->save_changes();
+        return $definitiontable->get_role_id();
+    }
 }
