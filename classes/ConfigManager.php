@@ -29,6 +29,7 @@ class ConfigManager
     public function configure() {
         $this->configure_initial();
         $this->configure_20150305();
+        $this->configure_20150313();
     }
 
     /**
@@ -157,10 +158,6 @@ class ConfigManager
         set_config('hotpot_enablemymoodle', '0');
         set_config('glossary_defaultapproval', '0');
         set_config('forum_maxattachments', '2');
-        set_config('core_media_enable_vimeo', '1');
-        set_config('core_media_enable_qt', '0');
-        set_config('core_media_enable_wmp', '0');
-        set_config('core_media_enable_rm', '0');
         set_config('grade_report_showquickfeedback', '1');
         set_config('grade_report_enableajax', '1');
         set_config('grade_report_showcalculations', '1');
@@ -174,11 +171,26 @@ class ConfigManager
      * Upgrade step for 20150305.
      */
     public function configure_20150305() {
-        global $CFG;
-
         set_config('enablecompletion', '1');
         set_config('enableoutcomes', '1');
         set_config('enableavailability', '1');
         set_config('enableplagiarism', '1');
+    }
+
+    /**
+     * Upgrade step for 20150313.
+     */
+    public function configure_20150313() {
+        set_config('core_media_enable_youtube', 1);
+        set_config('core_media_enable_vimeo', 1);
+        set_config('core_media_enable_mp3', 1);
+        set_config('core_media_enable_flv', 1);
+        set_config('core_media_enable_swf', 1);
+        set_config('core_media_enable_html5audio', 1);
+        set_config('core_media_enable_html5video', 1);
+
+        set_config('core_media_enable_qt', 0);
+        set_config('core_media_enable_wmp', 0);
+        set_config('core_media_enable_rm', 0);
     }
 }

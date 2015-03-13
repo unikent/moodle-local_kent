@@ -353,5 +353,12 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015031200, 'local', 'kent');
     }
 
+    if ($oldversion < 2015031300) {
+        $configman->configure_20150313();
+
+        // local_kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015031300, 'local', 'kent');
+    }
+
     return true;
 }
