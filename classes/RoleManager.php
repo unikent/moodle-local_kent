@@ -42,6 +42,26 @@ class RoleManager
         'support' => null
     );
 
+    private static $_shared_roles = array(
+        'system' => array(
+            'cla_viewer',
+            'flt',
+            'cla_admin',
+            'panopto_academic',
+            'panopto_non_academic',
+            'support'
+        ),
+        'coursecat' => array(
+            'cla_viewer',
+            'academic_advisor',
+            'dep_admin',
+            'extexam',
+            'support_staff',
+            'marker',
+            'readinglist'
+        )
+    );
+
     /**
      * Configure all managed roles, call this from an upgrade script when
      * you change something.
@@ -104,37 +124,38 @@ class RoleManager
      * Migrate the action up to SHAREDB.
      */
     public static function role_created($roleid, $userid) {
-        return self::migrate('add', $roleid, $userid);
+        $rm = new static();
+        return $rm->migrate('add', $roleid, $userid);
     }
 
     /**
      * Migrate the action up to SHAREDB.
      */
     public static function role_deleted($roleid, $userid) {
-        return self::migrate('delete', $roleid, $userid);
+        $rm = new static();
+        return $rm->migrate('delete', $roleid, $userid);
     }
 
     /**
      * Is the roleid in our sphere of care?
      */
-    public static function is_managed($roleid) {
-        $config = get_config('local_kent', 'sync_roles');
-        $ids = explode(',', $config);
+    public function is_managed($shortname) {
+        foreach (static::$_shared_roles as $context => $roles) {
+            if (in_array($shortname, $roles)) {
+                return true;
+            }
+        }
 
-        return in_array($roleid, $ids);
+        return false;
     }
 
     /**
-     * Helper for the above.
+     * Migrate a new role to SHAREDB.
      */
-    private static function migrate($action, $roleid, $userid) {
+    private function migrate($action, $roleid, $userid) {
         global $CFG, $DB, $SHAREDB;
 
         if (isset($CFG->in_role_sync)) {
-            return true;
-        }
-
-        if (!self::is_managed($roleid)) {
             return true;
         }
 
@@ -142,13 +163,17 @@ class RoleManager
         $shortname = $DB->get_field('role', 'shortname', array(
             'id' => $roleid
         ));
-        self::share_role_mapping($roleid, $shortname);
+        if (!$this->is_managed($shortname)) {
+            return true;
+        }
+
+        $this->share_role_mapping($roleid, $shortname);
 
         // Get the user.
         $user = $DB->get_record('user', array(
             'id' => $userid
         ));
-        self::share_user($user);
+        $this->share_user($user);
 
         // Update the migration.
         $migration = \local_kent\shared\config::increment("role_migration");
@@ -168,7 +193,7 @@ class RoleManager
     /**
      * Create mapping in SHAREDB for roleid.
      */
-    private static function share_role_mapping($roleid, $shortname) {
+    private function share_role_mapping($roleid, $shortname) {
         global $CFG, $SHAREDB;
 
         // Check the role exists in the mapping table #1.
@@ -195,7 +220,7 @@ class RoleManager
     /**
      * Create record in SHAREDB for user.
      */
-    private static function share_user($user) {
+    private function share_user($user) {
         global $SHAREDB;
 
         if (!$SHAREDB->record_exists('shared_users', array('username' => $user->username))) {

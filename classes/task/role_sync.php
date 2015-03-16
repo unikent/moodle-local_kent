@@ -172,7 +172,8 @@ class role_sync extends \core\task\scheduled_task
         $roleid = $this->map_internal_role($shortname);
 
         // Do we care?
-        if (!$roleid || !\local_kent\RoleManager::is_managed($roleid)) {
+        $rm = new \local_kent\RoleManager();
+        if (!$roleid || !$rm->is_managed($shortname)) {
             return true;
         }
 
