@@ -360,5 +360,44 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015031300, 'local', 'kent');
     }
 
+    if ($oldversion < 2015031600 && isset($sharedbman)) {
+        // Define table shared_roles to be dropped.
+        $table = new xmldb_table('shared_roles');
+
+        // Conditionally launch drop table for shared_roles.
+        if ($sharedbman->table_exists($table)) {
+            $sharedbman->drop_table($table);
+        }
+
+        // Define table shared_role_assignments to be dropped.
+        $table = new xmldb_table('shared_role_assignments');
+
+        // Conditionally launch drop table for shared_role_assignments.
+        if ($sharedbman->table_exists($table)) {
+            $sharedbman->drop_table($table);
+        }
+
+        // Define table shared_roles to be created.
+        $table = new xmldb_table('shared_roles');
+
+        // Adding fields to table shared_roles.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('shortname', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('username', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('contextlevel', XMLDB_TYPE_INTEGER, '3', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('contextname', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+
+        // Adding keys to table shared_roles.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for shared_roles.
+        if (!$sharedbman->table_exists($table)) {
+            $sharedbman->create_table($table);
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015031600, 'local', 'kent');
+    }
+
     return true;
 }

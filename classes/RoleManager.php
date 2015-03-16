@@ -50,7 +50,7 @@ class RoleManager
             'panopto_academic',
             'panopto_non_academic',
             'support'
-        ),
+        )/*,
         'coursecat' => array(
             'cla_viewer',
             'academic_advisor',
@@ -59,7 +59,7 @@ class RoleManager
             'support_staff',
             'marker',
             'readinglist'
-        )
+        )*/
     );
 
     /**
@@ -118,6 +118,156 @@ class RoleManager
 
         $definitiontable->save_changes();
         return $definitiontable->get_role_id();
+    }
+
+    /**
+     * Sync with SHAREDB.
+     */
+    public function sync() {
+        global $CFG;
+
+        $CFG->in_role_sync = true;
+        foreach (static::$_shared_roles as $context => $roles) {
+            foreach ($roles as $shortname) {
+                $this->sync_role_type($context, $shortname);
+            }
+        }
+        $CFG->in_role_sync = false;
+    }
+
+    /**
+     * Sync a given context and shortname.
+     */
+    private function sync_role_type($contextlevel, $shortname) {
+        global $DB, $SHAREDB;
+
+        // Get all shared roles.
+        $shared = $SHAREDB->get_records('shared_roles', array(
+            'contextlevel' => $contextlevel,
+            'shortname' => $shortname
+        ));
+
+        // Group by context.
+        $contexts = array();
+        foreach ($shared as $sharedrole) {
+            if (!in_array($sharedrole->contextname, $contexts)) {
+                $contexts[] = $sharedrole->contextname;
+            }
+        }
+
+        foreach ($contexts as $contextname) {
+            $this->sync_role_context($contextlevel, $contextname, $shortname);
+        }
+    }
+
+    /**
+     * Sync a given context and shortname.
+     */
+    private function sync_role_context($contextlevel, $contextname, $shortname) {
+        global $DB, $SHAREDB;
+
+        // Resolve local context.
+        $context = $this->get_context($contextlevel, $contextname);
+        if (!$context) {
+            return;
+        }
+
+        // Resolve local role.
+        $role = $DB->get_record('role', array('shortname' => $shortname));
+        if (!$role) {
+            return;
+        }
+
+        // Get all shared roles.
+        $shared = $SHAREDB->get_records('shared_roles', array(
+            'contextlevel' => $contextlevel,
+            'contextname' => $contextname,
+            'shortname' => $shortname
+        ));
+
+        $processed = array();
+        foreach ($shared as $sharedrole) {
+            // Grab user.
+            $userid = $this->get_userid($sharedrole->username);
+            if (!$userid) {
+                continue;
+            }
+
+            // Ensure the enrolment exists!
+            if (!user_has_role_assignment($userid, $role->id, $context->id)) {
+                role_assign($role->id, $userid, $context->id);
+            }
+
+            $processed[] = $userid;
+        }
+
+        // Get all local role assignments.
+        $local = $DB->get_records('role_assignments', array(
+            'roleid' => $role->id,
+            'contextid' => $context->id
+        ));
+        foreach ($local as $localra) {
+            if (!in_array($localra->userid, $processed)) {
+                if (user_has_role_assignment($localra->userid, $role->id, $context->id)) {
+                    role_unassign($role->id, $localra->userid, $context->id);
+                }
+            }
+        }
+    }
+
+    /**
+     * Resolve shared context-isms.
+     */
+    private function get_context($contextlevel, $ident) {
+        global $DB;
+
+        if ($contextlevel == CONTEXT_SYSTEM) {
+            return \context_system::instance();
+        }
+
+        if ($contextlevel == CONTEXT_COURSECAT) {
+            $coursecat = $DB->get_record('course_categories', array(
+                'idnumber' => $ident
+            ));
+
+            if ($coursecat) {
+                return \context_coursecat::instance($coursecat->id);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a user ID for a username.
+     */
+    private function get_userid($username) {
+        global $CFG, $DB, $SHAREDB;
+
+        static $cache = array();
+
+        if (!isset($cache[$username])) {
+            $user = $DB->get_field('user', 'id', array(
+                'username' => $username
+            ));
+
+            // User doesnt exist, try and create one.
+            if (!$user) {
+                require_once($CFG->dirroot . "/user/lib.php");
+                $info = $SHAREDB->get_record('shared_users', array(
+                    'username' => $username
+                ));
+
+                if ($info) {
+                    $user = \local_connect\user::get_user_object($user->info, $user->info, $user->info);
+                    $user = user_create_user($user, false);
+                }
+            }
+
+            $cache[$username] = $user;
+        }
+
+        return $cache[$username];
     }
 
     /**

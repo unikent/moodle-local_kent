@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/kent/db" VERSION="20150216" COMMENT="XMLDB file for SHAREDB"
+<XMLDB PATH="local/kent/db" VERSION="20150316" COMMENT="XMLDB file for SHAREDB"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -84,43 +84,6 @@
         <INDEX NAME="shared_course_admins_on_username" UNIQUE="false" FIELDS="username"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="shared_roles" COMMENT="shared_roles table retrofitted from MySQL">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="moodle_env" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="moodle_dist" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="roleid" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="shared_course_list_on_moodle_env" UNIQUE="false" FIELDS="moodle_env"/>
-        <INDEX NAME="shared_course_list_on_moodle_dist" UNIQUE="false" FIELDS="moodle_dist"/>
-        <INDEX NAME="shared_course_list_on_shortname" UNIQUE="false" FIELDS="shortname"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="shared_role_assignments" COMMENT="shared_role_assignments table retrofitted from MySQL">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="moodle_env" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="moodle_dist" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="roleid" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="username" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="action" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="migration" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="shared_role_assignments_on_moodle_env" UNIQUE="false" FIELDS="moodle_env"/>
-        <INDEX NAME="shared_role_assignments_on_moodle_dist" UNIQUE="false" FIELDS="moodle_dist"/>
-        <INDEX NAME="shared_role_assignments_on_roleid" UNIQUE="false" FIELDS="roleid"/>
-        <INDEX NAME="shared_role_assignments_on_migration" UNIQUE="false" FIELDS="migration"/>
-      </INDEXES>
-    </TABLE>
     <TABLE NAME="shared_rollovers" COMMENT="shared_rollovers table retrofitted from MySQL">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
@@ -151,6 +114,18 @@
         <INDEX NAME="index_rollovers_from_course" UNIQUE="false" FIELDS="from_course"/>
         <INDEX NAME="index_rollovers_status" UNIQUE="false" FIELDS="status"/>
       </INDEXES>
+    </TABLE>
+    <TABLE NAME="shared_roles" COMMENT="Shared roles">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Role shortname"/>
+        <FIELD NAME="username" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="username"/>
+        <FIELD NAME="contextlevel" TYPE="int" LENGTH="3" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="contextname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The UID for the given context level"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
     </TABLE>
   </TABLES>
 </XMLDB>
