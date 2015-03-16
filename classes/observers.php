@@ -172,10 +172,9 @@ class observers
             \local_kent\GroupManager::enrolment_created($context->instanceid, $event->relateduserid);
         }
 
-        // Ping the role manager?
-        if ($context->contextlevel == CONTEXT_SYSTEM) {
-            \local_kent\RoleManager::role_created($event->objectid, $event->relateduserid);
-        }
+        // Ping the role manager.
+        $rm = new \local_kent\RoleManager();
+        $rm->on_role_created($context, $event->objectid, $event->relateduserid);
 
         return true;
     }
@@ -191,10 +190,9 @@ class observers
         // Get the context.
         $context = \context::instance_by_id($event->contextid, MUST_EXIST);
 
-        // Ping the role manager?
-        if ($context->contextlevel == CONTEXT_SYSTEM) {
-            \local_kent\RoleManager::role_deleted($event->objectid, $event->relateduserid);
-        }
+        // Ping the role manager.
+        $rm = new \local_kent\RoleManager();
+        $rm->on_role_deleted($context, $event->objectid, $event->relateduserid);
     }
 
     /**

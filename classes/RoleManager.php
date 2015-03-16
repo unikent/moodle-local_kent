@@ -121,6 +121,19 @@ class RoleManager
     }
 
     /**
+     * Is the roleid in our sphere of care?
+     */
+    public function is_managed($shortname) {
+        foreach (static::$_shared_roles as $context => $roles) {
+            if (in_array($shortname, $roles)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Sync with SHAREDB.
      */
     public function sync() {
@@ -221,11 +234,11 @@ class RoleManager
     private function get_context($contextlevel, $ident) {
         global $DB;
 
-        if ($contextlevel == CONTEXT_SYSTEM) {
+        if ($contextlevel == \CONTEXT_SYSTEM) {
             return \context_system::instance();
         }
 
-        if ($contextlevel == CONTEXT_COURSECAT) {
+        if ($contextlevel == \CONTEXT_COURSECAT) {
             $coursecat = $DB->get_record('course_categories', array(
                 'idnumber' => $ident
             ));
@@ -273,36 +286,21 @@ class RoleManager
     /**
      * Migrate the action up to SHAREDB.
      */
-    public static function role_created($roleid, $userid) {
-        $rm = new static();
-        return $rm->migrate('add', $roleid, $userid);
+    public function on_role_created($context, $roleid, $userid) {
+        return $this->update_sharedb_role($context, $roleid, $userid, false);
     }
 
     /**
      * Migrate the action up to SHAREDB.
      */
-    public static function role_deleted($roleid, $userid) {
-        $rm = new static();
-        return $rm->migrate('delete', $roleid, $userid);
+    public function on_role_deleted($context, $roleid, $userid) {
+        return $this->update_sharedb_role($context, $roleid, $userid, true);
     }
 
     /**
-     * Is the roleid in our sphere of care?
+     * Update a new role in SHAREDB.
      */
-    public function is_managed($shortname) {
-        foreach (static::$_shared_roles as $context => $roles) {
-            if (in_array($shortname, $roles)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Migrate a new role to SHAREDB.
-     */
-    private function migrate($action, $roleid, $userid) {
+    private function update_sharedb_role($context, $roleid, $userid, $delete = false) {
         global $CFG, $DB, $SHAREDB;
 
         if (isset($CFG->in_role_sync)) {
@@ -317,54 +315,36 @@ class RoleManager
             return true;
         }
 
-        $this->share_role_mapping($roleid, $shortname);
-
         // Get the user.
         $user = $DB->get_record('user', array(
             'id' => $userid
         ));
         $this->share_user($user);
 
-        // Update the migration.
-        $migration = \local_kent\shared\config::increment("role_migration");
-
-        $SHAREDB->insert_record('shared_role_assignments', array(
-            'moodle_env' => $CFG->kent->environment,
-            'moodle_dist' => $CFG->kent->distribution,
-            'roleid' => $roleid,
-            'username' => $user->username,
-            'action' => $action,
-            'migration' => $migration
-        ));
-
-        return true;
-    }
-
-    /**
-     * Create mapping in SHAREDB for roleid.
-     */
-    private function share_role_mapping($roleid, $shortname) {
-        global $CFG, $SHAREDB;
-
-        // Check the role exists in the mapping table #1.
-        $params = array(
-            'moodle_env' => $CFG->kent->environment,
-            'moodle_dist' => $CFG->kent->distribution,
-            'roleid' => $roleid
-        );
-        $sharedrole = $SHAREDB->get_record('shared_roles', $params);
-        $params['shortname'] = $shortname;
-
-        // Check the role exists in the mapping table #2.
-        if (!$sharedrole) {
-            $SHAREDB->insert_record('shared_roles', $params);
-        } else {
-            // Does it need updating?
-            if ($sharedrole->shortname != $shortname) {
-                $params['id'] = $sharedrole->id;
-                $SHAREDB->update_record('shared_roles', $params);
-            }
+        // Resolve context.
+        $contextname = '';
+        if ($context->contextlevel == \CONTEXT_COURSECAT) {
+            $contextname = $DB->get_field('course_categories', 'idnumber', array(
+                'id' => $context->instanceid
+            ));
         }
+
+        // What ARE we doing? >:/
+        if ($delete) {
+            return $SHAREDB->delete_records('shared_roles', array(
+                'contextlevel' => $context->contextlevel,
+                'contextname' => $contextname,
+                'shortname' => $shortname,
+                'username' => $user->username
+            ));
+        }
+
+        return $SHAREDB->insert_record('shared_roles', array(
+            'contextlevel' => $context->contextlevel,
+            'contextname' => $contextname,
+            'shortname' => $shortname,
+            'username' => $user->username
+        ));
     }
 
     /**
