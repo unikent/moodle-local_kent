@@ -88,5 +88,3 @@ class GroupManager
         return true;
     }
 }
-
-
