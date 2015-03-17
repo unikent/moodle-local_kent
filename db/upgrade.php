@@ -415,6 +415,8 @@ function xmldb_local_kent_upgrade($oldversion) {
     // Upgrade role sync system.
     // Migrates all enrolments in category and system contexts to SHAREDB.
     if ($oldversion < 2015031700 && $CFG->kent->distribution == LIVE_MOODLE) {
+        $SHAREDB->delete_records('shared_roles');
+
         $rm = new \local_kent\RoleManager();
         $syncset = array();
 

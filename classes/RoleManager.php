@@ -50,7 +50,7 @@ class RoleManager
             'panopto_academic',
             'panopto_non_academic',
             'support'
-        )/*,
+        ),
         'coursecat' => array(
             'cla_viewer',
             'academic_advisor',
@@ -59,7 +59,7 @@ class RoleManager
             'support_staff',
             'marker',
             'readinglist'
-        )*/
+        )
     );
 
     /**
