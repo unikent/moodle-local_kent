@@ -34,15 +34,11 @@ class role_sync extends \core\task\scheduled_task
     }
 
     public function execute() {
-        global $CFG, $SHAREDB;
-
         $enabled = get_config('local_kent', 'enable_role_sync');
-        if (!$enabled) {
-            return;
+        if ($enabled) {
+            $rm = new \local_kent\RoleManager();
+            $rm->sync();
         }
-
-        $rm = new \local_kent\RoleManager();
-        $rm->sync();
 
         return true;
     }
