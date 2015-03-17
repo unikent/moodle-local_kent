@@ -43,7 +43,7 @@ class RoleManager
     );
 
     private static $_shared_roles = array(
-        'system' => array(
+        \CONTEXT_SYSTEM => array(
             'cla_viewer',
             'flt',
             'cla_admin',
@@ -51,7 +51,7 @@ class RoleManager
             'panopto_non_academic',
             'support'
         ),
-        'coursecat' => array(
+        \CONTEXT_COURSECAT => array(
             'cla_viewer',
             'academic_advisor',
             'dep_admin',
