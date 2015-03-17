@@ -48,6 +48,10 @@ function xmldb_local_kent_install() {
     $taskman = new \local_kent\TaskManager();
     $taskman->configure();
 
+    // Configure Kent managed roles.
+    $roleman = new \local_kent\RoleManager();
+    $roleman->configure();
+
     // Create basic categories.
     $localcatmap = array();
 

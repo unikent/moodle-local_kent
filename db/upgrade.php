@@ -353,5 +353,110 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015031200, 'local', 'kent');
     }
 
+    if ($oldversion < 2015031300) {
+        $configman->configure_20150313();
+
+        // local_kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015031300, 'local', 'kent');
+    }
+
+    if ($oldversion < 2015031600 && isset($sharedbman)) {
+        // Define table shared_roles to be dropped.
+        $table = new xmldb_table('shared_roles');
+
+        // Conditionally launch drop table for shared_roles.
+        if ($sharedbman->table_exists($table)) {
+            $sharedbman->drop_table($table);
+        }
+
+        // Define table shared_role_assignments to be dropped.
+        $table = new xmldb_table('shared_role_assignments');
+
+        // Conditionally launch drop table for shared_role_assignments.
+        if ($sharedbman->table_exists($table)) {
+            $sharedbman->drop_table($table);
+        }
+
+        // Define table shared_roles to be created.
+        $table = new xmldb_table('shared_roles');
+
+        // Adding fields to table shared_roles.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('shortname', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('username', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('contextlevel', XMLDB_TYPE_INTEGER, '3', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('contextname', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+
+        // Adding keys to table shared_roles.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for shared_roles.
+        if (!$sharedbman->table_exists($table)) {
+            $sharedbman->create_table($table);
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015031600, 'local', 'kent');
+    }
+
+    if ($oldversion < 2015031601 && isset($sharedbman)) {
+        // Define table shared_config to be dropped.
+        $table = new xmldb_table('shared_config');
+
+        // Conditionally launch drop table for shared_config.
+        if ($sharedbman->table_exists($table)) {
+            $sharedbman->drop_table($table);
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015031601, 'local', 'kent');
+    }
+
+    // Upgrade role sync system.
+    // Migrates all enrolments in category and system contexts to SHAREDB.
+    if ($oldversion < 2015031700 && $CFG->kent->distribution == LIVE_MOODLE) {
+        $SHAREDB->delete_records('shared_roles');
+
+        $rm = new \local_kent\RoleManager();
+        $syncset = array();
+
+        // Grab a list of course categories.
+        $categories = $DB->get_records('course_categories');
+
+        // Push up all managed enrolments in all categories.
+        foreach ($categories as $category) {
+            $ctx = \context_coursecat::instance($category->id);
+            $ras = $rm->get_local_enrolments_context($ctx);
+            foreach ($ras as $ra) {
+                if ($rm->is_managed($ra->shortname)) {
+                    $syncset[$ra->id] = array(
+                        'shortname' => $ra->shortname,
+                        'username' => $ra->username,
+                        'contextlevel' => \CONTEXT_COURSECAT,
+                        'contextname' => $category->idnumber
+                    );
+                }
+            }
+        }
+
+        $ctx = \context_system::instance();
+        $ras = $rm->get_local_enrolments_context($ctx);
+        foreach ($ras as $ra) {
+            if ($rm->is_managed($ra->shortname)) {
+                $syncset[$ra->id] = array(
+                    'shortname' => $ra->shortname,
+                    'username' => $ra->username,
+                    'contextlevel' => \CONTEXT_SYSTEM,
+                    'contextname' => ''
+                );
+            }
+        }
+
+        $SHAREDB->insert_records('shared_roles', $syncset);
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015031700, 'local', 'kent');
+    }
+
     return true;
 }
