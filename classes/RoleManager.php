@@ -361,4 +361,24 @@ class RoleManager
             ));
         }
     }
+
+    /**
+     * Returns a list of local enrolments within a given context.
+     * Returns a mapped list ready for SHAREDB (shortname, username).
+     */
+    public function get_local_enrolments_context($ctx) {
+        global $DB;
+
+        return $DB->get_records_sql('
+            SELECT ra.id, r.shortname, u.username
+            FROM {role_assignments} ra
+            INNER JOIN {role} r
+                ON r.id = ra.roleid
+            INNER JOIN {user} u
+                ON u.id = ra.userid
+            WHERE ra.contextid = :contextid
+        ', array(
+            'contextid' => $ctx->id
+        ));
+    }
 }

@@ -399,5 +399,62 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015031600, 'local', 'kent');
     }
 
+    if ($oldversion < 2015031601 && isset($sharedbman)) {
+        // Define table shared_config to be dropped.
+        $table = new xmldb_table('shared_config');
+
+        // Conditionally launch drop table for shared_config.
+        if ($sharedbman->table_exists($table)) {
+            $sharedbman->drop_table($table);
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015031601, 'local', 'kent');
+    }
+
+    // Upgrade role sync system.
+    // Migrates all enrolments in category and system contexts to SHAREDB.
+    if ($oldversion < 2015031700 && $CFG->kent->distribution == LIVE_MOODLE) {
+        $rm = new \local_kent\RoleManager();
+        $syncset = array();
+
+        // Grab a list of course categories.
+        $categories = $DB->get_records('course_categories');
+
+        // Push up all managed enrolments in all categories.
+        foreach ($categories as $category) {
+            $ctx = \context_coursecat::instance($category->id);
+            $ras = $rm->get_local_enrolments_context($ctx);
+            foreach ($ras as $ra) {
+                if ($rm->is_managed($ra->shortname)) {
+                    $syncset[$ra->id] = array(
+                        'shortname' => $ra->shortname,
+                        'username' => $ra->username,
+                        'contextlevel' => \CONTEXT_COURSECAT,
+                        'contextname' => $category->idnumber
+                    );
+                }
+            }
+        }
+
+        $ctx = \context_system::instance();
+        $ras = $rm->get_local_enrolments_context($ctx);
+        foreach ($ras as $ra) {
+            if ($rm->is_managed($ra->shortname)) {
+                $syncset[$ra->id] = array(
+                    'shortname' => $ra->shortname,
+                    'username' => $ra->username,
+                    'contextlevel' => \CONTEXT_SYSTEM,
+                    'contextname' => ''
+                );
+            }
+        }
+
+        $SHAREDB->insert_records('shared_roles', $syncset);
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015031700, 'local', 'kent');
+    }
+
     return true;
 }
