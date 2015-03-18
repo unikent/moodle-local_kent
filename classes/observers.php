@@ -168,7 +168,7 @@ class observers
         ));
 
         // Ping the group manager?
-        if ($context->contextlevel == CONTEXT_COURSE && strpos($role->shortname, 'student') !== false) {
+        if ($context->contextlevel == \CONTEXT_COURSE && strpos($role->shortname, 'student') !== false) {
             \local_kent\GroupManager::enrolment_created($context->instanceid, $event->relateduserid);
         }
 
@@ -188,7 +188,7 @@ class observers
         global $DB;
 
         // Get the context.
-        $context = \context::instance_by_id($event->contextid, MUST_EXIST);
+        $context = \context::instance_by_id($event->contextid, \MUST_EXIST);
 
         // Ping the role manager.
         $rm = new \local_kent\RoleManager();

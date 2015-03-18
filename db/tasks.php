@@ -42,15 +42,6 @@ $tasks = array(
         'month' => '*'
     ),
     array(
-        'classname' => 'local_kent\task\memcached_purge',
-        'blocking' => 0,
-        'minute' => '0',
-        'hour' => '0',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
         'classname' => 'local_kent\task\course_shouter',
         'blocking' => 0,
         'minute' => '*/5',
