@@ -14,7 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
-require_once($CFG->libdir . '/filelib.php');
+require_once(dirname(__FILE__) . '/../../config.php');
 
-send_file_not_found();
+require_login();
+
+$PAGE->set_context(context_user::instance($USER->id));
+$PAGE->set_url('/local/kent/index.php');
+$PAGE->set_title("Kent Moodle");
+
+// Output header.
+echo $OUTPUT->header();
+echo $OUTPUT->heading('Kent Moodle');
+
+echo <<<HTML5
+<p>Here you can change your <a href="optin.php">beta preferences</a> or view the <a href="changelog.php">Kent Moodle changelog</a>.</p>
+HTML5;
+
+// Output footer.
+echo $OUTPUT->footer();
