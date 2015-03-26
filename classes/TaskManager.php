@@ -57,7 +57,6 @@ class TaskManager
 		$this->disable_task('\\local_connect\\task\\course_sync');
 		$this->disable_task('\\local_connect\\task\\fix_mids');
 		$this->disable_task('\\local_connect\\task\\group_sync');
-		$this->disable_task('\\local_kent\\task\\memcached_purge');
 		$this->disable_task('\\local_kent\\task\\role_sync');
 		$this->disable_task('\\mod_cla\\task\\monthly_stats_gen');
 		$this->disable_task('\\mod_cla\\task\\reminder_email');

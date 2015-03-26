@@ -15,20 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once(dirname(__FILE__) . '/../../config.php');
+require_once($CFG->libdir.'/adminlib.php');
 
 require_login();
 
 $PAGE->set_context(context_user::instance($USER->id));
-$PAGE->set_url('/local/kent/index.php');
-$PAGE->set_title("Kent Moodle");
+$PAGE->set_url('/local/kent/changelog.php');
+$PAGE->set_title("Kent Moodle Changelog");
 
 // Output header.
 echo $OUTPUT->header();
-echo $OUTPUT->heading('Kent Moodle');
 
-echo <<<HTML5
-<p>Here you can change your <a href="optin.php">beta preferences</a> or view the <a href="changelog.php">Kent Moodle changelog</a>.</p>
-HTML5;
+$info = file_get_contents("$CFG->dirroot/changelog.md");
+echo markdown_to_html($info);
 
 // Output footer.
 echo $OUTPUT->footer();
