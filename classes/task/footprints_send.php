@@ -25,7 +25,7 @@
 namespace local_kent\task;
 
 /**
- * Sync a specified user's enrolments.
+ * Send footprints tickets.
  */
 class footprints_send extends \core\task\adhoc_task
 {
