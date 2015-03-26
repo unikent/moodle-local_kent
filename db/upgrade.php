@@ -433,7 +433,7 @@ function xmldb_local_kent_upgrade($oldversion) {
                         'shortname' => $ra->shortname,
                         'username' => $ra->username,
                         'contextlevel' => \CONTEXT_COURSECAT,
-                        'contextname' => $category->idnumber
+                        'contextname' => $category->name
                     );
                 }
             }

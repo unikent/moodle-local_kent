@@ -240,7 +240,7 @@ class RoleManager
 
         if ($contextlevel == \CONTEXT_COURSECAT) {
             $coursecat = $DB->get_record('course_categories', array(
-                'idnumber' => $ident
+                'name' => $ident
             ));
 
             if ($coursecat) {
@@ -324,7 +324,7 @@ class RoleManager
         // Resolve context.
         $contextname = '';
         if ($context->contextlevel == \CONTEXT_COURSECAT) {
-            $contextname = $DB->get_field('course_categories', 'idnumber', array(
+            $contextname = $DB->get_field('course_categories', 'name', array(
                 'id' => $context->instanceid
             ));
         }
