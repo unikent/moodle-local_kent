@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/kent/db" VERSION="20150401" COMMENT="XMLDB file for Moodle local/kent"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="course_notifications" COMMENT="Course notifications">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="contextid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="extref" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="External reference"/>
+        <FIELD NAME="message" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="dismissable" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="k_cidctxextref" TYPE="unique" FIELDS="courseid, contextid, extref"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="i_courseid" UNIQUE="false" FIELDS="courseid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="course_notifications_seen" COMMENT="Seen course notifications">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="nid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="notification id"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="k_niduserid" TYPE="unique" FIELDS="nid, userid"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="i_nid" UNIQUE="false" FIELDS="nid"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

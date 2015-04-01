@@ -412,5 +412,57 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015031601, 'local', 'kent');
     }
 
+    if ($oldversion < 2015040100) {
+        {
+            // Define table course_notifications to be created.
+            $table = new xmldb_table('course_notifications');
+
+            // Adding fields to table course_notifications.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+            $table->add_field('courseid', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('contextid', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('extref', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+            $table->add_field('message', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+            $table->add_field('dismissable', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1');
+
+            // Adding keys to table course_notifications.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('k_cidctxextref', XMLDB_KEY_UNIQUE, array('courseid', 'contextid', 'extref'));
+
+            // Adding indexes to table course_notifications.
+            $table->add_index('i_courseid', XMLDB_INDEX_NOTUNIQUE, array('courseid'));
+
+            // Conditionally launch create table for course_notifications.
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+
+        {
+            // Define table course_notifications_seen to be created.
+            $table = new xmldb_table('course_notifications_seen');
+
+            // Adding fields to table course_notifications_seen.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+            $table->add_field('nid', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('userid', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, null);
+
+            // Adding keys to table course_notifications_seen.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->add_key('k_niduserid', XMLDB_KEY_UNIQUE, array('nid', 'userid'));
+
+            // Adding indexes to table course_notifications_seen.
+            $table->add_index('i_nid', XMLDB_INDEX_NOTUNIQUE, array('nid'));
+
+            // Conditionally launch create table for course_notifications_seen.
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015040100, 'local', 'kent');
+    }
+
     return true;
 }
