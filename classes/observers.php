@@ -214,7 +214,7 @@ class observers
     public static function rollover_started(\local_rollover\event\rollover_started $event) {
         // Add message.
         $kc = new \local_kent\Course($event->courseid);
-        $kc->add_notification($event->context->id, 'rollover_scheduled', 'A rollover has been scheduled on this course.', false);
+        $kc->add_notification($event->get_context()->id, 'rollover_scheduled', 'A rollover has been scheduled on this course.', false);
     }
 
     /**
@@ -226,14 +226,14 @@ class observers
     public static function rollover_finished(\local_rollover\event\rollover_finished $event) {
         // Delete any notifications.
         $kc = new \local_kent\Course($event->courseid);
-        $notification = $kc->get_notification($event->context->id, 'rollover_scheduled');
+        $notification = $kc->get_notification($event->get_context()->id, 'rollover_scheduled');
         if ($notification) {
             $notification->delete();
         }
 
         // Add message.
         $kc = new \local_kent\Course($event->courseid);
-        $kc->add_notification($event->context->id, 'rollover_finished', 'This course has been rolled over from a previous year.');
+        $kc->add_notification($event->get_context()->id, 'rollover_finished', 'This course has been rolled over from a previous year.');
     }
 
     /**
@@ -252,6 +252,6 @@ class observers
 
         // Add message.
         $kc = new \local_kent\Course($event->courseid);
-        $kc->add_notification($event->context->id, 'rollover_error', 'The rollover for this course failed! Please contact your FLT.', false);
+        $kc->add_notification($event->get_context()->id, 'rollover_error', 'The rollover for this course failed! Please contact your FLT.', false);
     }
 }
