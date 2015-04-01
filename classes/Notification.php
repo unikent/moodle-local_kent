@@ -27,7 +27,7 @@ class Notification
 
 	public function __construct($notification) {
 		$this->_data = (array)$notification;
-		$this->_data['seen'] = array();
+		$this->_data['_seen'] = array();
 	}
 
 	/**
@@ -64,14 +64,14 @@ class Notification
 			$userid = $USER->id;
 		}
 
-		if (!isset($this->_data['seen'][$userid])) {
-			$this->_data['seen'][$userid] = $DB->record_exists('course_notifications_seen', array(
+		if (!isset($this->_data['_seen'][$userid])) {
+			$this->_data['_seen'][$userid] = $DB->record_exists('course_notifications_seen', array(
 				'nid' => $this->id,
 				'userid' => $userid
 			));
 		}
 
-		return $this->_data['seen'][$userid];
+		return $this->_data['_seen'][$userid];
 	}
 
 	/**
