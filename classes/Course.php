@@ -79,6 +79,10 @@ class Course
 			'extref' => $extref
 		));
 
+		if (!$record) {
+			return null;
+		}
+
 		return new \local_kent\Notification($record);
 	}
 }

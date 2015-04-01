@@ -204,4 +204,54 @@ class observers
         $cache = \cache::make('local_kent', 'userprefs');
         $cache->delete($event->objectid . '_prefs');
     }
+
+    /**
+     * Triggered when stuff happens to a rollover.
+     * Kinda.. should be able to work it out from the name tbh.
+     *
+     * @param \local_rollover\event\rollover_started $event
+     */
+    public static function rollover_started(\local_rollover\event\rollover_started $event) {
+        // Add message.
+        $kc = new \local_kent\Course($event->courseid);
+        $kc->add_notification($event->context->id, 'rollover_scheduled', 'A rollover has been scheduled on this course.', false);
+    }
+
+    /**
+     * Triggered when stuff happens to a rollover.
+     * Kinda.. should be able to work it out from the name tbh.
+     *
+     * @param \local_rollover\event\rollover_finished $event
+     */
+    public static function rollover_finished(\local_rollover\event\rollover_finished $event) {
+        // Delete any notifications.
+        $kc = new \local_kent\Course($event->courseid);
+        $notification = $kc->get_notification($event->context->id, 'rollover_scheduled');
+        if ($notification) {
+            $notification->delete();
+        }
+
+        // Add message.
+        $kc = new \local_kent\Course($event->courseid);
+        $kc->add_notification($event->context->id, 'rollover_finished', 'This course has been rolled over from a previous year.');
+    }
+
+    /**
+     * Triggered when stuff happens to a rollover.
+     * Kinda.. should be able to work it out from the name tbh.
+     *
+     * @param \local_rollover\event\rollover_error $event
+     */
+    public static function rollover_error(\local_rollover\event\rollover_error $event) {
+        // Delete any notifications.
+        $kc = new \local_kent\Course($event->courseid);
+        $notifications = $kc->get_notifications();
+        foreach ($notifications as $notification) {
+            $notification->delete();
+        }
+
+        // Add message.
+        $kc = new \local_kent\Course($event->courseid);
+        $kc->add_notification($event->context->id, 'rollover_error', 'The rollover for this course failed! Please contact your FLT.', false);
+    }
 }
