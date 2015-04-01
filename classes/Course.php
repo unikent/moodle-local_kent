@@ -33,39 +33,52 @@ class Course
 	 * Add a notification to a course.
 	 * 
 	 * @param int $contextid The context ID of the component that is alerting.
-	 * @param string $ref Something to remember me by, e.g. 'delete_notify'. Used with $contextid to grab notifications.
+	 * @param string $extref Something to remember me by, e.g. 'delete_notify'. Used with $contextid to grab notifications.
 	 * @param string $message The message (HTML is fine).
 	 * @param boolean $dismissable Can this alert be dismissed by users?
 	 */
-	public function add_notification($contextid, $ref, $message, $dismissable = true) {
-		// TODO.
-	}
+	public function add_notification($contextid, $extref, $message, $dismissable = true) {
+		global $DB;
 
-	/**
-	 * Remove a notification.
-	 */
-	public function remove_notification($contextid, $ref) {
-		// TODO.
+		$DB->insert_record('course_notifications', array(
+			'courseid' => $this->_courseid,
+			'contextid' => $contextid,
+			'extref' => $extref,
+			'message' => $message,
+			'dismissable' => $dismissable ? '1' : '0'
+		));
 	}
 
 	/**
 	 * Return a list of notifications.
 	 */
 	public function get_notifications() {
-		// TODO.
+		global $DB;
+
+		$objects = array();
+
+		$records = $DB->get_records('course_notifications', array(
+			'courseid' => $this->_courseid
+		));
+		foreach ($records as $record) {
+			$objects[] = new \local_kent\Notification($record);
+		}
+
+		return $objects;
 	}
 
 	/**
 	 * Return a list of notifications within a specific context.
 	 */
-	public function get_notifications_context($contextid, $ref) {
-		// TODO.
-	}
+	public function get_notification($contextid, $extref) {
+		global $DB;
 
-	/**
-	 * Mark a notification as 'seen' by a specific user.
-	 */
-	public function notification_seen($id, $userid) {
-		// TODO.
+		$record = $DB->get_record('course_notifications', array(
+			'courseid' => $this->_courseid,
+			'contextid' => $contextid,
+			'extref' => $extref
+		));
+
+		return new \local_kent\Notification($record);
 	}
 }

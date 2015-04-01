@@ -427,7 +427,7 @@ function xmldb_local_kent_upgrade($oldversion) {
 
             // Adding keys to table course_notifications.
             $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-            $table->add_key('k_cidextref', XMLDB_KEY_UNIQUE, array('contextid', 'extref'));
+            $table->add_key('k_cidctxextref', XMLDB_KEY_UNIQUE, array('courseid', 'contextid', 'extref'));
 
             // Adding indexes to table course_notifications.
             $table->add_index('i_courseid', XMLDB_INDEX_NOTUNIQUE, array('courseid'));

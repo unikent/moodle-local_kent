@@ -15,10 +15,10 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="cidextref" TYPE="unique" FIELDS="contextid, extref"/>
+        <KEY NAME="k_cidctxextref" TYPE="unique" FIELDS="courseid, contextid, extref"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="courseid" UNIQUE="false" FIELDS="courseid"/>
+        <INDEX NAME="i_courseid" UNIQUE="false" FIELDS="courseid"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="course_notifications_seen" COMMENT="Seen course notifications">
@@ -29,10 +29,10 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="niduserid" TYPE="unique" FIELDS="nid, userid"/>
+        <KEY NAME="k_niduserid" TYPE="unique" FIELDS="nid, userid"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="inid" UNIQUE="false" FIELDS="nid"/>
+        <INDEX NAME="i_nid" UNIQUE="false" FIELDS="nid"/>
       </INDEXES>
     </TABLE>
   </TABLES>
