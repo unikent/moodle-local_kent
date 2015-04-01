@@ -31,6 +31,19 @@ class Notification
 	}
 
 	/**
+	 * Instance.
+	 */
+	public static function instance($id) {
+		global $DB;
+
+		$obj = $DB->get_record('course_notifications', array(
+			'id' => $id
+		));
+
+		return new static($obj);
+	}
+
+	/**
 	 * Magic.
 	 * But remember! All magic, comes with a price!
 	 */
