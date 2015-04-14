@@ -69,6 +69,10 @@ class TaskManager
 	private function configure_task($taskname, $minute = '*', $hour = '*', $month = '*', $dayofweek = '*', $day = '*') {
 	    try {
 		    $task = \core\task\manager::get_scheduled_task($taskname);
+		    if (!$task) {
+		    	return;
+		    }
+
 		    $task->set_minute($minute);
 		    $task->set_hour($hour);
 		    $task->set_month($month);
@@ -88,6 +92,10 @@ class TaskManager
 	private function enable_task($taskname) {
 	    try {
 		    $task = \core\task\manager::get_scheduled_task($taskname);
+		    if (!$task) {
+		    	return;
+		    }
+
 		    $task->set_disabled(false);
 		    $task->set_customised(true);
 
@@ -103,6 +111,10 @@ class TaskManager
 	private function disable_task($taskname) {
 	    try {
 		    $task = \core\task\manager::get_scheduled_task($taskname);
+		    if (!$task) {
+		    	return;
+		    }
+
 		    $task->set_disabled(true);
 		    $task->set_customised(true);
 
