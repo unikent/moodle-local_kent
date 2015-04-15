@@ -31,6 +31,7 @@ class RoleManager
         'dep_admin' => 'editingteacher',
         'extexam' => 'teacher',
         'support_staff' => 'editingteacher',
+        'convenor' => 'editingteacher',
         'sds_convenor' => 'editingteacher',
         'sds_teacher' => 'editingteacher',
         'sds_student' => 'student',
@@ -66,7 +67,17 @@ class RoleManager
      * Configure all managed roles, call this from an upgrade script when
      * you change something.
      */
-    public function configure() {
+    public function configure($role = 'all') {
+        if ($role != 'all') {
+            if (!isset(static::$_managed_roles[$role])) {
+                debugging("Invalid role '{$role}'!");
+                return;
+            }
+
+            $this->install_or_update_role($role, static::$_managed_roles[$role]);
+            return;
+        }
+
         foreach (static::$_managed_roles as $shortname => $archetype) {
             $this->install_or_update_role($shortname, $archetype);
         }
