@@ -27,6 +27,7 @@ function xmldb_local_kent_upgrade($oldversion) {
 
     $taskman = new \local_kent\TaskManager();
     $configman = new \local_kent\ConfigManager();
+    $roleman = new \local_kent\RoleManager();
 
     if ($oldversion < 2014080100) {
         // Define table to be dropped.
@@ -462,6 +463,18 @@ function xmldb_local_kent_upgrade($oldversion) {
 
         // Kent savepoint reached.
         upgrade_plugin_savepoint(true, 2015040100, 'local', 'kent');
+    }
+
+
+    if ($oldversion < 2015041500) {
+        // Configure new Kent managed role.
+        $roleman->configure('convenor');
+
+        // Configs.
+        $configman->configure_20150415();
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015041500, 'local', 'kent');
     }
 
     return true;

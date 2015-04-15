@@ -30,6 +30,7 @@ class ConfigManager
         $this->configure_initial();
         $this->configure_20150305();
         $this->configure_20150313();
+        $this->configure_20150415();
     }
 
     /**
@@ -192,5 +193,26 @@ class ConfigManager
         set_config('core_media_enable_qt', 0);
         set_config('core_media_enable_wmp', 0);
         set_config('core_media_enable_rm', 0);
+    }
+
+    /**
+     * Upgrade step for 20150415.
+     */
+    public function configure_20150415() {
+        set_config('enablewebservices', 1);
+        set_config('enablerssfeeds', 1);
+        set_config('cookiesecure', 1);
+        set_config('forum_enablerssfeeds', 1);
+        set_config('forum_enabletimedposts', 1);
+        set_config('requestcategoryselection', 1);
+        set_config('grade_hiddenasdate', 1);
+        set_config('grade_navmethod', 1);
+        set_config('gradeexport', 'txt,xls');
+        set_config('autolang', 0);
+        set_config('langmenu', 0);
+        set_config('debugdisplay', 0);
+        set_config('facetoface_fromaddress', 'noreply@kent.ac.uk');
+        set_config('facetoface_hidecost', 0);
+        set_config('facetoface_hidediscount', 0);
     }
 }
