@@ -52,13 +52,11 @@ class TaskManager
 		}
 
 		// Disable a set of tasks that only need to be active on the current Moodle.
-		$this->disable_task('\\block_panopto\\task\\course_provisions');
 		$this->disable_task('\\enrol_connect\\task\\sync');
 		$this->disable_task('\\local_connect\\task\\course_sync');
 		$this->disable_task('\\local_connect\\task\\fix_mids');
 		$this->disable_task('\\local_connect\\task\\group_sync');
 		$this->disable_task('\\local_kent\\task\\role_sync');
-		$this->disable_task('\\mod_cla\\task\\monthly_stats_gen');
 		$this->disable_task('\\mod_cla\\task\\reminder_email');
 		$this->disable_task('\\mod_thesis\\task\\submissions');
 	}
@@ -70,6 +68,7 @@ class TaskManager
 	    try {
 		    $task = \core\task\manager::get_scheduled_task($taskname);
 		    if (!$task) {
+		    	debugging("Invalid task: {$taskname}.");
 		    	return;
 		    }
 
@@ -93,6 +92,7 @@ class TaskManager
 	    try {
 		    $task = \core\task\manager::get_scheduled_task($taskname);
 		    if (!$task) {
+		    	debugging("Invalid task: {$taskname}.");
 		    	return;
 		    }
 
@@ -112,6 +112,7 @@ class TaskManager
 	    try {
 		    $task = \core\task\manager::get_scheduled_task($taskname);
 		    if (!$task) {
+		    	debugging("Invalid task: {$taskname}.");
 		    	return;
 		    }
 
