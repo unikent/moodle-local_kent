@@ -31,6 +31,7 @@ class ConfigManager
         $this->configure_20150305();
         $this->configure_20150313();
         $this->configure_20150415();
+        $this->configure_20150416();
     }
 
     /**
@@ -214,5 +215,30 @@ class ConfigManager
         set_config('facetoface_fromaddress', 'noreply@kent.ac.uk');
         set_config('facetoface_hidecost', 0);
         set_config('facetoface_hidediscount', 0);
+    }
+
+    /**
+     * Upgrade step for 20150416.
+     */
+    public function configure_20150416() {
+        set_config('hiddensections', 1, 'moodlecourse');
+        set_config('enablecompletion', 1, 'moodlecourse');
+        set_config('marks', 1, 'question_preview');
+        set_config('maxbytes', 0, 'assignsubmission_file');
+        set_config('requiremodintro', 0, 'book');
+        set_config('allow_submissions', 1, 'cla');
+        set_config('requiremodintro', 0, 'lesson');
+        set_config('requiremodintro', 0, 'page');
+        set_config('displayoptions', '5,6', 'page');
+        set_config('autosaveperiod', 120, 'quiz');
+        set_config('strserver', 'media.kent.ac.uk', 'streamingvideo');
+        set_config('enablepeermark', 0, 'turnitintooltwo');
+        set_config('useanon', 1, 'turnitintooltwo');
+        set_config('default_type', 1, 'turnitintooltwo');
+        set_config('default_allowlate', 1, 'turnitintooltwo');
+        set_config('default_erater_dictionary', 'en_GB', 'turnitintooltwo');
+        set_config('requiremodintro', 0, 'url');
+        set_config('printintro', 0, 'url');
+        set_config('convertformat', 'png', 'filter_tex');
     }
 }
