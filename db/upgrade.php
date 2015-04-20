@@ -465,7 +465,6 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015040100, 'local', 'kent');
     }
 
-
     if ($oldversion < 2015041500) {
         // Configure new Kent managed role.
         $roleman->configure('convenor');
@@ -475,6 +474,14 @@ function xmldb_local_kent_upgrade($oldversion) {
 
         // Kent savepoint reached.
         upgrade_plugin_savepoint(true, 2015041500, 'local', 'kent');
+    }
+
+    if ($oldversion < 2015041600) {
+        // Configs.
+        $configman->configure_20150416();
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015041600, 'local', 'kent');
     }
 
     return true;
