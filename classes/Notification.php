@@ -23,10 +23,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class Notification
 {
-	const TYPE_ERROR = 0;
-	const TYPE_WARNING = 1;
-	const TYPE_INFO = 2;
-
 	private $_data;
 
 	private function __construct($notification) {

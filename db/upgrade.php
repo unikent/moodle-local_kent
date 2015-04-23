@@ -514,5 +514,17 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015042300, 'local', 'kent');
     }
 
+    if ($oldversion < 2015042301) {
+        // Changing type of field type on table course_notifications to char.
+        $table = new xmldb_table('course_notifications');
+        $field = new xmldb_field('type', XMLDB_TYPE_CHAR, '18', null, XMLDB_NOTNULL, null, 'warning', 'message');
+
+        // Launch change of type for field type.
+        $dbman->change_field_type($table, $field);
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015042301, 'local', 'kent');
+    }
+
     return true;
 }

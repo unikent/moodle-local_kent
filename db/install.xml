@@ -11,7 +11,7 @@
         <FIELD NAME="contextid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="extref" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="External reference"/>
         <FIELD NAME="message" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="type" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="18" NOTNULL="true" DEFAULT="warning" SEQUENCE="false"/>
         <FIELD NAME="actionable" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="dismissable" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
       </FIELDS>
