@@ -23,24 +23,53 @@ defined('MOODLE_INTERNAL') || die();
  */
 class Notification
 {
+	const TYPE_ERROR = 0;
+	const TYPE_WARNING = 1;
+	const TYPE_INFO = 2;
+
 	private $_data;
 
-	public function __construct($notification) {
+	private function __construct($notification) {
 		$this->_data = (array)$notification;
 		$this->_data['_seen'] = array();
 	}
 
 	/**
-	 * Instance.
+	 * Create.
 	 */
-	public static function instance($id) {
+	public static function create($courseid, $contextid, $extref, $message, $type, $actionable, $dismissable) {
 		global $DB;
 
+		$DB->insert_record('course_notifications', array(
+			'courseid' => $courseid,
+			'contextid' => $contextid,
+			'extref' => $extref,
+			'message' => $message,
+			'type' => $type,
+			'actionable' => $actionable ? '1' : '0',
+			'dismissable' => $dismissable ? '1' : '0'
+		));
+	}
+
+	/**
+	 * Instance.
+	 */
+	public static function instance($objorid) {
+		global $DB;
+
+		if (is_object($objorid)) {
+			return new static($objorid);
+		}
+
 		$obj = $DB->get_record('course_notifications', array(
-			'id' => $id
+			'id' => $objorid
 		));
 
-		return new static($obj);
+		if ($obj) {
+			return new static($obj);
+		}
+
+		return null;
 	}
 
 	/**
