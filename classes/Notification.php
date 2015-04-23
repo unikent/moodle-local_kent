@@ -36,7 +36,7 @@ class Notification
 	public static function create($courseid, $contextid, $extref, $message, $type, $actionable, $dismissable) {
 		global $DB;
 
-		$DB->insert_record('course_notifications', array(
+		$data = array(
 			'courseid' => $courseid,
 			'contextid' => $contextid,
 			'extref' => $extref,
@@ -44,7 +44,11 @@ class Notification
 			'type' => $type,
 			'actionable' => $actionable ? '1' : '0',
 			'dismissable' => $dismissable ? '1' : '0'
-		));
+		);
+
+		$data['id'] = $DB->insert_record('course_notifications', $data);
+
+		return new static($data);
 	}
 
 	/**

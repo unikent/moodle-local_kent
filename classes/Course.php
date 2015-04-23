@@ -40,7 +40,7 @@ class Course
 	 * @param boolean $dismissable Can this alert be dismissed by users?
 	 */
 	public function add_notification($contextid, $extref, $message, $type = 'warning', $actionable = false, $dismissable = true) {
-		\local_kent\Notification::create($this->_courseid, $contextid, $extref, $message, $type, $actionable, $dismissable);
+		return \local_kent\Notification::create($this->_courseid, $contextid, $extref, $message, $type, $actionable, $dismissable);
 	}
 
 	/**
