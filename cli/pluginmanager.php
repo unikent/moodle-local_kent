@@ -30,7 +30,10 @@ list($options, $unrecognized) = cli_get_params(
     ),
     array(
         'l' => 'list',
-        'f' => 'fix'
+        'f' => 'fix',
+        'd' => 'dry',
+        'D' => 'downgrade',
+        'c' => 'clean'
     )
 );
 
@@ -42,6 +45,8 @@ if ($options['fix']) {
     $options['clean'] = true;
     $options['downgrade'] = true;
 }
+
+core_plugin_manager::reset_caches();
 
 $pluginman = core_plugin_manager::instance();
 $plugininfo = $pluginman->get_plugins();
