@@ -18,16 +18,25 @@ require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 
 require_login();
+require_capability('moodle/site:config', context_system::instance());
 
 $PAGE->set_context(context_system::instance());
-$PAGE->set_url('/local/kent/changelog.php');
-$PAGE->set_title("Kent Moodle Changelog");
+$PAGE->set_url('/local/kent/notifications.php');
+$PAGE->set_title("Course Notifications");
+
+// Check form.
+$form = new \local_kent\form\notify_form();
+if ($data = $form->get_data()) {
+	$notification = \local_kent\Notification::create($data->courseid, 0, uniqid(), $data->message, $data->type, $data->actionable, $data->dismissable);
+    redirect(new moodle_url('/local/kent/notifications.php'));
+}
 
 // Output header.
 echo $OUTPUT->header();
+echo $OUTPUT->heading("Course Notifications");
 
-$info = file_get_contents("$CFG->dirroot/changelog.md");
-echo markdown_to_html($info);
+// Show form.
+$form->display();
 
 // Output footer.
 echo $OUTPUT->footer();
