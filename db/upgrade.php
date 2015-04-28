@@ -534,5 +534,17 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015042800, 'local', 'kent');
     }
 
+    // SHAREDB upgrade step.
+    if ($oldversion < 2015042801 && isset($sharedbman)) {
+        // Rename notifications.uid -> notifications.username.
+        $table = new xmldb_table("shared_notifications");
+        if ($sharedbman->table_exists($table)) {
+            $sharedbman->drop_table($table);
+        }
+
+        // local_kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015042801, 'local', 'kent');
+    }
+
     return true;
 }
