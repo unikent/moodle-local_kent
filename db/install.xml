@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/kent/db" VERSION="20150401" COMMENT="XMLDB file for Moodle local/kent"
+<XMLDB PATH="local/kent/db" VERSION="20150423" COMMENT="XMLDB file for Moodle local/kent"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -11,6 +11,8 @@
         <FIELD NAME="contextid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="extref" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="External reference"/>
         <FIELD NAME="message" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="18" NOTNULL="true" DEFAULT="warning" SEQUENCE="false"/>
+        <FIELD NAME="actionable" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="dismissable" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
@@ -19,6 +21,7 @@
       </KEYS>
       <INDEXES>
         <INDEX NAME="i_courseid" UNIQUE="false" FIELDS="courseid"/>
+        <INDEX NAME="i_course_actionable" UNIQUE="false" FIELDS="courseid, actionable"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="course_notifications_seen" COMMENT="Seen course notifications">

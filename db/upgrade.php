@@ -484,5 +484,47 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015041600, 'local', 'kent');
     }
 
+    if ($oldversion < 2015042300) {
+        // Define field type to be added to course_notifications.
+        $table = new xmldb_table('course_notifications');
+        $field = new xmldb_field('type', XMLDB_TYPE_INTEGER, '1', null, null, null, '1', 'message');
+
+        // Conditionally launch add field type.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field actionable to be added to course_notifications.
+        $field = new xmldb_field('actionable', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'type');
+
+        // Conditionally launch add field actionable.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define index i_course_actionable (not unique) to be added to course_notifications.
+        $index = new xmldb_index('i_course_actionable', XMLDB_INDEX_NOTUNIQUE, array('courseid', 'actionable'));
+
+        // Conditionally launch add index i_course_actionable.
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015042300, 'local', 'kent');
+    }
+
+    if ($oldversion < 2015042301) {
+        // Changing type of field type on table course_notifications to char.
+        $table = new xmldb_table('course_notifications');
+        $field = new xmldb_field('type', XMLDB_TYPE_CHAR, '18', null, XMLDB_NOTNULL, null, 'warning', 'message');
+
+        // Launch change of type for field type.
+        $dbman->change_field_type($table, $field);
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015042301, 'local', 'kent');
+    }
+
     return true;
 }
