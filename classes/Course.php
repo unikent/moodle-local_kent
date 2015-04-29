@@ -63,7 +63,7 @@ SQL;
 		foreach ($courses as $course) {
 			$pos = (int)substr($course->shortname, 2);
 			if ($pos >= $num) {
-				$num = $pos + 100;
+				$num = $pos + 25;
 			}
 		}
 
