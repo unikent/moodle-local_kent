@@ -24,6 +24,18 @@ defined('MOODLE_INTERNAL') || die();
 class observers
 {
     /**
+     * course_content_deleted event.
+     */
+    public static function course_content_deleted(\core\event\course_content_deleted $event) {
+        // Delete any notifications.
+        $kc = new \local_kent\Course($event->objectid);
+        $notifications = $kc->get_notifications();
+        foreach ($notifications as $notification) {
+            $notification->delete();
+        }
+    }
+
+    /**
      * Course created observer.
      */
     public static function course_created(\core\event\course_created $event) {
@@ -203,18 +215,6 @@ class observers
     public static function user_updated(\core\event\user_updated $event) {
         $cache = \cache::make('local_kent', 'userprefs');
         $cache->delete($event->objectid . '_prefs');
-    }
-
-    /**
-     * course_content_deleted event.
-     */
-    public static function course_content_deleted(\core\event\course_content_deleted $event) {
-        // Delete any notifications.
-        $kc = new \local_kent\Course($event->objectid);
-        $notifications = $kc->get_notifications();
-        foreach ($notifications as $notification) {
-            $notification->delete();
-        }
     }
 
     /**
