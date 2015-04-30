@@ -241,4 +241,12 @@ class ConfigManager
         set_config('printintro', 0, 'url');
         set_config('convertformat', 'png', 'filter_tex');
     }
+
+    /**
+     * Upgrade step for 20150428.
+     */
+    public function configure_20150428() {
+        set_config('format', 'standardweeks', 'moodlecourse');
+        set_config('disabled', 0, 'format_standardweeks');
+    }
 }

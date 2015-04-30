@@ -30,6 +30,47 @@ class Course
 	}
 
 	/**
+	 * Helper for creating a manual module code.
+	 * Rollover should be true or false, null means we don't know.
+	 */
+	public static function get_manual_shortname($rollover = null) {
+		global $DB;
+
+		$rollover = $rollover === null ? 'X' : ($rollover == true ? 'P' : 'O');
+		$shortname = "D{$rollover}";
+
+		$like = $DB->sql_like('shortname', ':shortname');
+		$like2 = $DB->sql_like('shortname', ':shortname2');
+		$sql = <<<SQL
+			SELECT shortname
+			FROM {course}
+			WHERE {$like}
+
+			UNION
+
+			SELECT shortname
+			FROM {course_request}
+			WHERE {$like2}
+SQL;
+
+		$courses = $DB->get_records_sql($sql, array(
+		    'shortname' => $shortname . "%",
+		    'shortname2' => $shortname . "%"
+		));
+
+
+		$num = 1000;
+		foreach ($courses as $course) {
+			$pos = (int)substr($course->shortname, 2);
+			if ($pos >= $num) {
+				$num = $pos + 25;
+			}
+		}
+
+		return "{$shortname}{$num}";
+	}
+
+	/**
 	 * Add a notification to a course.
 	 * 
 	 * @param int $contextid The context ID of the component that is alerting.

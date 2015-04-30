@@ -45,7 +45,7 @@ class notify_form extends \moodleform
         $mform->addElement('textarea', 'message', 'Message', array(
             'rows' => 10
         ));
-        $mform->setType('message', PARAM_TEXT);
+        $mform->setType('message', PARAM_RAW);
 
         $mform->addElement('checkbox', 'actionable', 'Actionable');
         $mform->addElement('checkbox', 'dismissable', 'Dismissable');

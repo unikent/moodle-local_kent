@@ -18,14 +18,14 @@
  * Version information
  *
  * @package    local_kent
- * @copyright  2014 University of Kent
+ * @copyright  2015 University of Kent
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_kent';
-$plugin->version   = 2015042301;
+$plugin->version   = 2015043000;
 $plugin->requires  = 2014051200;
 
 $plugin->dependencies = array(

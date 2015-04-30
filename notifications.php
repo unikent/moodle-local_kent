@@ -27,8 +27,8 @@ $PAGE->set_title("Course Notifications");
 // Check form.
 $form = new \local_kent\form\notify_form();
 if ($data = $form->get_data()) {
-	$notification = \local_kent\Notification::create($data->courseid, 0, uniqid(), $data->message, $data->type, $data->actionable, $data->dismissable);
-    redirect(new moodle_url('/local/kent/notifications.php'));
+	\local_kent\Notification::create($data->courseid, 0, uniqid(), $data->message, $data->type, $data->actionable, $data->dismissable);
+    redirect(new moodle_url('/course/view.php', array('id' => $data->courseid)));
 }
 
 // Output header.

@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/kent/db" VERSION="20150316" COMMENT="XMLDB file for SHAREDB"
+<XMLDB PATH="local/kent/db" VERSION="20150428" COMMENT="XMLDB file for SHAREDB"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="shared_notifications" COMMENT="shared_notifications table retrofitted from MySQL">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="username" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false"/>
-        <FIELD NAME="content" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="time" TYPE="datetime" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="seen" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="index_notifications_on_seen" UNIQUE="false" FIELDS="seen"/>
-        <INDEX NAME="index_notifications_on_uid" UNIQUE="false" FIELDS="username"/>
-      </INDEXES>
-    </TABLE>
     <TABLE NAME="shared_users" COMMENT="shared_users table retrofitted from MySQL">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
