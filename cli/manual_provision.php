@@ -76,7 +76,7 @@ foreach ($csv as $course) {
     $obj->visible = 0;
 
     $course = create_course($obj);
-    $ctx = \course_context::instance($course->id);
+    $ctx = \context_course::instance($course->id);
     
     $rolloverlink = new \moodle_url('/local/kent/courseclassify.php', array(
     	'id' => $course->id,
@@ -90,7 +90,7 @@ foreach ($csv as $course) {
 
     // Add message.
     $kc = new \local_kent\Course($course->id);
-    $kc->add_notification($ctx->id, 'manual_classify', "This manually created module has not been classified. Do you want this module to rollover next year? <a href=\"$rolloverlink\" class=\"alert-link\">Yes</a> <a href=\"$norolloverlink\" class=\"alert-link\">No</a>.", 'warning', true, false);
+    $kc->add_notification($ctx->id, 'manual_classify', "This manually created module has not been classified. Do you want this module to rollover next year? <a href=\"$rolloverlink\" class=\"alert-link\">Yes</a> / <a href=\"$norolloverlink\" class=\"alert-link\">No</a>.", 'warning', true, false);
 
     echo "$shortname, $newshortname\n";
 }
