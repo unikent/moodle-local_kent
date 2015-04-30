@@ -213,8 +213,9 @@ class observers
      */
     public static function rollover_started(\local_rollover\event\rollover_started $event) {
         // Add message.
+        $message = '<i class="fa fa-info-circle"></i> A rollover has been scheduled on this course.';
         $kc = new \local_kent\Course($event->courseid);
-        $kc->add_notification($event->get_context()->id, 'rollover_scheduled', 'A rollover has been scheduled on this course.', false);
+        $kc->add_notification($event->get_context()->id, 'rollover_scheduled', $message, false);
     }
 
     /**
@@ -224,6 +225,8 @@ class observers
      * @param \local_rollover\event\rollover_finished $event
      */
     public static function rollover_finished(\local_rollover\event\rollover_finished $event) {
+        global $CFG, $SHAREDB;
+
         // Delete any notifications.
         $kc = new \local_kent\Course($event->courseid);
         $notification = $kc->get_notification($event->get_context()->id, 'rollover_scheduled');
@@ -231,9 +234,23 @@ class observers
             $notification->delete();
         }
 
+        $message = '<i class="fa fa-history"></i> This course has been rolled over from a previous year.';
+
+        // Get the rollover.
+        $rollover = $SHAREDB->get_record('shared_rollovers', array('id' => $event->objectid));
+        if ($rollover && isset($CFG->kent->paths[$rollover->from_dist])) {
+            $url = $CFG->kent->paths[$rollover->from_dist] . "course/view.php?id=" . $rollover->from_course;
+            $undourl = new \moodle_url('/local/rollover/clear.php', array(
+                'id' => $rollover->id
+            ));
+            $message = <<<HTML5
+                <i class="fa fa-history"></i> This course has been rolled over from <a href="{$url}">Moodle {$rollover->from_dist}</a>. <a href="{$undourl}">Undo</a>
+HTML5;
+        }
+
         // Add message.
         $kc = new \local_kent\Course($event->courseid);
-        $kc->add_notification($event->get_context()->id, 'rollover_finished', 'This course has been rolled over from a previous year.');
+        $kc->add_notification($event->get_context()->id, 'rollover_finished', $message);
     }
 
     /**
@@ -251,7 +268,8 @@ class observers
         }
 
         // Add message.
+        $message = '<i class="fa fa-exclamation-triangle"></i> The rollover for this course failed! Please contact your FLT.';
         $kc = new \local_kent\Course($event->courseid);
-        $kc->add_notification($event->get_context()->id, 'rollover_error', 'The rollover for this course failed! Please contact your FLT.', false);
+        $kc->add_notification($event->get_context()->id, 'rollover_error', $message, false);
     }
 }
