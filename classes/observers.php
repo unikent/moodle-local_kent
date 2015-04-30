@@ -240,11 +240,8 @@ class observers
         $rollover = $SHAREDB->get_record('shared_rollovers', array('id' => $event->objectid));
         if ($rollover && isset($CFG->kent->paths[$rollover->from_dist])) {
             $url = $CFG->kent->paths[$rollover->from_dist] . "course/view.php?id=" . $rollover->from_course;
-            $undourl = new \moodle_url('/local/rollover/clear.php', array(
-                'id' => $rollover->id
-            ));
             $message = <<<HTML5
-                <i class="fa fa-history"></i> This course has been rolled over from <a href="{$url}">Moodle {$rollover->from_dist}</a>. <a href="{$undourl}">Undo</a>
+                <i class="fa fa-history"></i> This course has been rolled over from <a href="{$url}" class="alert-link">Moodle {$rollover->from_dist}</a>.
 HTML5;
         }
 
