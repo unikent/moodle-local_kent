@@ -65,6 +65,11 @@ $observers = array (
     ),
 
     array (
+        'eventname' => '\core\event\course_content_deleted',
+        'callback'  => '\local_kent\observers::course_content_deleted',
+    ),
+
+    array (
         'eventname' => '\local_rollover\event\rollover_started',
         'callback'  => '\local_kent\observers::rollover_started',
     ),
