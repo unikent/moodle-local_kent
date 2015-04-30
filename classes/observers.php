@@ -215,7 +215,7 @@ class observers
         // Add message.
         $message = '<i class="fa fa-info-circle"></i> A rollover has been scheduled on this course.';
         $kc = new \local_kent\Course($event->courseid);
-        $kc->add_notification($event->get_context()->id, 'rollover_scheduled', $message, false);
+        $kc->add_notification($event->get_context()->id, 'rollover_scheduled', $message, 'info', false, false);
     }
 
     /**
@@ -250,7 +250,7 @@ HTML5;
 
         // Add message.
         $kc = new \local_kent\Course($event->courseid);
-        $kc->add_notification($event->get_context()->id, 'rollover_finished', $message);
+        $kc->add_notification($event->get_context()->id, 'rollover_finished', $message, 'info', false, true);
     }
 
     /**
@@ -270,6 +270,6 @@ HTML5;
         // Add message.
         $message = '<i class="fa fa-exclamation-triangle"></i> The rollover for this course failed! Please contact your FLT.';
         $kc = new \local_kent\Course($event->courseid);
-        $kc->add_notification($event->get_context()->id, 'rollover_error', $message, false);
+        $kc->add_notification($event->get_context()->id, 'rollover_error', $message, 'error', false, false);
     }
 }
