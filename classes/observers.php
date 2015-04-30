@@ -24,18 +24,6 @@ defined('MOODLE_INTERNAL') || die();
 class observers
 {
     /**
-     * course_content_deleted event.
-     */
-    public static function course_content_deleted(\core\event\course_content_deleted $event) {
-        // Delete any notifications.
-        $kc = new \local_kent\Course($event->objectid);
-        $notifications = $kc->get_notifications();
-        foreach ($notifications as $notification) {
-            $notification->delete();
-        }
-    }
-
-    /**
      * Course created observer.
      */
     public static function course_created(\core\event\course_created $event) {
@@ -69,6 +57,18 @@ class observers
         return true;
     }
 
+    /**
+     * course_content_deleted event.
+     */
+    public static function course_content_deleted(\core\event\course_content_deleted $event) {
+        // Delete any notifications.
+        $kc = new \local_kent\Course($event->objectid);
+        $notifications = $kc->get_notifications();
+        foreach ($notifications as $notification) {
+            $notification->delete();
+        }
+    }
+    
     /**
      * Course deleted observer.
      */
