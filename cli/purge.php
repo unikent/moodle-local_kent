@@ -39,7 +39,9 @@ if ($options['dry']) {
     echo "Running in LIVE mode...\n";
 }
 
-function purge_cat($category) {
+function purge_cat($category, $options) {
+    global $DB;
+
     \local_hipchat\Message::send("Purging Category {$category}...", "red");
 
     // Destroy everything.
@@ -79,5 +81,5 @@ function purge_cat($category) {
 $categories = $options['category'];
 $categories = explode(',', $categories);
 foreach ($categories as $category) {
-    purge_cat($category);
+    purge_cat($category, $options);
 }
