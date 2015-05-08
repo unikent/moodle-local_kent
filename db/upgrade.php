@@ -554,5 +554,29 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015050800, 'local', 'kent');
     }
 
+    // SHAREDB upgrade step.
+    if ($oldversion < 2015050801 && isset($sharedbman)) {
+
+        // Define table shared_vimeo_quota to be created.
+        $table = new xmldb_table('shared_vimeo_quota');
+
+        // Adding fields to table shared_vimeo_quota.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('timestamp', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('used', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+        $table->add_field('free', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+
+        // Adding keys to table shared_vimeo_quota.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for shared_vimeo_quota.
+        if (!$sharedbman->table_exists($table)) {
+            $sharedbman->create_table($table);
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015050801, 'local', 'kent');
+    }
+
     return true;
 }

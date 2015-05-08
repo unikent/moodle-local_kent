@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/kent/db" VERSION="20150428" COMMENT="XMLDB file for SHAREDB"
+<XMLDB PATH="local/kent/db" VERSION="20150508" COMMENT="XMLDB file for SHAREDB"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -93,6 +93,17 @@
         <FIELD NAME="username" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="username"/>
         <FIELD NAME="contextlevel" TYPE="int" LENGTH="3" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="contextname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The UID for the given context level"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="shared_vimeo_quota" COMMENT="Stores Vimeo quota usage stats">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="timestamp" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Time quota was checked"/>
+        <FIELD NAME="used" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Used quota"/>
+        <FIELD NAME="free" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Remaining upload quota"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
