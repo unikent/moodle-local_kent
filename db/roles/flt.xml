@@ -447,7 +447,6 @@
 		<allow>mod/scorm:skipview</allow>
 		<allow>mod/scorm:viewreport</allow>
 		<allow>mod/scorm:viewscores</allow>
-		<prevent>mod/streamingvideo:addinstance</prevent>
 		<allow>mod/survey:addinstance</allow>
 		<allow>mod/survey:download</allow>
 		<allow>mod/survey:participate</allow>
@@ -736,5 +735,6 @@
 		<allow>webservice/rest:use</allow>
 		<allow>webservice/soap:use</allow>
 		<allow>webservice/xmlrpc:use</allow>
+		<prevent>mod/streamingvideo:addinstance</prevent>
 	</permissions>
 </role>

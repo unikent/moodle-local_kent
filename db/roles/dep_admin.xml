@@ -491,7 +491,6 @@
 		<allow>mod/scorm:savetrack</allow>
 		<allow>mod/scorm:viewreport</allow>
 		<allow>mod/scorm:viewscores</allow>
-		<prevent>mod/streamingvideo:addinstance</prevent>
 		<allow>mod/survey:addinstance</allow>
 		<allow>mod/survey:download</allow>
 		<allow>mod/survey:participate</allow>
@@ -692,5 +691,6 @@
 		<prevent>local/connect:manage</prevent>
 		<prevent>mod/cla:manage</prevent>
 		<prevent>mod/forum:allowforcesubscribe</prevent>
+		<prevent>mod/streamingvideo:addinstance</prevent>
 	</permissions>
 </role>
