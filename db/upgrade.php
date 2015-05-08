@@ -546,5 +546,13 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015042801, 'local', 'kent');
     }
 
+    if ($oldversion < 2015050800) {
+        // Configure new Kent managed roles.
+        $roleman->configure();
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015050800, 'local', 'kent');
+    }
+
     return true;
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <role>
-	<shortname>sds_teacher</shortname>
-	<name>Teacher (SDS)</name>
-	<description>Teachers can do anything within a course, including changing the activities and grading students.</description>
+	<shortname>editingteacher</shortname>
+	<name/>
+	<description/>
 	<archetype>editingteacher</archetype>
 	<contextlevels>
 		<level>course</level>
@@ -18,6 +18,7 @@
 		<shortname>guest</shortname>
 	</allowoverride>
 	<allowswitch>
+		<shortname>teacher</shortname>
 		<shortname>student</shortname>
 		<shortname>guest</shortname>
 	</allowswitch>
@@ -58,6 +59,7 @@
 		<inherit>block/tags:myaddinstance</inherit>
 		<inherit>block/turnitin:myaddinstance</inherit>
 		<inherit>booktool/exportimscp:export</inherit>
+		<inherit>enrol/category:synchronised</inherit>
 		<inherit>enrol/cohort:unenrol</inherit>
 		<inherit>enrol/connect:config</inherit>
 		<inherit>enrol/database:unenrol</inherit>
@@ -92,7 +94,6 @@
 		<inherit>mod/folder:view</inherit>
 		<inherit>mod/imscp:view</inherit>
 		<inherit>mod/nagios:configure</inherit>
-		<inherit>mod/ouwiki:deletepage</inherit>
 		<inherit>mod/ouwiki:lock</inherit>
 		<inherit>mod/page:view</inherit>
 		<inherit>mod/questionnaire:createpublic</inherit>
@@ -108,10 +109,12 @@
 		<inherit>mod/resource:view</inherit>
 		<inherit>mod/scorm:deleteownresponses</inherit>
 		<inherit>mod/scorm:skipview</inherit>
+		<inherit>mod/talis:pub</inherit>
 		<inherit>mod/thesis:emailnotes</inherit>
 		<inherit>mod/turnitintool:submit</inherit>
 		<inherit>mod/turnitintooltwo:submit</inherit>
 		<inherit>mod/url:view</inherit>
+		<inherit>mod/videofile:view</inherit>
 		<inherit>mod/workshop:peerassess</inherit>
 		<inherit>mod/workshop:submit</inherit>
 		<inherit>moodle/backup:anonymise</inherit>
@@ -121,6 +124,8 @@
 		<inherit>moodle/badges:manageownbadges</inherit>
 		<inherit>moodle/badges:viewbadges</inherit>
 		<inherit>moodle/badges:viewotherbadges</inherit>
+		<inherit>moodle/blog:associatecourse</inherit>
+		<inherit>moodle/blog:associatemodule</inherit>
 		<inherit>moodle/blog:create</inherit>
 		<inherit>moodle/blog:viewdrafts</inherit>
 		<inherit>moodle/calendar:manageownentries</inherit>
@@ -128,11 +133,6 @@
 		<inherit>moodle/category:viewhiddencategories</inherit>
 		<inherit>moodle/cohort:assign</inherit>
 		<inherit>moodle/cohort:manage</inherit>
-		<inherit>moodle/course:changecategory</inherit>
-		<inherit>moodle/course:changefullname</inherit>
-		<inherit>moodle/course:changeidnumber</inherit>
-		<inherit>moodle/course:changeshortname</inherit>
-		<inherit>moodle/course:changesummary</inherit>
 		<inherit>moodle/course:create</inherit>
 		<inherit>moodle/course:delete</inherit>
 		<inherit>moodle/course:ignorefilesizelimits</inherit>
@@ -188,6 +188,7 @@
 		<inherit>report/questioninstances:view</inherit>
 		<inherit>report/security:view</inherit>
 		<inherit>report/studentactivity:view</inherit>
+		<inherit>report/turnitin:view</inherit>
 		<inherit>repository/alfresco:view</inherit>
 		<inherit>repository/areafiles:view</inherit>
 		<inherit>repository/boxnet:view</inherit>
@@ -277,7 +278,6 @@
 		<allow>booktool/importhtml:import</allow>
 		<allow>booktool/print:print</allow>
 		<allow>enrol/category:config</allow>
-		<allow>enrol/category:synchronised</allow>
 		<allow>enrol/cohort:config</allow>
 		<allow>enrol/database:config</allow>
 		<allow>enrol/guest:config</allow>
@@ -452,6 +452,7 @@
 		<allow>mod/ouwiki:addinstance</allow>
 		<allow>mod/ouwiki:annotate</allow>
 		<allow>mod/ouwiki:annotateothers</allow>
+		<allow>mod/ouwiki:deletepage</allow>
 		<allow>mod/ouwiki:edit</allow>
 		<allow>mod/ouwiki:editothers</allow>
 		<allow>mod/ouwiki:grade</allow>
@@ -492,7 +493,6 @@
 		<allow>mod/survey:download</allow>
 		<allow>mod/survey:participate</allow>
 		<allow>mod/survey:readresponses</allow>
-		<allow>mod/talis:pub</allow>
 		<allow>mod/taskchain:addinstance</allow>
 		<allow>mod/taskchain:attempt</allow>
 		<allow>mod/taskchain:deleteallattempts</allow>
@@ -513,6 +513,7 @@
 		<allow>mod/turnitintooltwo:read</allow>
 		<allow>mod/turnitintooltwo:view</allow>
 		<allow>mod/url:addinstance</allow>
+		<allow>mod/videofile:addinstance</allow>
 		<allow>mod/vimeo:addinstance</allow>
 		<allow>mod/wiki:addinstance</allow>
 		<allow>mod/wiki:createpage</allow>
@@ -555,8 +556,6 @@
 		<allow>moodle/badges:viewawarded</allow>
 		<allow>moodle/block:edit</allow>
 		<allow>moodle/block:view</allow>
-		<allow>moodle/blog:associatecourse</allow>
-		<allow>moodle/blog:associatemodule</allow>
 		<allow>moodle/blog:manageentries</allow>
 		<allow>moodle/blog:manageexternal</allow>
 		<allow>moodle/blog:search</allow>
@@ -571,6 +570,11 @@
 		<allow>moodle/community:download</allow>
 		<allow>moodle/course:activityvisibility</allow>
 		<allow>moodle/course:bulkmessaging</allow>
+		<allow>moodle/course:changecategory</allow>
+		<allow>moodle/course:changefullname</allow>
+		<allow>moodle/course:changeidnumber</allow>
+		<allow>moodle/course:changeshortname</allow>
+		<allow>moodle/course:changesummary</allow>
 		<allow>moodle/course:enrolconfig</allow>
 		<allow>moodle/course:enrolreview</allow>
 		<allow>moodle/course:manageactivities</allow>
