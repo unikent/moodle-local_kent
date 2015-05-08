@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-die("Ahem. You sure?");
-
 define('CLI_SCRIPT', true);
 
 require_once(dirname(__FILE__) . '/../../../config.php');
@@ -32,8 +30,6 @@ if (empty($options['category'])) {
     die("You must specify a category!\n");
 }
 
-$category = $options['category'];
-
 // Dry is true by default.
 if ($options['dry']) {
     echo "Running in DRY mode...\n";
@@ -41,37 +37,47 @@ if ($options['dry']) {
     echo "Running in LIVE mode...\n";
 }
 
-\local_hipchat\Message::send("Purging Category {$category}...", "red");
+function purge_cat($category, $options) {
+    global $DB;
 
-// Destroy everything.
-cli_heading("Destroying {$category}...");
+    \local_hipchat\Message::send("Purging Category {$category}...", "red");
 
-// Delete all courses.
-$count = $DB->count_records('course');
+    // Destroy everything.
+    cli_heading("Destroying {$category}...");
 
-$rs = $DB->get_recordset_sql("SELECT c.* FROM mdl_course c
-    INNER JOIN mdl_course_categories cc
-      ON cc.id=c.category
-    WHERE cc.path LIKE :p1
-      OR cc.path LIKE :p2
-", array(
-    'p1' => "%/{$category}/%",
-    'p2' => "%/{$category}"
-));
+    // Delete all courses.
+    $count = $DB->count_records('course');
 
-foreach ($rs as $course) {
-    if ($course->id <= 1) {
-        continue;
+    $rs = $DB->get_recordset_sql("SELECT c.* FROM mdl_course c
+        INNER JOIN mdl_course_categories cc
+          ON cc.id=c.category
+        WHERE cc.path LIKE :p1
+          OR cc.path LIKE :p2
+    ", array(
+        'p1' => "%/{$category}/%",
+        'p2' => "%/{$category}"
+    ));
+
+    foreach ($rs as $course) {
+        if ($course->id <= 1) {
+            continue;
+        }
+
+        echo "Deleting {$course->id}...\n";
+        if (!$options['dry']) {
+            delete_course($course);
+        }
     }
+    $rs->close();
 
-    echo "Deleting {$course->id}...\n";
-    if (!$options['dry']) {
-        delete_course($course);
-    }
+    $count -= $DB->count_records('course');
+
+    echo "Deleted {$count} courses.\n";
+    \local_hipchat\Message::send("Finished! {$count} courses purged.", "red");
 }
-$rs->close();
 
-$count -= $DB->count_records('course');
-
-echo "Deleted {$count} courses.\n";
-\local_hipchat\Message::send("Finished! {$count} courses purged.", "red");
+$categories = $options['category'];
+$categories = explode(',', $categories);
+foreach ($categories as $category) {
+    purge_cat($category, $options);
+}

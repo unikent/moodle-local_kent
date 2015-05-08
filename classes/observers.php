@@ -179,7 +179,7 @@ class observers
         global $DB;
 
         // Get the context.
-        $context = \context::instance_by_id($event->contextid, MUST_EXIST);
+        $context = $event->get_context();
 
         // Get the role.
         $role = $DB->get_record('role', array(
@@ -207,7 +207,7 @@ class observers
         global $DB;
 
         // Get the context.
-        $context = \context::instance_by_id($event->contextid, \MUST_EXIST);
+        $context = $event->get_context();
 
         // Ping the role manager.
         $rm = new \local_kent\RoleManager();
