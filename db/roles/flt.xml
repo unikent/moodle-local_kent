@@ -447,7 +447,7 @@
 		<allow>mod/scorm:skipview</allow>
 		<allow>mod/scorm:viewreport</allow>
 		<allow>mod/scorm:viewscores</allow>
-		<allow>mod/streamingvideo:addinstance</allow>
+		<prevent>mod/streamingvideo:addinstance</prevent>
 		<allow>mod/survey:addinstance</allow>
 		<allow>mod/survey:download</allow>
 		<allow>mod/survey:participate</allow>
