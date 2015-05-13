@@ -127,11 +127,11 @@ SQL;
 	/**
 	 * Return a count of actionable notifications for a course.
 	 */
-	public function get_actionable_notifications_count($courseid) {
+	public function get_actionable_notifications_count() {
 		global $DB;
 
 		$count = $DB->count_records('course_notifications', array(
-			'courseid' => $courseid,
+			'courseid' => $this->_courseid,
 			'actionable' => 1
 		));
 
