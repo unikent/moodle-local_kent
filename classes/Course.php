@@ -123,4 +123,22 @@ SQL;
 
 		return \local_kent\Notification::instance($record);
 	}
+
+	/**
+	 * Return a count of actionable notifications for a course.
+	 */
+	public function get_actionable_notifications_count($courseid) {
+		global $DB;
+
+		$count = $DB->count_records('course_notifications', array(
+			'courseid' => $courseid,
+			'actionable' => 1
+		));
+
+		if (!$count) {
+			return null;
+		}
+
+		return $count;
+	}
 }
