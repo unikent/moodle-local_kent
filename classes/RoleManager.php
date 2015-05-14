@@ -87,9 +87,9 @@ class RoleManager
     }
 
     /**
-     * Helper for add_cap and remove_cap.
+     * Helper for add_capability and remove_capability.
      */
-    private function resolve_roles($roles) {
+    private function set_capability($capability, $permission, $roles) {
         global $DB;
         
         $ids = array();
@@ -111,29 +111,24 @@ class RoleManager
             $ids[] = $role->id;
         }
 
-        return $ids;
+        $context = \context_system::instance();
+        foreach ($ids as $roleid) {
+            assign_capability($capability, $permission, $roleid, $context->id, true);
+        }
     }
 
     /**
      * Add a capability to a role (or roles).
      */
-    public function add_cap($capability, $roles = "*") {
-        $roles = $this->resolve_roles($roles);
-        $context = \context_system::instance();
-
-        foreach ($roles as $roleid) {
-            assign_capability($capability, \CAP_ALLOW, $roleid, $context->id, true);
-        }
+    public function add_capability($capability, $roles = "*") {
+        $this->set_capability($capability, \CAP_ALLOW, $roles);
     }
 
     /**
      * Remove a capability from a role (or roles).
      */
-    public function remove_cap($capability, $roles = "*") {
-        $roles = $this->resolve_roles($roles);
-        foreach ($roles as $roleid) {
-            unassign_capability($capability, $roleid);
-        }
+    public function remove_capability($capability, $roles = "*") {
+        $this->set_capability($capability, \CAP_PREVENT, $roles);
     }
 
     /**
