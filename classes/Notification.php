@@ -42,7 +42,7 @@ class Notification
 			'extref' => $extref,
 			'message' => $message,
 			'type' => $type,
-			'actionable' => $actionable,
+			'actionable' => !$actionable ? '0' : $actionable,
 			'dismissable' => $dismissable ? '1' : '0'
 		);
 
