@@ -585,7 +585,9 @@ function xmldb_local_kent_upgrade($oldversion) {
 
         // Drop index i_course_actionable (not unique) to be added to course_notifications.
         $index = new xmldb_index('i_course_actionable', XMLDB_INDEX_NOTUNIQUE, array('courseid', 'actionable'));
-        $dbman->drop_index($table, $index);
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
 
         $dbman->change_field_type($table, $field);
 
