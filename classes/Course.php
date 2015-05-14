@@ -130,15 +130,13 @@ SQL;
 	public function get_actionable_notifications_count() {
 		global $DB;
 
-		$count = $DB->count_records('course_notifications', array(
-			'courseid' => $this->_courseid,
-			'actionable' => 1
-		));
+		$sql = "SELECT SUM(actionable) as actions FROM {course_notifications} WHERE courseid = :courseid AND actionable > 0";
+		$count = $DB->get_record_sql($sql, array("courseid" => $this->_courseid));
 
 		if (!$count) {
-			return null;
+			return 0;
 		}
 
-		return $count;
+		return $count->actions;
 	}
 }
