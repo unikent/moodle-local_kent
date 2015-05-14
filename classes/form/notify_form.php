@@ -47,7 +47,9 @@ class notify_form extends \moodleform
         ));
         $mform->setType('message', PARAM_RAW);
 
-        $mform->addElement('checkbox', 'actionable', 'Actionable');
+        $mform->addElement('text', 'actionable', 'Actionable');
+        $mform->setDefault('actionable', '0');
+        $mform->setType('text', PARAM_INT);
         $mform->addElement('checkbox', 'dismissable', 'Dismissable');
 
         $this->add_action_buttons(true);
