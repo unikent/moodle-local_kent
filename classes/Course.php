@@ -25,7 +25,8 @@ require_once($CFG->dirroot . '/course/lib.php');
  */
 class Course
 {
-	private $_courseid;
+    private static $FORCE_DELETE = false;
+    private $_courseid;
 
 	public function __construct($courseid) {
 		$this->_courseid = $courseid;
@@ -159,6 +160,25 @@ SQL;
     }
 
     /**
+     * Empty the recycle bin.
+     */
+    public function empty_recycle_bin() {
+        $items = $this->get_recycle_bin_items();
+        foreach ($items as $cm) {
+            $this->force_delete_cm($cm->id);
+        }
+    }
+
+    /**
+     * Force-delete a CM (ignore recycle bin).
+     */
+    public function force_delete_cm($cmid) {
+        static::$FORCE_DELETE = true;
+        course_delete_module($cmid);
+        static::$FORCE_DELETE = false;
+    }
+
+    /**
      * Returns the recycle bin section.
      */
     public function get_recycle_bin() {
@@ -213,8 +233,8 @@ SQL;
     public static function on_quiz_delete($quiz) {
         global $DB;
 
-        // Disable the hook if we are testing.
-        if (defined("PHPUNIT_UTIL") && PHPUNIT_UTIL) {
+        // Disable the hook if we are force-deleting or testing.
+        if (static::$FORCE_DELETE || (defined("PHPUNIT_UTIL") && PHPUNIT_UTIL)) {
             return true;
         }
 
