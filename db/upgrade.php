@@ -546,14 +546,6 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015042801, 'local', 'kent');
     }
 
-    if ($oldversion < 2015050800) {
-        // Configure new Kent managed roles.
-        $roleman->configure();
-
-        // Kent savepoint reached.
-        upgrade_plugin_savepoint(true, 2015050800, 'local', 'kent');
-    }
-
     // SHAREDB upgrade step.
     if ($oldversion < 2015050801 && isset($sharedbman)) {
 
@@ -601,6 +593,25 @@ function xmldb_local_kent_upgrade($oldversion) {
 
         // Kent savepoint reached.
         upgrade_plugin_savepoint(true, 2015051401, 'local', 'kent');
+    }
+
+    if ($oldversion < 2015051402) {
+        // Remove old capabilities.
+        $roleman->remove_capability('mod/streamingvideo:addinstance');
+        $roleman->remove_capability('mod/hotpot:addinstance');
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015051402, 'local', 'kent');
+    }
+
+    if ($oldversion < 2015051403) {
+        // Add new capabilities.
+        $roleman->add_capability('report/turnitin:view', array(
+            'manager', 'teacher', 'editingteacher', 'convenor', 'flt'
+        ));
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015051403, 'local', 'kent');
     }
 
     return true;

@@ -87,6 +87,51 @@ class RoleManager
     }
 
     /**
+     * Helper for add_capability and remove_capability.
+     */
+    private function set_capability($capability, $permission, $roles) {
+        global $DB;
+        
+        $ids = array();
+
+        if ($roles = '*') {
+            $roles = $DB->get_records('role', null, '', 'id');
+        } else {
+            if (is_array($roles)) {
+                list($sql, $params) = $DB->get_in_or_equal($roles, SQL_PARAMS_NAMED, 'shortname');
+                $roles = $DB->get_records_select('role', 'shortname '. $sql, $params, '', 'id');
+            } else {
+                $roles = $DB->get_records('role', array(
+                    'shortname' => $roles
+                ), '', 'id');
+            }
+        }
+
+        foreach ($roles as $role) {
+            $ids[] = $role->id;
+        }
+
+        $context = \context_system::instance();
+        foreach ($ids as $roleid) {
+            assign_capability($capability, $permission, $roleid, $context->id, true);
+        }
+    }
+
+    /**
+     * Add a capability to a role (or roles).
+     */
+    public function add_capability($capability, $roles = "*") {
+        $this->set_capability($capability, \CAP_ALLOW, $roles);
+    }
+
+    /**
+     * Remove a capability from a role (or roles).
+     */
+    public function remove_capability($capability, $roles = "*") {
+        $this->set_capability($capability, \CAP_PREVENT, $roles);
+    }
+
+    /**
      * Either update or install a managed role.
      */
     private function install_or_update_role($shortname, $archetype) {

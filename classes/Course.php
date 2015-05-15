@@ -18,6 +18,8 @@ namespace local_kent;
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/course/lib.php');
+
 /**
  * Course helpers
  */
@@ -139,4 +141,98 @@ SQL;
 
 		return $count->actions;
 	}
+
+    /**
+     * Restore an item from the recycle bin.
+     */
+    public function restore_from_recycle_bin($cmid) {
+        global $DB;
+
+        $modinfo = get_fast_modinfo($this->_courseid);
+        if (!isset($modinfo->cms[$cmid])) {
+            throw new \moodle_exception("Invalid CMID.");
+        }
+        $cminfo = $modinfo->cms[$cmid];
+
+        // Just move it back to the first section.
+        moveto_module($cminfo, $modinfo->get_section_info(0));
+    }
+
+    /**
+     * Returns the recycle bin section.
+     */
+    public function get_recycle_bin() {
+        global $DB;
+
+        // Do we have one?
+        $section = $DB->get_record('course_sections', array(
+            'course' => $this->_courseid,
+            'section' => 99999
+        ));
+
+        if (!$section) {
+            $section = new \stdClass();
+            $section->name = 'Recycle bin';
+            $section->summary = '';
+            $section->summaryformat = 1;
+            $section->course = $this->_courseid;
+            $section->section = 99999;
+            $section->visible = 0;
+
+            $section->id = $DB->insert_record('course_sections', $section);
+        }
+
+        return $section;
+    }
+
+    /**
+     * Returns the items in the recycle bin.
+     */
+    public function get_recycle_bin_items() {
+        $cms = array();
+        $section = $this->get_recycle_bin();
+
+        $modinfo = get_fast_modinfo($this->_courseid);
+        foreach ($modinfo->cms as $cm) {
+            if ($cm->section == $section->id) {
+                $cms[] = $cm;
+            }
+        }
+
+        return $cms;
+    }
+
+    /**
+     * Called when someone tries to delete a quiz.
+     * If this returns "true", we will continue with the deletion.
+     * If it returns "false", we will stop and cry a bit but NOT delete the actual quiz.
+     *
+     * @param $quiz
+     * @return bool
+     */
+    public static function on_quiz_delete($quiz) {
+        global $DB;
+
+        // For now, we want to add the module to a "trashbin".
+        $course = new static($quiz->course);
+        $section = $course->get_recycle_bin();
+
+        $module = $DB->get_record('modules', array(
+            'name' => 'quiz'
+        ));
+
+        // Create a module container.
+        $cm = new \stdClass();
+        $cm->course   = $quiz->course;
+        $cm->module   = $module->id;
+        $cm->instance = $quiz->id;
+        $cm->section  = $section->id;
+        $cm->visible  = 1;
+
+        // Create the module.
+        $cm = add_course_module($cm);
+        course_add_cm_to_section($quiz->course, $cm, $section->section);
+
+        return false;
+    }
 }
