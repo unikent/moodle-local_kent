@@ -213,7 +213,12 @@ SQL;
     public static function on_quiz_delete($quiz) {
         global $DB;
 
-        // For now, we want to add the module to a "trashbin".
+        // Disable the hook if we are testing.
+        if (defined("PHPUNIT_UTIL") && PHPUNIT_UTIL) {
+            return true;
+        }
+
+        // We want to add the module to a "Recycle Bin".
         $course = new static($quiz->course);
         $section = $course->get_recycle_bin();
 
