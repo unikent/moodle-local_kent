@@ -139,4 +139,65 @@ SQL;
 
 		return $count->actions;
 	}
+
+    /**
+     * Returns the recycle bin section.
+     */
+    public function get_recycle_bin() {
+        global $DB;
+
+        // Do we have one?
+        $section = $DB->get_record('course_sections', array(
+            'course' => $this->_courseid,
+            'section' => 99999
+        ));
+
+        if (!$section) {
+            $section = new \stdClass();
+            $section->name = 'Recycle bin';
+            $section->summary = '';
+            $section->summaryformat = 1;
+            $section->course = $this->_courseid;
+            $section->section = 99999;
+            $section->visible = 0;
+
+            $DB->insert_record('course_sections', $section);
+        }
+
+        return $section;
+    }
+
+    /**
+     * Called when someone tries to delete a quiz.
+     * If this returns "true", we will continue with the deletion.
+     * If it returns "false", we will stop and cry a bit but NOT delete the actual quiz.
+     *
+     * @param $quiz
+     * @return bool
+     */
+    public static function on_quiz_delete($quiz) {
+        global $DB;
+
+        // For now, we want to add the module to a "trashbin".
+        $course = new static($quiz->course);
+        $section = $course->get_recycle_bin();
+
+        $module = $DB->get_record('modules', array(
+            'name' => 'quiz'
+        ));
+
+        // Create a module container.
+        $cm = new \stdClass();
+        $cm->course   = $quiz->course;
+        $cm->module   = $module->id;
+        $cm->instance = $quiz->id;
+        $cm->section  = $section->id;
+        $cm->visible  = 1;
+
+        // Create the module.
+        $cm = add_course_module($cm);
+        course_add_cm_to_section($quiz->course, $cm, $section->section);
+
+        return false;
+    }
 }
