@@ -71,3 +71,13 @@ function local_kent_extend_settings_navigation(settings_navigation $nav, context
 
     return $node;
 }
+
+/**
+ * TODO - Remove post-2.9 deploy
+ *
+ * @param settings_navigation $nav
+ * @param context $context
+ */
+function local_kent_extends_settings_navigation(settings_navigation $nav, context $context) {
+    local_kent_extend_settings_navigation($nav, $context);
+}
