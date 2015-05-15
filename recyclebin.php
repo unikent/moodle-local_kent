@@ -38,13 +38,20 @@ if (isset($cmid)) {
     redirect($PAGE->url);
 }
 
+$items = $course->get_recycle_bin_items();
+if (empty($items)) {
+    redirect(new \moodle_url('/course/view.php', array(
+        'id' => $courseid
+    )));
+}
+
 // Output header.
 echo $OUTPUT->header();
 echo $OUTPUT->heading('Recycle Bin');
 
 echo '<ul>';
 
-foreach ($course->get_recycle_bin_items() as $cm) {
+foreach ($items as $cm) {
     $icon = '';
     if (!empty($cm->icon)) {
         // Each url has an icon in 2.0.

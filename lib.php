@@ -42,6 +42,12 @@ function local_kent_extend_settings_navigation(settings_navigation $nav, context
         return;
     }
 
+    $course = new \local_kent\Course($PAGE->course->id);
+    $items = $course->get_recycle_bin_items();
+    if (empty($items)) {
+        return;
+    }
+
     if ($settingnode = $nav->find('courseadmin', navigation_node::TYPE_COURSE)) {
         $url = new moodle_url('/local/kent/recyclebin.php', array(
             'course' => $context->instanceid
