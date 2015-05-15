@@ -33,3 +33,35 @@ if ((!defined("CLI_SCRIPT") || !CLI_SCRIPT) &&
     )) {
     \local_kent\GA::inject();
 }
+
+function local_kent_extend_settings_navigation(settings_navigation $nav, context $context) {
+    global $PAGE;
+
+    // Only add this settings item on non-site course pages.
+    if (!$PAGE->course or $PAGE->course->id == 1) {
+        return;
+    }
+
+    if ($settingnode = $nav->find('courseadmin', navigation_node::TYPE_COURSE)) {
+        $url = new moodle_url('/local/kent/recyclebin.php', array(
+            'course' => $context->instanceid
+        ));
+
+        $node = navigation_node::create(
+            'Recycle Bin',
+            $url,
+            navigation_node::NODETYPE_LEAF,
+            'local_kent',
+            'local_kent',
+            new pix_icon('e/cleanup_messy_code', $strfoo)
+        );
+
+        if ($PAGE->url->compare($url, URL_MATCH_BASE)) {
+            $node->make_active();
+        }
+
+        $settingnode->add_node($node);
+    }
+
+    return $node;
+}

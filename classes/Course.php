@@ -18,6 +18,8 @@ namespace local_kent;
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/course/lib.php');
+
 /**
  * Course helpers
  */
@@ -141,6 +143,22 @@ SQL;
 	}
 
     /**
+     * Restore an item from the recycle bin.
+     */
+    public function restore_from_recycle_bin($cmid) {
+        global $DB;
+
+        $modinfo = get_fast_modinfo($this->_courseid);
+        if (!isset($modinfo->cms[$cmid])) {
+            throw new \moodle_exception("Invalid CMID.");
+        }
+        $cminfo = $modinfo->cms[$cmid];
+
+        // Just move it back to the first section.
+        moveto_module($cminfo, $modinfo->get_section_info(0));
+    }
+
+    /**
      * Returns the recycle bin section.
      */
     public function get_recycle_bin() {
@@ -165,6 +183,23 @@ SQL;
         }
 
         return $section;
+    }
+
+    /**
+     * Returns the items in the recycle bin.
+     */
+    public function get_recycle_bin_items() {
+        $cms = array();
+        $section = $this->get_recycle_bin();
+
+        $modinfo = get_fast_modinfo($this->_courseid);
+        foreach ($modinfo->cms as $cm) {
+            if ($cm->section == $section->id) {
+                $cms[] = $cm;
+            }
+        }
+
+        return $cms;
     }
 
     /**
