@@ -161,7 +161,7 @@ SQL;
             $section->section = 99999;
             $section->visible = 0;
 
-            $DB->insert_record('course_sections', $section);
+            $section->id = $DB->insert_record('course_sections', $section);
         }
 
         return $section;
