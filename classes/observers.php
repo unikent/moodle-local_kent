@@ -264,6 +264,11 @@ class observers
 HTML5;
         }
 
+        // Is this a manual course?
+        if ($kc->is_manual()) {
+            $message .= ' You must re-link any previous meta-enrolments. Information on how to do this can be found on the <a href="http://www.kent.ac.uk/elearning/files/moodle/moodle-meta-enrolment.pdf">Kent website</a>.';
+        }
+
         // Add message.
         $kc = new \local_kent\Course($event->courseid);
         $kc->add_notification($event->get_context()->id, 'rollover_finished', $message, 'info', false, true);

@@ -73,6 +73,21 @@ SQL;
 	}
 
 	/**
+	 * Is this a manual course?
+	 */
+	public function is_manual() {
+		global $DB;
+
+		$shortname = $DB->get_field('course', 'shortname', array(
+			'id' => $this->_courseid
+		));
+
+		$indicator = substr($shortname, 0, 2);
+
+		return in_array($indicator, array('DX', 'DP', 'DO'));
+	}
+
+	/**
 	 * Add a notification to a course.
 	 * 
 	 * @param int $contextid The context ID of the component that is alerting.
