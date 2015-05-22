@@ -20,15 +20,46 @@ require_login();
 
 $PAGE->set_context(context_user::instance($USER->id));
 $PAGE->set_url('/local/kent/index.php');
-$PAGE->set_title("Kent Moodle");
+$PAGE->set_title("Kent Beta Preferences");
+
+// Create form.
+$form = new \local_kent\form\optin_form();
+
+// Did we cancel?
+if ($form->is_cancelled()) {
+    redirect($CFG->wwwroot . '/local/kent/index.php');
+}
+
+// Did we submit?
+if ($data = $form->get_data()) {
+    $arr = (array)$data;
+    unset($arr['submitbutton']);
+
+    $prefs = array();
+    foreach ($arr as $k => $v) {
+        $prefs[] = $k . "=" . ($v ? '1' : '0');
+    }
+
+    set_user_preference("betaprefs", implode(',', $prefs));
+    redirect(new \moodle_url('/local/kent/index.php'));
+} else {
+    // Set defaults.
+    $prefs = \local_kent\User::get_beta_preferences();
+    foreach ($prefs as $k => $v) {
+        $form->set_field_default($k, $v);
+    }
+}
 
 // Output header.
 echo $OUTPUT->header();
-echo $OUTPUT->heading('Kent Moodle');
+echo $OUTPUT->heading("Beta Preferences");
 
-echo <<<HTML5
-<p>Here you can change your <a href="optin.php">beta preferences</a> or view the <a href="changelog.php">Kent Moodle changelog</a>.</p>
-HTML5;
+// Warning.
+//echo \html_writer::tag("p", "Warning! These options enable features that may or may not be very unstable, we do not recommend you enable any of them.");
+echo \html_writer::tag("p", "There are currently no beta programs running. Please check back later.</p>");
+
+// Show form.
+//$form->display();
 
 // Output footer.
 echo $OUTPUT->footer();
