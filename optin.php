@@ -55,10 +55,11 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading("Beta Preferences");
 
 // Warning.
-echo \html_writer::tag("p", "Warning! These options enable features that may or may not be very unstable, we do not recommend you enable any of them.");
+//echo \html_writer::tag("p", "Warning! These options enable features that may or may not be very unstable, we do not recommend you enable any of them.");
+echo \html_writer::tag("p", "There are currently no beta programs running. Please check back later.</p>");
 
 // Show form.
-$form->display();
+//$form->display();
 
 // Output footer.
 echo $OUTPUT->footer();
