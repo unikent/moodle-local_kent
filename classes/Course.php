@@ -27,133 +27,132 @@ class Course
 {
     private $_courseid;
 
-	public function __construct($courseid) {
-		$this->_courseid = $courseid;
-	}
+    public function __construct($courseid) {
+        $this->_courseid = $courseid;
+    }
 
-	/**
-	 * Helper for creating a manual module code.
-	 * Rollover should be true or false, null means we don't know.
-	 */
-	public static function get_manual_shortname($rollover = null) {
-		global $DB;
+    /**
+     * Helper for creating a manual module code.
+     * Rollover should be true or false, null means we don't know.
+     */
+    public static function get_manual_shortname($rollover = null) {
+        global $DB;
 
-		$rollover = $rollover === null ? 'X' : ($rollover == true ? 'P' : 'O');
-		$shortname = "D{$rollover}";
+        $rollover = $rollover === null ? 'X' : ($rollover == true ? 'P' : 'O');
+        $shortname = "D{$rollover}";
 
-		$like = $DB->sql_like('shortname', ':shortname');
-		$like2 = $DB->sql_like('shortname', ':shortname2');
-		$sql = <<<SQL
-			SELECT shortname
-			FROM {course}
-			WHERE {$like}
+        $like = $DB->sql_like('shortname', ':shortname');
+        $like2 = $DB->sql_like('shortname', ':shortname2');
+        $sql = <<<SQL
+            SELECT shortname
+            FROM {course}
+            WHERE {$like}
 
-			UNION
+            UNION
 
-			SELECT shortname
-			FROM {course_request}
-			WHERE {$like2}
+            SELECT shortname
+            FROM {course_request}
+            WHERE {$like2}
 SQL;
 
-		$courses = $DB->get_records_sql($sql, array(
-		    'shortname' => $shortname . "%",
-		    'shortname2' => $shortname . "%"
-		));
+        $courses = $DB->get_records_sql($sql, array(
+            'shortname' => $shortname . "%",
+            'shortname2' => $shortname . "%"
+        ));
 
+        $num = 1000;
+        foreach ($courses as $course) {
+            $pos = (int)substr($course->shortname, 2);
+            if ($pos >= $num) {
+                $num = $pos + 25;
+            }
+        }
 
-		$num = 1000;
-		foreach ($courses as $course) {
-			$pos = (int)substr($course->shortname, 2);
-			if ($pos >= $num) {
-				$num = $pos + 25;
-			}
-		}
+        return "{$shortname}{$num}";
+    }
 
-		return "{$shortname}{$num}";
-	}
+    /**
+     * Is this a manual course?
+     */
+    public function is_manual() {
+        global $DB;
 
-	/**
-	 * Is this a manual course?
-	 */
-	public function is_manual() {
-		global $DB;
+        $shortname = $DB->get_field('course', 'shortname', array(
+            'id' => $this->_courseid
+        ));
 
-		$shortname = $DB->get_field('course', 'shortname', array(
-			'id' => $this->_courseid
-		));
+        $indicator = substr($shortname, 0, 2);
 
-		$indicator = substr($shortname, 0, 2);
+        return in_array($indicator, array('DX', 'DP', 'DO'));
+    }
 
-		return in_array($indicator, array('DX', 'DP', 'DO'));
-	}
+    /**
+     * Add a notification to a course.
+     *
+     * @param int $contextid The context ID of the component that is alerting.
+     * @param string $extref Something to remember me by, e.g. 'delete_notify'. Used with $contextid to grab notifications.
+     * @param string $message The message (HTML is fine).
+     * @param string $type warning, danger, info.
+     * @param boolean $actionable Can this alert be actioned by a user?
+     * @param boolean $dismissable Can this alert be dismissed by users?
+     */
+    public function add_notification($contextid, $extref, $message, $type = 'warning', $actionable = false, $dismissable = true) {
+        return \local_kent\Notification::create($this->_courseid, $contextid, $extref, $message, $type, $actionable, $dismissable);
+    }
 
-	/**
-	 * Add a notification to a course.
-	 * 
-	 * @param int $contextid The context ID of the component that is alerting.
-	 * @param string $extref Something to remember me by, e.g. 'delete_notify'. Used with $contextid to grab notifications.
-	 * @param string $message The message (HTML is fine).
-	 * @param string $type warning, danger, info.
-	 * @param boolean $actionable Can this alert be actioned by a user?
-	 * @param boolean $dismissable Can this alert be dismissed by users?
-	 */
-	public function add_notification($contextid, $extref, $message, $type = 'warning', $actionable = false, $dismissable = true) {
-		return \local_kent\Notification::create($this->_courseid, $contextid, $extref, $message, $type, $actionable, $dismissable);
-	}
+    /**
+     * Return a list of notifications.
+     */
+    public function get_notifications($type = null) {
+        global $DB;
 
-	/**
-	 * Return a list of notifications.
-	 */
-	public function get_notifications($type = null) {
-		global $DB;
+        $objects = array();
 
-		$objects = array();
+        $params = array('courseid' => $this->_courseid);
+        if ($type !== null) {
+            $params['type'] = $type;
+        }
 
-		$params = array('courseid' => $this->_courseid);
-		if ($type !== null) {
-			$params['type'] = $type;
-		}
+        $records = $DB->get_records('course_notifications', $params);
+        foreach ($records as $record) {
+            $objects[] = \local_kent\Notification::instance($record);
+        }
 
-		$records = $DB->get_records('course_notifications', $params);
-		foreach ($records as $record) {
-			$objects[] = \local_kent\Notification::instance($record);
-		}
+        return $objects;
+    }
 
-		return $objects;
-	}
+    /**
+     * Return a list of notifications within a specific context.
+     */
+    public function get_notification($contextid, $extref) {
+        global $DB;
 
-	/**
-	 * Return a list of notifications within a specific context.
-	 */
-	public function get_notification($contextid, $extref) {
-		global $DB;
+        $record = $DB->get_record('course_notifications', array(
+            'courseid' => $this->_courseid,
+            'contextid' => $contextid,
+            'extref' => $extref
+        ));
 
-		$record = $DB->get_record('course_notifications', array(
-			'courseid' => $this->_courseid,
-			'contextid' => $contextid,
-			'extref' => $extref
-		));
+        if (!$record) {
+            return null;
+        }
 
-		if (!$record) {
-			return null;
-		}
+        return \local_kent\Notification::instance($record);
+    }
 
-		return \local_kent\Notification::instance($record);
-	}
+    /**
+     * Return a count of actionable notifications for a course.
+     */
+    public function get_actionable_notifications_count() {
+        global $DB;
 
-	/**
-	 * Return a count of actionable notifications for a course.
-	 */
-	public function get_actionable_notifications_count() {
-		global $DB;
+        $sql = "SELECT SUM(actionable) as actions FROM {course_notifications} WHERE courseid = :courseid AND actionable > 0";
+        $count = $DB->get_record_sql($sql, array("courseid" => $this->_courseid));
 
-		$sql = "SELECT SUM(actionable) as actions FROM {course_notifications} WHERE courseid = :courseid AND actionable > 0";
-		$count = $DB->get_record_sql($sql, array("courseid" => $this->_courseid));
+        if (!$count) {
+            return 0;
+        }
 
-		if (!$count) {
-			return 0;
-		}
-
-		return $count->actions;
-	}
+        return $count->actions;
+    }
 }

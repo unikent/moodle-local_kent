@@ -107,6 +107,7 @@ class observers
             \local_hipchat\Message::send($msg, "purple", "text");
         } catch (\Exception $e) {
             // Ignore.
+            debugging($e->getMessage());
         }
 
         return true;
@@ -266,7 +267,8 @@ HTML5;
 
         // Is this a manual course?
         if ($kc->is_manual()) {
-            $message .= ' You must re-link any previous meta-enrolments. Information on how to do this can be found on the <a href="http://www.kent.ac.uk/elearning/files/moodle/moodle-meta-enrolment.pdf">Kent website</a>.';
+            $message .= ' You must re-link any previous meta-enrolments.';
+            $message .= ' Information on how to do this can be found on the <a href="http://www.kent.ac.uk/elearning/files/moodle/moodle-meta-enrolment.pdf">Kent website</a>.';
         }
 
         // Add message.
