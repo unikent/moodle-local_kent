@@ -614,5 +614,20 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015051403, 'local', 'kent');
     }
 
+    // SHAREDB upgrade step.
+    if ($oldversion < 2015052600 && isset($sharedbman)) {
+        $SHAREDB->delete_records('shared_roles');
+
+        // Define key k_suclcn (unique) to be added to shared_roles.
+        $table = new xmldb_table('shared_roles');
+        $key = new xmldb_key('k_suclcn', XMLDB_KEY_UNIQUE, array('shortname', 'username', 'contextlevel', 'contextname'));
+
+        // Launch add key k_suclcn.
+        $sharedbman->add_key($table, $key);
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015052600, 'local', 'kent');
+    }
+
     return true;
 }
