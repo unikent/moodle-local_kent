@@ -46,23 +46,8 @@ class User
             return true;
         }
 
-        $sql = <<<SQL
-            SELECT COUNT(ra.id)
-            FROM {role_assignments} ra
-            INNER JOIN {context} ctx
-                ON ctx.id = ra.contextid
-            INNER JOIN {role_capabilities} rc
-                ON rc.roleid = ra.roleid
-                AND (
-                    ctx.path LIKE CONCAT("%/", rc.contextid, "/%")
-                    OR ctx.path LIKE CONCAT("%/", rc.contextid)
-                )
-            WHERE ra.userid = :userid AND rc.capability = :capability AND rc.permission = 1
-SQL;
-        return $DB->count_records_sql($sql, array(
-            'userid' => $userid,
-            'capability' => 'moodle/course:update'
-        )) > 0;
+        $courses = get_user_capability_course('moodle/course:update', $userid);
+        return count($courses) > 0;
     }
 
     /**
