@@ -29,19 +29,11 @@ class User
     public static function is_dep_admin($userid) {
         global $DB;
 
-        $sql = "SELECT COUNT(ra.id) as count
-                FROM {role_assignments} ra
-                WHERE userid = :userid AND roleid = (
-                    SELECT r.id
-                    FROM {role} r
-                    WHERE r.shortname = :shortname
-                    LIMIT 1
-                )";
-
-        return $DB->count_records_sql($sql, array(
-            'userid' => $userid,
+        $roleid = $DB->get_field('role', 'id', array(
             'shortname' => 'dep_admin'
-        )) > 0;
+        ));
+
+        return user_has_role_assignment($userid, $roleid);
     }
 
     /**
