@@ -229,7 +229,6 @@
 		<inherit>mod/scorm:addinstance</inherit>
 		<inherit>mod/scorm:deleteownresponses</inherit>
 		<inherit>mod/scorm:skipview</inherit>
-		<inherit>mod/streamingvideo:addinstance</inherit>
 		<inherit>mod/survey:addinstance</inherit>
 		<inherit>mod/talis:pub</inherit>
 		<inherit>mod/taskchain:addinstance</inherit>
@@ -671,5 +670,6 @@
 		<prevent>local/connect:manage</prevent>
 		<prevent>mod/cla:manage</prevent>
 		<prevent>mod/cla:viewresource</prevent>
+		<prevent>mod/streamingvideo:addinstance</prevent>
 	</permissions>
 </role>

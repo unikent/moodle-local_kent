@@ -29,19 +29,11 @@ class User
     public static function is_dep_admin($userid) {
         global $DB;
 
-        $sql = "SELECT COUNT(ra.id) as count
-                FROM {role_assignments} ra
-                WHERE userid = :userid AND roleid = (
-                    SELECT r.id
-                    FROM {role} r
-                    WHERE r.shortname = :shortname
-                    LIMIT 1
-                )";
-
-        return $DB->count_records_sql($sql, array(
-            'userid' => $userid,
+        $roleid = $DB->get_field('role', 'id', array(
             'shortname' => 'dep_admin'
-        )) > 0;
+        ));
+
+        return user_has_role_assignment($userid, $roleid);
     }
 
     /**
@@ -54,23 +46,8 @@ class User
             return true;
         }
 
-        $sql = <<<SQL
-            SELECT COUNT(ra.id)
-            FROM {role_assignments} ra
-            INNER JOIN {context} ctx
-                ON ctx.id = ra.contextid
-            INNER JOIN {role_capabilities} rc
-                ON rc.roleid = ra.roleid
-                AND (
-                    ctx.path LIKE CONCAT("%/", rc.contextid, "/%")
-                    OR ctx.path LIKE CONCAT("%/", rc.contextid)
-                )
-            WHERE ra.userid = :userid AND rc.capability = :capability AND rc.permission = 1
-SQL;
-        return $DB->count_records_sql($sql, array(
-            'userid' => $userid,
-            'capability' => 'moodle/course:update'
-        )) > 0;
+        $courses = get_user_capability_course('moodle/course:update', $userid);
+        return count($courses) > 0;
     }
 
     /**

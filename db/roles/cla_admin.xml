@@ -361,7 +361,6 @@
 		<inherit>mod/scorm:skipview</inherit>
 		<inherit>mod/scorm:viewreport</inherit>
 		<inherit>mod/scorm:viewscores</inherit>
-		<inherit>mod/streamingvideo:addinstance</inherit>
 		<inherit>mod/survey:addinstance</inherit>
 		<inherit>mod/survey:download</inherit>
 		<inherit>mod/survey:participate</inherit>
@@ -664,5 +663,6 @@
 		<allow>moodle/course:viewparticipants</allow>
 		<allow>moodle/course:viewscales</allow>
 		<prevent>mod/talis:pub</prevent>
+		<prevent>mod/streamingvideo:addinstance</prevent>
 	</permissions>
 </role>

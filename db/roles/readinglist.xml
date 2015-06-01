@@ -374,7 +374,6 @@
 		<inherit>mod/scorm:skipview</inherit>
 		<inherit>mod/scorm:viewreport</inherit>
 		<inherit>mod/scorm:viewscores</inherit>
-		<inherit>mod/streamingvideo:addinstance</inherit>
 		<inherit>mod/survey:addinstance</inherit>
 		<inherit>mod/survey:download</inherit>
 		<inherit>mod/survey:participate</inherit>
@@ -665,5 +664,6 @@
 		<inherit>webservice/xmlrpc:use</inherit>
 		<allow>enrol/category:synchronised</allow>
 		<allow>mod/talis:pub</allow>
+		<prevent>mod/streamingvideo:addinstance</prevent>
 	</permissions>
 </role>

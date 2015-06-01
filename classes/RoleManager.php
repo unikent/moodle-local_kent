@@ -182,8 +182,12 @@ class RoleManager
     /**
      * Is the roleid in our sphere of care?
      */
-    public function is_managed($shortname) {
-        foreach (static::$_shared_roles as $context => $roles) {
+    public function is_managed($shortname, $contextlevel = null) {
+        foreach (static::$_shared_roles as $ctxlevel => $roles) {
+            if ($contextlevel && $contextlevel != $ctxlevel) {
+                continue;
+            }
+
             if (in_array($shortname, $roles)) {
                 return true;
             }
@@ -370,7 +374,7 @@ class RoleManager
         $shortname = $DB->get_field('role', 'shortname', array(
             'id' => $roleid
         ));
-        if (!$this->is_managed($shortname)) {
+        if (!$this->is_managed($shortname, $context->contextlevel)) {
             return true;
         }
 
