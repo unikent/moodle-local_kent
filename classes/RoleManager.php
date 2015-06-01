@@ -182,9 +182,9 @@ class RoleManager
     /**
      * Is the roleid in our sphere of care?
      */
-    public function is_managed($shortname, $context = null) {
-        foreach (static::$_shared_roles as $ctx => $roles) {
-            if ($context && $context != $ctx) {
+    public function is_managed($shortname, $contextlevel = null) {
+        foreach (static::$_shared_roles as $ctxlevel => $roles) {
+            if ($contextlevel && $contextlevel != $ctxlevel) {
                 continue;
             }
 
