@@ -26,11 +26,6 @@ trait databasepod
     use datapod;
 
     /**
-     * Internal cache.
-     */
-    private static $_podcache = array();
-
-    /**
      * The name of our database table.
      */
     protected static function get_table() {
@@ -122,18 +117,28 @@ trait databasepod
     }
 
     /**
+     * Get internal cache.
+     */
+    private static function get_internal_cache() {
+        return \cache::make_from_params(\cache_store::MODE_REQUEST, 'local_kent', crc32(get_called_class()), array(), array(
+            'simplekeys' => true
+        ));
+    }
+
+    /**
      * This is *basically* a public version of set_class_data.
      * Pseudo-forces singletons.
      */
     public static function from_sql_result($data) {
-        $key = crc32(get_called_class()) . "_" . $data->id;
-        if (!isset(self::$_podcache[$key])) {
-            $obj = new static();
-            $obj->set_data($data);
-            self::$_podcache[$key] = $obj;
+        $cache = static::get_internal_cache();
+        $result = $cache->get($data->id);
+        if (!$result) {
+            $result = new static();
+            $result->set_data($data);
+            $cache->set($data->id, $result);
         }
 
-        return self::$_podcache[$key];
+        return $result;
     }
 
     /**
