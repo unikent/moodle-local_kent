@@ -33,7 +33,9 @@ trait databasepod
     /**
      * The name of our database table.
      */
-    protected abstract static function get_table();
+    protected static function get_table() {
+        throw new \moodle_exception("get_table() must be implemented.");
+    }
 
     /**
      * A list of key fields for this data object.
@@ -45,7 +47,7 @@ trait databasepod
     /**
      * Optionally returns an array of immutable fields for this data object.
      */
-    protected function immutable_fields() {
+    protected static function immutable_fields() {
         return array();
     }
 
@@ -53,7 +55,7 @@ trait databasepod
      * Returns an array of fields that link to other databasepods.
      * fieldname -> classname
      */
-    protected function linked_fields() {
+    protected static function linked_fields() {
         return array();
     }
 
@@ -124,14 +126,14 @@ trait databasepod
      * Pseudo-forces singletons.
      */
     public static function from_sql_result($data) {
-    	$key = crc32(get_class()) . "_" . $data->id;
-        if (isset(static::$_podcache[$key])) {
+        $key = crc32(get_called_class()) . "_" . $data->id;
+        if (!isset(self::$_podcache[$key])) {
             $obj = new static();
-            $obj->set_class_data($data);
-            static::$_podcache[$key] = $obj;
+            $obj->set_data($data);
+            self::$_podcache[$key] = $obj;
         }
 
-        return static::$_podcache[$key];
+        return self::$_podcache[$key];
     }
 
     /**

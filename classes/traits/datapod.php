@@ -29,7 +29,7 @@ trait datapod
     /**
      * Optionally returns an array of valid fields for this data object.
      */
-    protected function valid_fields() {
+    protected static function valid_fields() {
         return array();
     }
 
