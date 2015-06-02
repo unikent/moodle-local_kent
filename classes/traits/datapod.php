@@ -24,20 +24,13 @@ defined('MOODLE_INTERNAL') || die();
 trait datapod
 {
     /** Stores all our data */
-    private $_data;
-
-    /**
-     * Optionally returns an array of immutable fields for this data object.
-     */
-    protected function immutable_fields() {
-    	return array();
-    }
+    private $_data = array();
 
     /**
      * Optionally returns an array of valid fields for this data object.
      */
     protected function valid_fields() {
-    	return array();
+        return array();
     }
 
     /**
@@ -45,6 +38,22 @@ trait datapod
      */
     public final function get_data() {
         return (object)$this->_data;
+    }
+
+    /**
+     * Given an object containing data, set appropriate class vars.
+     * This is done quickly, and skips most checks.
+     */
+    protected function set_data($data) {
+        if (!is_array($data)) {
+            $data = get_object_vars($data);
+        }
+
+        foreach ($data as $key => $value) {
+            if (in_array($key, $this->valid_fields())) {
+                $this->_data[$key] = $value;
+            }
+        }
     }
 
     /**

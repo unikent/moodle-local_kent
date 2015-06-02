@@ -26,6 +26,30 @@ trait databasepod
     use datapod;
 
     /**
+     * Internal cache.
+     */
+    private static $_podcache = array();
+
+    /**
+     * The name of our database table.
+     */
+    protected abstract static function get_table();
+
+    /**
+     * A list of key fields for this data object.
+     */
+    protected static function key_fields() {
+        return array("id");
+    }
+
+    /**
+     * Optionally returns an array of immutable fields for this data object.
+     */
+    protected function immutable_fields() {
+        return array();
+    }
+
+    /**
      * Returns an array of fields that link to other databasepods.
      * fieldname -> classname
      */
@@ -96,6 +120,21 @@ trait databasepod
     }
 
     /**
+     * This is *basically* a public version of set_class_data.
+     * Pseudo-forces singletons.
+     */
+    public static function from_sql_result($data) {
+    	$key = crc32(get_class()) . "_" . $data->id;
+        if (isset(static::$_podcache[$key])) {
+            $obj = new static();
+            $obj->set_class_data($data);
+            static::$_podcache[$key] = $obj;
+        }
+
+        return static::$_podcache[$key];
+    }
+
+    /**
      * Save to the Connect database
      *
      * @return boolean
@@ -130,5 +169,89 @@ trait databasepod
         $sql = "UPDATE {{$table}} SET {$sets} WHERE {$idstr}";
 
         return $DB->execute($sql, $params);
+    }
+    /**
+     * Get an object by a specified field.
+     */
+    public static function get_by($field, $val, $forcearray = false) {
+        global $DB;
+
+        if (!in_array($field, static::valid_fields())) {
+            debugging("Invalid field: $field!");
+            return;
+        }
+
+        $data = $DB->get_records(static::get_table(), array(
+            $field => $val
+        ));
+
+        if (!$forcearray) {
+            if (!$data) {
+                return null;
+            }
+
+            if (count($data) === 1) {
+                return static::from_sql_result(array_pop($data));
+            }
+        }
+
+        $ret = array();
+        foreach ($data as $obj) {
+            $ret[] = static::from_sql_result($obj);
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Get an object by ID
+     */
+    public static function get($id) {
+        return static::get_by('id', $id);
+    }
+
+    /**
+     * Returns all known objects.
+     *
+     * @param bool raw Return raw (stdClass) objects?
+     */
+    public static function get_all($raw = false) {
+        global $DB;
+
+        $set = $DB->get_records(static::get_table());
+
+        if (!$raw) {
+            foreach ($set as &$o) {
+                $o = static::from_sql_result($o);
+            }
+        }
+
+        return $set;
+    }
+
+    /**
+     * Run a given method against all objects in a memory-efficient way.
+     * The method will be provided with a single argument (object).
+     */
+    public static function batch_all($func, $conditions = array()) {
+        global $DB;
+
+        $errors = array();
+
+        $rs = $DB->get_recordset(static::get_table(), $conditions);
+
+        // Go through each record, create an object and call the function.
+        foreach ($rs as $record) {
+            try {
+                $obj = static::from_sql_result($record);
+                $func($obj);
+            } catch (\moodle_exception $e) {
+                $errors[] = $e->getMessage();
+            }
+        }
+
+        $rs->close();
+
+        return $errors;
     }
 }
