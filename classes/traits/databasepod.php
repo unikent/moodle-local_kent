@@ -284,4 +284,35 @@ trait databasepod
 
         return $errors;
     }
+
+    /**
+     * Returns a flexitable.
+     */
+    public function get_flexible_table($baseurl) {
+        global $CFG;
+
+        require_once($CFG->libdir . '/tablelib.php');
+
+        $class = get_called_class();
+
+        $table = new \flexible_table("{$class}_{$this->id}");
+        $table->define_columns(array('variable', 'value'));
+        $table->define_headers(array('Variable', 'Value'));
+        $table->define_baseurl($baseurl);
+        $table->setup();
+
+        $linkedfields = $this->linked_fields();
+
+        foreach ($this->_data as $k => $v) {
+            if (isset($linkedfields[$k])) {
+                $k = substr($k, 0, -2);
+                $v = $this->$k . "";
+                $table->add_data(array($k, $v));
+            } else {
+                $table->add_data(array($k, $v));
+            }
+        }
+
+        return $table;
+    }
 }
