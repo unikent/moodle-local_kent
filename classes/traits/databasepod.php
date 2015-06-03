@@ -296,6 +296,7 @@ trait databasepod
         $class = get_called_class();
 
         $table = new \flexible_table("{$class}_{$this->id}");
+        $table->set_attribute('class', 'table flexible');
         $table->define_columns(array('variable', 'value'));
         $table->define_headers(array('Variable', 'Value'));
         $table->define_baseurl($baseurl);
