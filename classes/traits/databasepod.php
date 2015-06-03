@@ -191,6 +191,7 @@ trait databasepod
 
         return $DB->execute($sql, $params);
     }
+
     /**
      * Get an object by a specified field.
      */
@@ -200,6 +201,14 @@ trait databasepod
         if (!in_array($field, static::valid_fields())) {
             debugging("Invalid field: $field!");
             return;
+        }
+
+        // We can cache on id!
+        if ($field == 'id') {
+            $cache = static::get_internal_cache();
+            if (isset($cache[$val])) {
+                return $cache[$val];
+            }
         }
 
         $data = $DB->get_records(static::get_table(), array(
