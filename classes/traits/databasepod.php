@@ -25,6 +25,8 @@ trait databasepod
 {
     use datapod;
 
+    protected static $internalcache;
+
     /**
      * The name of our database table.
      */
@@ -94,10 +96,12 @@ trait databasepod
         }
 
         // Are we trying to set the object for an id column?
-        $linkedfields = $this->linked_fields();
-        if (isset($this->_data["{$name}id"]) && isset($linkedfields["{$name}id"])) {
-            $this->_data["{$name}id"] = $value->id;
-            return;
+        if (isset($this->_data["{$name}id"])) {
+            $linkedfields = $this->linked_fields();
+            if (isset($linkedfields["{$name}id"])) {
+                $this->_data["{$name}id"] = $value->id;
+                return;
+            }
         }
 
         $validfields = $this->valid_fields();
@@ -120,9 +124,20 @@ trait databasepod
      * Get internal cache.
      */
     private static function get_internal_cache() {
-        return \cache::make_from_params(\cache_store::MODE_REQUEST, 'local_kent', crc32(get_called_class()), array(), array(
-            'simplekeys' => true
-        ));
+        global $CFG;
+
+        // This helps with phpunit resets.
+        if (!isset($CFG->local_kent_cache_uuid)) {
+            $CFG->local_kent_cache_uuid = uniqid();
+        }
+
+        if (!isset(static::$internalcache['__uuid__']) || static::$internalcache['__uuid__'] !== $CFG->local_kent_cache_uuid) {
+            static::$internalcache = array(
+                '__uuid__' => $CFG->local_kent_cache_uuid
+            );
+        }
+
+        return static::$internalcache;
     }
 
     /**
@@ -131,14 +146,13 @@ trait databasepod
      */
     public static function from_sql_result($data) {
         $cache = static::get_internal_cache();
-        $result = $cache->get($data->id);
-        if (!$result) {
+        if (!isset($cache[$data->id])) {
             $result = new static();
             $result->set_data($data);
-            $cache->set($data->id, $result);
+            $cache[$data->id] = $result;
         }
 
-        return $result;
+        return $cache[$data->id];
     }
 
     /**
