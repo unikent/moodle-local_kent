@@ -614,5 +614,51 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015051403, 'local', 'kent');
     }
 
+    /**
+     * This cleans up from very old installs.
+     */
+    if ($oldversion < 2015060500) {
+        // First, drop old tables.
+        $tables = array(
+            'block_department_info',
+            'kentturnitinview',
+            'kentturnitinview_submissions',
+            'linktadc',
+            'local_dsubscription',
+            'local_dsubscription_post',
+            'local_dsubscription_q',
+            'local_dsubscription_subs',
+            'simplefileresource',
+            'block_aspire_list',
+            'question_ddmatch',
+            'question_ddmatch_sub',
+            'question_imagetarget',
+            'question_order',
+            'question_order_sub',
+            'unittest_course_modules',
+            'unittest_grade_categories',
+            'unittest_grade_categories_history',
+            'unittest_grade_grades',
+            'unittest_grade_grades_history',
+            'unittest_grade_items',
+            'unittest_grade_items_history',
+            'unittest_grade_outcomes',
+            'unittest_grade_outcomes_history',
+            'unittest_modules',
+            'unittest_quiz',
+            'unittest_scale',
+            'unittest_scale_history'
+        );
+        foreach ($tables as $table) {
+            $table = new xmldb_table($table);
+            if ($dbman->table_exists($table)) {
+                $dbman->drop_table($table);
+            }
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015060500, 'local', 'kent');
+    }
+
     return true;
 }

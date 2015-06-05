@@ -110,4 +110,27 @@ trait datapod
     public function __unset($name) {
         unset($this->_data[$name]);
     }
+
+    /**
+     * Returns a flexitable.
+     */
+    public function get_flexible_table($baseurl) {
+        global $CFG;
+
+        require_once($CFG->libdir . '/tablelib.php');
+
+        $class = get_called_class();
+
+        $table = new \flexible_table("{$class}_{$this->id}");
+        $table->define_columns(array('variable', 'value'));
+        $table->define_headers(array('Variable', 'Value'));
+        $table->define_baseurl($baseurl);
+        $table->setup();
+
+        foreach ($this->_data as $k => $v) {
+            $table->add_data(array($k, $v));
+        }
+
+        return $table;
+    }
 }

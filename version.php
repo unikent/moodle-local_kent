@@ -25,10 +25,10 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_kent';
-$plugin->version   = 2015052600;
+$plugin->version   = 2015060500;
 $plugin->requires  = 2014051200;
 
 $plugin->dependencies = array(
-    'local_hipchat' => 2014043000,
-    'local_connect' => 2014102000
+    'local_hipchat' => 2015060500,
+    'local_connect' => 2015060500
 );
