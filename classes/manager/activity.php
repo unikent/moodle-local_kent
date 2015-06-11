@@ -42,7 +42,7 @@ class activity
     public function deprecate() {
         global $DB;
 
-        if (!self::is_deprecated($this->_module->name)) {
+        if (!$this->is_deprecated()) {
             debugging("[Deprecate] You forgot to add the module name to is_deprecated!");
         }
 
@@ -57,20 +57,21 @@ class activity
             'moduleid' => $this->_module->id
         ));
 
+        // Notify all the courses that they have a deprecated activity.
         foreach ($courses as $course) {
             $this->notify($course->id);
         }
 
-        // TODO.
-        //  - Remove capabilities.
+        // Remove capabilities.
+        $roleman = new \local_kent\RoleManager();
+        $roleman->remove_capability("mod/{$this->_module->name}:addinstance");
     }
 
     /**
-     * Given a module name and a course, generate a deprecation notification if
-     * required.
+     * Generate a deprecation notification if required.
      */
     public function notify($courseid) {
-        if (!self::is_deprecated($this->_module->name)) {
+        if (!$this->is_deprecated()) {
             return true;
         }
 
@@ -85,12 +86,12 @@ class activity
     }
 
     /**
-     * Returns true if a specific module is deprecated.
+     * Returns true if this activity is deprecated.
      */
-    public static function is_deprecated($activity) {
+    public function is_deprecated() {
         return (
-            $activity == 'turnitintool' ||
-            $activity == 'hotpot'
+            $this->_module->name == 'turnitintool' ||
+            $this->_module->name == 'hotpot'
         );
     }
 }
