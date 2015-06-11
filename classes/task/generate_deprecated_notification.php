@@ -46,7 +46,8 @@ class generate_deprecated_notification extends \core\task\adhoc_task
             if (!empty($modinfo->sections[$section->section])) {
                 foreach ($modinfo->sections[$section->section] as $modnumber) {
                     $mod = $modinfo->cms[$modnumber];
-                    if (\local_kent\manager\activity::is_deprecated($mod->modname)) {
+                    $activityman = new \local_kent\manager\activity($mod->modname);
+                    if ($activityman->is_deprecated()) {
                         $message .= '<li>' . \html_writer::link($mod->url, $mod->name, array('class' => 'alert-notification')) . '</li>';
                     }
                 }
