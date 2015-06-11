@@ -23,17 +23,13 @@ defined('MOODLE_INTERNAL') || die();
  */
 class activity
 {
-    private $_module;
+    private $_name;
 
     /**
      * Create an instance of the activity manager.
      */
     public function __construct($activity) {
-        global $DB;
-
-        $this->_module = $DB->get_record('modules', array(
-            'name' => $activity
-        ), '*', \MUST_EXIST);
+        $this->_name = $activity;
     }
 
     /**
@@ -52,9 +48,11 @@ class activity
             FROM {course} c
             INNER JOIN {course_modules} cm
                 ON cm.course = c.id
-                AND cm.module = :moduleid
+            INNER JOIN {modules} m
+                ON m.id = cm.module
+                AND m.name = :module
         ', array(
-            'moduleid' => $this->_module->id
+            'module' => $this->_name
         ));
 
         // Notify all the courses that they have a deprecated activity.
@@ -64,7 +62,7 @@ class activity
 
         // Remove capabilities.
         $roleman = new \local_kent\RoleManager();
-        $roleman->remove_capability("mod/{$this->_module->name}:addinstance");
+        $roleman->remove_capability("mod/{$this->_name}:addinstance");
     }
 
     /**
@@ -90,8 +88,8 @@ class activity
      */
     public function is_deprecated() {
         return (
-            $this->_module->name == 'turnitintool' ||
-            $this->_module->name == 'hotpot'
+            $this->_name == 'turnitintool' ||
+            $this->_name == 'hotpot'
         );
     }
 }
