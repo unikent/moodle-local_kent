@@ -64,7 +64,7 @@ class generate_deprecated_notification extends \core\task\adhoc_task
         if (($notification = $course->get_notification($ctx->id, 'deprecated_modules'))) {
             $notification->delete();
         }
-        $course->add_notification($ctx->id, 'deprecated_modules', $message);
+        $course->add_notification($ctx->id, 'deprecated_modules', $message, 'warning', true, false);
 
         return true;
     }
