@@ -660,5 +660,14 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015060500, 'local', 'kent');
     }
 
+    if ($oldversion < 2015061100) {
+        // Deprecate hotpot.
+        $activityman = new \local_kent\manager\activity('hotpot');
+        $activityman->deprecate();
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015061100, 'local', 'kent');
+    }
+
     return true;
 }

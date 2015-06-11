@@ -30,6 +30,16 @@ $observers = array (
     ),
 
     array (
+        'eventname' => '\core\event\course_module_created',
+        'callback' => '\local_kent\observers::course_module_created',
+    ),
+
+    array (
+        'eventname' => '\core\event\course_module_deleted',
+        'callback' => '\local_kent\observers::course_module_deleted',
+    ),
+
+    array (
         'eventname' => '\core\event\user_enrolment_created',
         'callback' => '\local_kent\observers::user_enrolment_created',
     ),
