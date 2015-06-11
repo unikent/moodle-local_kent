@@ -112,6 +112,26 @@ class observers
     }
 
     /**
+     * Course removed observer.
+     */
+    public static function course_removed(\local_catman\event\course_removed $event) {
+        $ctx = \context_course::instance($event->courseid);
+
+        $course = new \local_kent\Course($event->courseid);
+        if (($notification = $course->get_notification($ctx->id, 'catman'))) {
+            $notification->delete();
+        }
+
+        $time = \local_catman\core::get_expiration($event->courseid);
+        $time = strftime("%H:%M %d/%m/%Y", $time);
+
+        $message = "<i class=\"fa fa-exclamation-triangle\"></i> This course has been scheduled for deletion at {$time}.";
+        $course->add_notification($ctx->id, 'catman', $message, 'warning', false, false);
+
+        return true;
+    }
+
+    /**
      * Course purged observer.
      */
     public static function course_purged(\local_catman\event\course_purged $event) {
