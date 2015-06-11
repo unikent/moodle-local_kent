@@ -96,6 +96,39 @@ class observers
     }
 
     /**
+     * Given a module name and a course, generate a deprecation notification if
+     * required.
+     */
+    public static function generate_deprecated_notification($modulename, $courseid) {
+        if (!\local_kent\manager\activity::is_deprecated($modulename)) {
+            return true;
+        }
+
+        // Regenerate the deprecated notification.
+        $task = new \local_kent\task\generate_deprecated_notification();
+        $task->set_custom_data(array(
+            'courseid' => $courseid
+        ));
+        \core\task\manager::queue_adhoc_task($task);
+
+        return true;
+    }
+
+    /**
+     * Course module created observer.
+     */
+    public static function course_module_created(\core\event\course_module_created $event) {
+        return static::generate_deprecated_notification($event->other['modulename'], $event->courseid);
+    }
+
+    /**
+     * Course module deleted observer.
+     */
+    public static function course_module_deleted(\core\event\course_module_deleted $event) {
+        return static::generate_deprecated_notification($event->other['modulename'], $event->courseid);
+    }
+
+    /**
      * Course purged observer.
      */
     public static function course_purged(\local_catman\event\course_purged $event) {
