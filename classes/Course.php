@@ -113,7 +113,7 @@ SQL;
             $params['type'] = $type;
         }
 
-        $records = $DB->get_records('course_notifications', $params);
+        $records = $DB->get_records('course_notifications', $params, 'type');
         foreach ($records as $record) {
             $objects[] = \local_kent\Notification::instance($record);
         }
