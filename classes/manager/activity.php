@@ -40,13 +40,48 @@ class activity
      * Deprecate the activity.
      */
     public function deprecate() {
+        global $DB;
+
         if (!self::is_deprecated($this->_module->name)) {
             debugging("[Deprecate] You forgot to add the module name to is_deprecated!");
         }
 
+        // Grab a list of courses that have this activity.
+        $courses = $DB->get_records_sql('
+            SELECT c.id
+            FROM {course} c
+            INNER JOIN {course_modules} cm
+                ON cm.course = c.id
+                AND cm.module = :moduleid
+        ', array(
+            'moduleid' => $this->_module->id
+        ));
+
+        foreach ($courses as $course) {
+            $this->notify($course->id);
+        }
+
         // TODO.
-        //  - Notify all courses with one of the activities.
         //  - Remove capabilities.
+    }
+
+    /**
+     * Given a module name and a course, generate a deprecation notification if
+     * required.
+     */
+    public function notify($courseid) {
+        if (!self::is_deprecated($this->_module->name)) {
+            return true;
+        }
+
+        // Regenerate the deprecated notification.
+        $task = new \local_kent\task\generate_deprecated_notification();
+        $task->set_custom_data(array(
+            'courseid' => $courseid
+        ));
+        \core\task\manager::queue_adhoc_task($task);
+
+        return true;
     }
 
     /**
