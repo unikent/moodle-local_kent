@@ -29,6 +29,6 @@ $plugin->version   = 2015061102;
 $plugin->requires  = 2014051200;
 
 $plugin->dependencies = array(
-    'local_hipchat' => 2015061100,
+    'local_hipchat' => 2015060500,
     'local_connect' => 2015060500
 );
