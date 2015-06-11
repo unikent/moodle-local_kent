@@ -112,9 +112,9 @@ class observers
     }
 
     /**
-     * Course removed observer.
+     * Course scheduled observer.
      */
-    public static function course_removed(\local_catman\event\course_removed $event) {
+    public static function course_scheduled(\local_catman\event\course_scheduled $event) {
         $ctx = \context_course::instance($event->courseid);
 
         $course = new \local_kent\Course($event->courseid);

@@ -60,8 +60,8 @@ $observers = array (
     ),
 
     array (
-        'eventname' => '\local_catman\event\course_removed',
-        'callback' => '\local_kent\observers::course_removed',
+        'eventname' => '\local_catman\event\course_scheduled',
+        'callback' => '\local_kent\observers::course_scheduled',
     ),
 
     array (
