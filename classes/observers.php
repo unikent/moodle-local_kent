@@ -96,6 +96,22 @@ class observers
     }
 
     /**
+     * Course module created observer.
+     */
+    public static function course_module_created(\core\event\course_module_created $event) {
+        $activityman = new \local_kent\manager\activity($event->other['modulename']);
+        return $activityman->notify($event->courseid);
+    }
+
+    /**
+     * Course module deleted observer.
+     */
+    public static function course_module_deleted(\core\event\course_module_deleted $event) {
+        $activityman = new \local_kent\manager\activity($event->other['modulename']);
+        return $activityman->notify($event->courseid);
+    }
+
+    /**
      * Course purged observer.
      */
     public static function course_purged(\local_catman\event\course_purged $event) {
