@@ -97,7 +97,7 @@ SQL;
      * @param boolean $dismissable Can this alert be dismissed by users?
      */
     public function add_notification($contextid, $extref, $message, $type = 'warning', $actionable = false, $dismissable = true) {
-        return \local_kent\Notification::create($this->_courseid, $contextid, $extref, $message, $type, $actionable, $dismissable);
+        return \local_notifications\Notification::create($this->_courseid, $contextid, $extref, $message, $type, $actionable, $dismissable);
     }
 
     /**
@@ -115,7 +115,7 @@ SQL;
 
         $records = $DB->get_records('course_notifications', $params, 'type');
         foreach ($records as $record) {
-            $objects[] = \local_kent\Notification::instance($record);
+            $objects[] = \local_notifications\Notification::instance($record);
         }
 
         return $objects;
@@ -137,7 +137,7 @@ SQL;
             return null;
         }
 
-        return \local_kent\Notification::instance($record);
+        return \local_notifications\Notification::instance($record);
     }
 
     /**
