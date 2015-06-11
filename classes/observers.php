@@ -125,7 +125,7 @@ class observers
         $time = \local_catman\core::get_expiration($event->courseid);
         $time = strftime("%H:%M %d/%m/%Y", $time);
 
-        $message = "<i class=\"fa fa-exclamation-triangle\"></i> This course has been scheduled for deletion at {$time}.";
+        $message = "<i class=\"fa fa-exclamation-triangle\"></i> This course is scheduled for deletion at {$time}.";
         $course->add_notification($ctx->id, 'catman', $message, 'warning', false, false);
 
         return true;
