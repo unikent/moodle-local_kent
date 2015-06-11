@@ -132,6 +132,18 @@ class observers
     }
 
     /**
+     * Course unscheduled observer.
+     */
+    public static function course_unscheduled(\local_catman\event\course_unscheduled $event) {
+        $ctx = \context_course::instance($event->courseid);
+
+        $course = new \local_kent\Course($event->courseid);
+        if (($notification = $course->get_notification($ctx->id, 'catman'))) {
+            $notification->delete();
+        }
+    }
+
+    /**
      * Course purged observer.
      */
     public static function course_purged(\local_catman\event\course_purged $event) {

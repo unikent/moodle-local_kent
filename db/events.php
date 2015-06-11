@@ -18,7 +18,7 @@
  * Local stuff for Kent
  *
  * @package    local_kent
- * @copyright  2014 Skylar Kelty <S.Kelty@kent.ac.uk>
+ * @copyright  2015 Skylar Kelty <S.Kelty@kent.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -62,6 +62,11 @@ $observers = array (
     array (
         'eventname' => '\local_catman\event\course_scheduled',
         'callback' => '\local_kent\observers::course_scheduled',
+    ),
+
+    array (
+        'eventname' => '\local_catman\event\course_unscheduled',
+        'callback' => '\local_kent\observers::course_unscheduled',
     ),
 
     array (
