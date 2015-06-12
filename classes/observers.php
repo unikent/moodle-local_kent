@@ -331,6 +331,13 @@ HTML5;
         // Add message.
         $kc = new \local_kent\Course($event->courseid);
         $kc->add_notification($event->get_context()->id, 'rollover_finished', $message, 'info', false, true);
+
+        // Regenerate the deprecated notification.
+        $task = new \local_kent\task\generate_deprecated_notification();
+        $task->set_custom_data(array(
+            'courseid' => $event->courseid
+        ));
+        \core\task\manager::queue_adhoc_task($task);
     }
 
     /**
