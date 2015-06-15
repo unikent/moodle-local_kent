@@ -54,16 +54,16 @@ class generate_deprecated_notification extends \core\task\adhoc_task
             }
         }
 
-        if (empty($message)) {
-            return true;
-        }
-
-        $message = '<p>You have some deprecated activities. They may be removed in a future Moodle update.</p><ul>' . $message . '</ul>';
-
         $course = new \local_kent\Course($courseid);
         if (($notification = $course->get_notification($ctx->id, 'deprecated_modules'))) {
             $notification->delete();
         }
+
+        if (empty($message)) {
+            return true;
+        }
+
+        $message = '<i class="fa fa-exclamation-triangle"></i> You have some deprecated activities. They may be removed in a future Moodle update.<ul>' . $message . '</ul>';
         $course->add_notification($ctx->id, 'deprecated_modules', $message, 'warning', true, false);
 
         return true;

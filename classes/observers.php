@@ -112,6 +112,38 @@ class observers
     }
 
     /**
+     * Course scheduled observer.
+     */
+    public static function course_scheduled(\local_catman\event\course_scheduled $event) {
+        $ctx = \context_course::instance($event->courseid);
+
+        $course = new \local_kent\Course($event->courseid);
+        if (($notification = $course->get_notification($ctx->id, 'catman'))) {
+            $notification->delete();
+        }
+
+        $time = \local_catman\core::get_expiration($event->courseid);
+        $time = strftime("%H:%M %d/%m/%Y", $time);
+
+        $message = "<i class=\"fa fa-exclamation-triangle\"></i> This course is scheduled for deletion at {$time}.";
+        $course->add_notification($ctx->id, 'catman', $message, 'warning', false, false);
+
+        return true;
+    }
+
+    /**
+     * Course unscheduled observer.
+     */
+    public static function course_unscheduled(\local_catman\event\course_unscheduled $event) {
+        $ctx = \context_course::instance($event->courseid);
+
+        $course = new \local_kent\Course($event->courseid);
+        if (($notification = $course->get_notification($ctx->id, 'catman'))) {
+            $notification->delete();
+        }
+    }
+
+    /**
      * Course purged observer.
      */
     public static function course_purged(\local_catman\event\course_purged $event) {
@@ -299,6 +331,13 @@ HTML5;
         // Add message.
         $kc = new \local_kent\Course($event->courseid);
         $kc->add_notification($event->get_context()->id, 'rollover_finished', $message, 'info', false, true);
+
+        // Regenerate the deprecated notification.
+        $task = new \local_kent\task\generate_deprecated_notification();
+        $task->set_custom_data(array(
+            'courseid' => $event->courseid
+        ));
+        \core\task\manager::queue_adhoc_task($task);
     }
 
     /**

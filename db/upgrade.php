@@ -669,5 +669,19 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015061100, 'local', 'kent');
     }
 
+    if ($oldversion < 2015061102) {
+        // Define index i_courseid_type (not unique) to be added to course_notifications.
+        $table = new xmldb_table('course_notifications');
+        $index = new xmldb_index('i_courseid_type', XMLDB_INDEX_NOTUNIQUE, array('courseid', 'type'));
+
+        // Conditionally launch add index i_courseid_type.
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015061102, 'local', 'kent');
+    }
+
     return true;
 }
