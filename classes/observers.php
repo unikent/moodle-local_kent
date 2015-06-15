@@ -283,7 +283,7 @@ class observers
         // Add message.
         $message = '<i class="fa fa-info-circle"></i> A rollover has been scheduled on this course.';
         $kc = new \local_kent\Course($event->courseid);
-        $kc->add_notification($event->get_context()->id, 'rollover_scheduled', $message, 'info', false, false);
+        $kc->add_notification($event->get_context()->id, 'rollover', $message, 'info', false, false);
     }
 
     /**
@@ -298,7 +298,7 @@ class observers
         // Delete any notifications.
         $kc = new \local_kent\Course($event->courseid);
         $manual = $kc->is_manual();
-        $notification = $kc->get_notification($event->get_context()->id, 'rollover_scheduled');
+        $notification = $kc->get_notification($event->get_context()->id, 'rollover');
         if ($notification) {
             $notification->delete();
         }
@@ -330,7 +330,7 @@ HTML5;
 
         // Add message.
         $kc = new \local_kent\Course($event->courseid);
-        $kc->add_notification($event->get_context()->id, 'rollover_finished', $message, 'info', false, true);
+        $kc->add_notification($event->get_context()->id, 'rollover', $message, 'info', false, true);
 
         // Regenerate the deprecated notification.
         $task = new \local_kent\task\generate_deprecated_notification();
@@ -357,6 +357,6 @@ HTML5;
         // Add message.
         $message = '<i class="fa fa-exclamation-triangle"></i> The rollover for this course failed! Please contact your FLT.';
         $kc = new \local_kent\Course($event->courseid);
-        $kc->add_notification($event->get_context()->id, 'rollover_error', $message, 'error', false, false);
+        $kc->add_notification($event->get_context()->id, 'rollover', $message, 'error', false, false);
     }
 }
