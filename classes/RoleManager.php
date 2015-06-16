@@ -271,7 +271,7 @@ class RoleManager
 
             // Ensure the enrolment exists!
             if (!user_has_role_assignment($userid, $role->id, $context->id)) {
-                //role_assign($role->id, $userid, $context->id);
+                role_assign($role->id, $userid, $context->id);
             }
 
             $processed[] = $userid;
@@ -285,7 +285,7 @@ class RoleManager
         foreach ($local as $localra) {
             if (!in_array($localra->userid, $processed)) {
                 if (user_has_role_assignment($localra->userid, $role->id, $context->id)) {
-                    //role_unassign($role->id, $localra->userid, $context->id);
+                    role_unassign($role->id, $localra->userid, $context->id);
                 }
             }
         }

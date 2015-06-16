@@ -683,5 +683,12 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015061102, 'local', 'kent');
     }
 
+    if ($oldversion < 2015061601) {
+        set_config('enable_role_sync', 0, 'local_kent');
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015061601, 'local', 'kent');
+    }
+
     return true;
 }
