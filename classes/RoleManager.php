@@ -203,9 +203,9 @@ class RoleManager
         global $CFG;
 
         $CFG->in_role_sync = true;
-        foreach (static::$_shared_roles as $context => $roles) {
+        foreach (static::$_shared_roles as $contextlevel => $roles) {
             foreach ($roles as $shortname) {
-                $this->sync_role_type($context, $shortname);
+                $this->sync_role_type($contextlevel, $shortname);
             }
         }
         $CFG->in_role_sync = false;
