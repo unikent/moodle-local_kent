@@ -277,9 +277,9 @@ class observers
      * Triggered when stuff happens to a rollover.
      * Kinda.. should be able to work it out from the name tbh.
      *
-     * @param \local_rollover\event\rollover_started $event
+     * @param \local_rollover\event\rollover_scheduled $event
      */
-    public static function rollover_started(\local_rollover\event\rollover_started $event) {
+    public static function rollover_scheduled(\local_rollover\event\rollover_scheduled $event) {
         // Add message.
         $message = '<i class="fa fa-info-circle"></i> A rollover has been scheduled on this course.';
         $kc = new \local_kent\Course($event->courseid);

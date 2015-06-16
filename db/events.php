@@ -90,8 +90,8 @@ $observers = array (
     ),
 
     array (
-        'eventname' => '\local_rollover\event\rollover_started',
-        'callback'  => '\local_kent\observers::rollover_started',
+        'eventname' => '\local_rollover\event\rollover_scheduled',
+        'callback'  => '\local_kent\observers::rollover_scheduled',
     ),
 
     array (
