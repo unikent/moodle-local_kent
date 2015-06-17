@@ -58,29 +58,10 @@ class observers
     }
 
     /**
-     * course_content_deleted event.
-     */
-    public static function course_content_deleted(\core\event\course_content_deleted $event) {
-        // Delete any notifications.
-        $kc = new \local_kent\Course($event->objectid);
-        $notifications = $kc->get_notifications();
-        foreach ($notifications as $notification) {
-            $notification->delete();
-        }
-    }
-
-    /**
      * Course deleted observer.
      */
     public static function course_deleted(\core\event\course_deleted $event) {
         global $CFG, $SHAREDB;
-
-        // Delete any notifications.
-        $kc = new \local_kent\Course($event->objectid);
-        $notifications = $kc->get_notifications();
-        foreach ($notifications as $notification) {
-            $notification->delete();
-        }
 
         if (!util\sharedb::available()) {
             return true;
