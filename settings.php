@@ -28,13 +28,6 @@ if ($hassiteconfig) {
     $ADMIN->add('localplugins', $settings);
 
     $settings->add(new admin_setting_configcheckbox(
-        'local_kent/enable_session_cron',
-        'Enable Session Cron',
-        'Runs a cron once a night to clear out the Memcached slabs',
-        1
-    ));
-
-    $settings->add(new admin_setting_configcheckbox(
         'local_kent/enable_config_shouter',
         'Enable Config Shouter',
         'Shouts out config modifications to HipChat',
