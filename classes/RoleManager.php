@@ -334,10 +334,15 @@ class RoleManager
                     'username' => $username
                 ));
 
-                if ($info) {
-                    $user = \local_connect\user::get_user_object($user->info, $user->info, $user->info);
-                    $user = user_create_user($user, false);
+                if (!$info) {
+                    $info = new \stdClass();
+                    $info->username = $username;
+                    $info->firstname = 'Unknown';
+                    $info->lastname = 'Unknown';
                 }
+
+                $user = \local_connect\user::get_user_object($info->username, $info->firstname, $info->lastname);
+                $user = user_create_user($user, false);
             }
 
             $cache[$username] = $user;
