@@ -96,16 +96,14 @@ class observers
      * Course scheduled observer.
      */
     public static function course_scheduled(\local_catman\event\course_scheduled $event) {
-        $ctx = \context_course::instance($event->courseid);
+        $ctx = $event->get_context();
 
         $course = new \local_kent\Course($event->courseid);
         if (($notification = $course->get_notification($ctx->id, 'catman'))) {
             $notification->delete();
         }
 
-        $time = \local_catman\core::get_expiration($event->courseid);
-        $time = strftime("%H:%M %d/%m/%Y", $time);
-
+        $time = strftime("%H:%M %d/%m/%Y", $event->other['expirationtime']);
         $message = "<i class=\"fa fa-exclamation-triangle\"></i> This course is scheduled for deletion at {$time}.";
         $course->add_notification($ctx->id, 'catman', $message, 'warning', false, false);
 
@@ -116,10 +114,8 @@ class observers
      * Course unscheduled observer.
      */
     public static function course_unscheduled(\local_catman\event\course_unscheduled $event) {
-        $ctx = \context_course::instance($event->courseid);
-
         $course = new \local_kent\Course($event->courseid);
-        if (($notification = $course->get_notification($ctx->id, 'catman'))) {
+        if (($notification = $course->get_notification($event->get_context()->id, 'catman'))) {
             $notification->delete();
         }
     }
@@ -152,12 +148,11 @@ class observers
             return true;
         }
 
-        $ctx = \context_course::instance($event->courseid);
-        if (!has_capability('moodle/course:update', $ctx, $event->relateduserid)) {
+        if (!has_capability('moodle/course:update', $event->get_context(), $event->relateduserid)) {
             return true;
         }
 
-        $user = $DB->get_record('user', array(
+        $username = $DB->get_field('user', 'username', array(
             'id' => $event->relateduserid
         ));
 
@@ -165,7 +160,7 @@ class observers
             "moodle_env" => $CFG->kent->environment,
             "moodle_dist" => $CFG->kent->distribution,
             "courseid" => $event->courseid,
-            "username" => $user->username
+            "username" => $username
         );
 
         if (!$SHAREDB->record_exists('shared_course_admins', $params)) {
@@ -185,7 +180,7 @@ class observers
             return true;
         }
 
-        $user = $DB->get_record('user', array(
+        $username = $DB->get_field('user', 'username', array(
             'id' => $event->relateduserid
         ));
 
@@ -193,7 +188,7 @@ class observers
             "moodle_env" => $CFG->kent->environment,
             "moodle_dist" => $CFG->kent->distribution,
             "courseid" => $event->courseid,
-            "username" => $user->username
+            "username" => $username
         ));
 
         return true;
@@ -212,12 +207,12 @@ class observers
         $context = $event->get_context();
 
         // Get the role.
-        $role = $DB->get_record('role', array(
+        $shortname = $DB->get_field('role', 'shortname', array(
             'id' => $event->objectid
         ));
 
         // Ping the group manager?
-        if ($context->contextlevel == \CONTEXT_COURSE && strpos($role->shortname, 'student') !== false) {
+        if ($context->contextlevel == \CONTEXT_COURSE && strpos($shortname, 'student') !== false) {
             \local_kent\GroupManager::enrolment_created($context->instanceid, $event->relateduserid);
         }
 
@@ -237,8 +232,6 @@ class observers
      * @param \core\event\role_unassigned $event
      */
     public static function role_unassigned(\core\event\role_unassigned $event) {
-        global $DB;
-
         // Get the context.
         $context = $event->get_context();
 
