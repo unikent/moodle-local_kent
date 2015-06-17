@@ -101,6 +101,25 @@ SQL;
     }
 
     /**
+     * Add a notification to a course, replacing any with the same contextid/extref.
+     *
+     * @param int $contextid The context ID of the component that is alerting.
+     * @param string $extref Something to remember me by, e.g. 'delete_notify'. Used with $contextid to grab notifications.
+     * @param string $message The message (HTML is fine).
+     * @param string $type warning, danger, info.
+     * @param boolean $actionable Can this alert be actioned by a user?
+     * @param boolean $dismissable Can this alert be dismissed by users?
+     */
+    public function replace_notification($contextid, $extref, $message, $type = 'warning', $actionable = false, $dismissable = true) {
+        $notification = $this->get_notification($contextid, $extref);
+        if ($notification) {
+            $notification->delete();
+        }
+
+        $this->add_notification($contextid, $extref, $message, $type, $actionable, $dismissable);
+    }
+
+    /**
      * Return a list of notifications.
      */
     public function get_notifications($type = null) {

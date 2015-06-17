@@ -280,89 +280,16 @@ class observers
     }
 
     /**
-     * Triggered when stuff happens to a rollover.
-     * Kinda.. should be able to work it out from the name tbh.
-     *
-     * @param \local_rollover\event\rollover_scheduled $event
-     */
-    public static function rollover_scheduled(\local_rollover\event\rollover_scheduled $event) {
-        // Add message.
-        $message = '<i class="fa fa-info-circle"></i> A rollover has been scheduled on this course.';
-        $kc = new \local_kent\Course($event->courseid);
-        $kc->add_notification($event->get_context()->id, 'rollover', $message, 'info', false, false);
-    }
-
-    /**
-     * Triggered when stuff happens to a rollover.
-     * Kinda.. should be able to work it out from the name tbh.
+     * Triggered when a rollover finished.
      *
      * @param \local_rollover\event\rollover_finished $event
      */
     public static function rollover_finished(\local_rollover\event\rollover_finished $event) {
-        global $CFG, $SHAREDB;
-
-        // Delete any notifications.
-        $kc = new \local_kent\Course($event->courseid);
-        $manual = $kc->is_manual();
-        $notification = $kc->get_notification($event->get_context()->id, 'rollover');
-        if ($notification) {
-            $notification->delete();
-        }
-
-        $moduletext = ($manual ? 'manually-created ' : '') . 'module';
-
-        $message = <<<HTML5
-            <i class="fa fa-history"></i> This {$moduletext} has been rolled over from a previous year.
-HTML5;
-
-        // Get the rollover.
-        $rollover = $SHAREDB->get_record('shared_rollovers', array('id' => $event->objectid));
-        if ($rollover && isset($CFG->kent->paths[$rollover->from_dist])) {
-            $url = $CFG->kent->paths[$rollover->from_dist] . "course/view.php?id=" . $rollover->from_course;
-
-            $message = <<<HTML5
-                <i class="fa fa-history"></i> This {$moduletext} has been rolled over from
-                <a href="{$url}" class="alert-link" target="_blank">Moodle {$rollover->from_dist}</a>.
-HTML5;
-        }
-
-        // Is this a manual course?
-        if ($manual) {
-            $message .= ' ';
-            $message .= <<<HTML5
-            An administrator must re-link any previous meta-enrolments. Information on how to do this can be found on the <a href="http://www.kent.ac.uk/elearning/files/moodle/moodle-meta-enrolment.pdf" class="alert-link" target="_blank">E-Learning website</a>.
-HTML5;
-        }
-
-        // Add message.
-        $kc = new \local_kent\Course($event->courseid);
-        $kc->add_notification($event->get_context()->id, 'rollover', $message, 'info', false, true);
-
         // Regenerate the deprecated notification.
         $task = new \local_kent\task\generate_deprecated_notification();
         $task->set_custom_data(array(
             'courseid' => $event->courseid
         ));
         \core\task\manager::queue_adhoc_task($task);
-    }
-
-    /**
-     * Triggered when stuff happens to a rollover.
-     * Kinda.. should be able to work it out from the name tbh.
-     *
-     * @param \local_rollover\event\rollover_error $event
-     */
-    public static function rollover_error(\local_rollover\event\rollover_error $event) {
-        // Delete any notifications.
-        $kc = new \local_kent\Course($event->courseid);
-        $notifications = $kc->get_notifications();
-        foreach ($notifications as $notification) {
-            $notification->delete();
-        }
-
-        // Add message.
-        $message = '<i class="fa fa-exclamation-triangle"></i> The rollover for this course failed! Please contact your FLT.';
-        $kc = new \local_kent\Course($event->courseid);
-        $kc->add_notification($event->get_context()->id, 'rollover', $message, 'error', false, false);
     }
 }
