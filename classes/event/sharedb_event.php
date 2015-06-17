@@ -38,7 +38,7 @@ abstract class sharedb_event extends \core\event\base
      * @throws \coding_exception if used after ::trigger()
      */
     public final function add_shared_record_snapshot($tablename, $record) {
-        if ($this->triggered) {
+        if ($this->is_triggered()) {
             throw new \coding_exception('It is not possible to add snapshots after triggering of events');
         }
 
@@ -57,7 +57,7 @@ abstract class sharedb_event extends \core\event\base
     public final function get_shared_record_snapshot($tablename, $id) {
         global $SHAREDB;
 
-        if ($this->restored) {
+        if ($this->is_restored()) {
             throw new \coding_exception('It is not possible to get snapshots from restored events');
         }
 
