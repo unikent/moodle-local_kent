@@ -28,6 +28,7 @@
 $definitions = array(
     'userprefs' => array(
         'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
         'staticacceleration' => true,
         'staticaccelerationsize' => 2
     )
