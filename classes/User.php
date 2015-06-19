@@ -106,6 +106,7 @@ SQL;
             return array();
         }
 
+        check_user_preferences_loaded($USER);
         $prefs = $USER->preference;
         if (empty($prefs['betaprefs'])) {
             return array();

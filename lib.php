@@ -33,3 +33,10 @@ if ((!defined("CLI_SCRIPT") || !CLI_SCRIPT) &&
     )) {
     \local_kent\GA::inject();
 }
+
+function local_kent_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course) {
+    $url = new moodle_url('/local/kent/preferences.php', array(
+        'id' => $user->id
+    ));
+    $tree->add_node(new core_user\output\myprofile\node('miscellaneous', 'kentprefs', 'Kent Preferences', 'notes', $url));
+}
