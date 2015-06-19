@@ -85,7 +85,8 @@
 	<permissions>
 		<inherit>block/panopto:panoptocreator</inherit>
 		<inherit>block/panopto:panoptoviewer</inherit>
-		<inherit>enrol/category:config</inherit>
+		<inherit>block/panopto:provision_aspublisher</inherit>
+		<inherit>block/panopto:provision_asteacher</inherit>
 		<inherit>enrol/category:synchronised</inherit>
 		<inherit>enrol/connect:config</inherit>
 		<inherit>enrol/database:config</inherit>
@@ -98,6 +99,7 @@
 		<inherit>mod/quiz:emailwarnoverdue</inherit>
 		<inherit>tool/monitor:managetool</inherit>
 		<allow>block/activity_modules:addinstance</allow>
+		<allow>block/activity_results:addinstance</allow>
 		<allow>block/admin_bookmarks:addinstance</allow>
 		<allow>block/admin_bookmarks:myaddinstance</allow>
 		<allow>block/aspirelists:addinstance</allow>
@@ -155,15 +157,13 @@
 		<allow>block/news_items:myaddinstance</allow>
 		<allow>block/notifications:addinstance</allow>
 		<allow>block/notifications:myaddinstance</allow>
-		<allow>block/onlinesurvey:addinstance</allow>
-		<allow>block/onlinesurvey:myaddinstance</allow>
 		<allow>block/online_users:addinstance</allow>
 		<allow>block/online_users:myaddinstance</allow>
 		<allow>block/online_users:viewlist</allow>
+		<allow>block/onlinesurvey:addinstance</allow>
+		<allow>block/onlinesurvey:myaddinstance</allow>
 		<allow>block/panopto:addinstance</allow>
 		<allow>block/panopto:myaddinstance</allow>
-		<allow>block/panopto:provision_aspublisher</allow>
-		<allow>block/panopto:provision_asteacher</allow>
 		<allow>block/panopto:provision_course</allow>
 		<allow>block/panopto:provision_multiple</allow>
 		<allow>block/participants:addinstance</allow>
@@ -184,15 +184,16 @@
 		<allow>block/settings:myaddinstance</allow>
 		<allow>block/site_main_menu:addinstance</allow>
 		<allow>block/social_activities:addinstance</allow>
-		<allow>block/tags:addinstance</allow>
-		<allow>block/tags:myaddinstance</allow>
 		<allow>block/tag_flickr:addinstance</allow>
 		<allow>block/tag_youtube:addinstance</allow>
+		<allow>block/tags:addinstance</allow>
+		<allow>block/tags:myaddinstance</allow>
 		<allow>block/turnitin:addinstance</allow>
 		<allow>block/turnitin:myaddinstance</allow>
 		<allow>booktool/exportimscp:export</allow>
 		<allow>booktool/importhtml:import</allow>
 		<allow>booktool/print:print</allow>
+		<allow>enrol/category:config</allow>
 		<allow>enrol/cohort:config</allow>
 		<allow>enrol/cohort:unenrol</allow>
 		<allow>enrol/database:unenrol</allow>
@@ -240,6 +241,10 @@
 		<allow>gradereport/user:view</allow>
 		<allow>local/connect:helpdesk</allow>
 		<allow>local/connect:manage</allow>
+		<allow>local/recyclebin:delete</allow>
+		<allow>local/recyclebin:empty</allow>
+		<allow>local/recyclebin:restore</allow>
+		<allow>local/recyclebin:view</allow>
 		<allow>message/airnotifier:managedevice</allow>
 		<allow>mod/aspirelists:addinstance</allow>
 		<allow>mod/assign:addinstance</allow>
@@ -335,6 +340,7 @@
 		<allow>mod/forum:addnews</allow>
 		<allow>mod/forum:addquestion</allow>
 		<allow>mod/forum:allowforcesubscribe</allow>
+		<allow>mod/forum:canposttomygroups</allow>
 		<allow>mod/forum:createattachment</allow>
 		<allow>mod/forum:deleteanypost</allow>
 		<allow>mod/forum:deleteownpost</allow>
@@ -373,7 +379,6 @@
 		<allow>mod/glossary:viewanyrating</allow>
 		<allow>mod/glossary:viewrating</allow>
 		<allow>mod/glossary:write</allow>
-		<allow>mod/hotpot:addinstance</allow>
 		<allow>mod/hotpot:attempt</allow>
 		<allow>mod/hotpot:deleteallattempts</allow>
 		<allow>mod/hotpot:deletemyattempts</allow>
@@ -389,6 +394,8 @@
 		<allow>mod/lesson:edit</allow>
 		<allow>mod/lesson:grade</allow>
 		<allow>mod/lesson:manage</allow>
+		<allow>mod/lesson:manageoverrides</allow>
+		<allow>mod/lesson:viewreports</allow>
 		<allow>mod/lti:addcoursetool</allow>
 		<allow>mod/lti:addinstance</allow>
 		<allow>mod/lti:manage</allow>
@@ -409,6 +416,8 @@
 		<allow>mod/ouwiki:viewparticipation</allow>
 		<allow>mod/page:addinstance</allow>
 		<allow>mod/page:view</allow>
+		<allow>mod/panopto:addinstance</allow>
+		<allow>mod/panopto:view</allow>
 		<allow>mod/questionnaire:addinstance</allow>
 		<allow>mod/questionnaire:createpublic</allow>
 		<allow>mod/questionnaire:createtemplates</allow>
@@ -476,6 +485,8 @@
 		<allow>mod/turnitintooltwo:view</allow>
 		<allow>mod/url:addinstance</allow>
 		<allow>mod/url:view</allow>
+		<allow>mod/videofile:addinstance</allow>
+		<allow>mod/videofile:view</allow>
 		<allow>mod/vimeo:addinstance</allow>
 		<allow>mod/wiki:addinstance</allow>
 		<allow>mod/wiki:createpage</allow>
@@ -704,6 +715,8 @@
 		<allow>report/security:view</allow>
 		<allow>report/stats:view</allow>
 		<allow>report/studentactivity:view</allow>
+		<allow>report/turnitin:view</allow>
+		<allow>report/usersessions:manageownsessions</allow>
 		<allow>repository/alfresco:view</allow>
 		<allow>repository/areafiles:view</allow>
 		<allow>repository/boxnet:view</allow>
@@ -711,8 +724,8 @@
 		<allow>repository/dropbox:view</allow>
 		<allow>repository/equella:view</allow>
 		<allow>repository/filesystem:view</allow>
-		<allow>repository/flickr:view</allow>
 		<allow>repository/flickr_public:view</allow>
+		<allow>repository/flickr:view</allow>
 		<allow>repository/googledocs:view</allow>
 		<allow>repository/local:view</allow>
 		<allow>repository/merlot:view</allow>
@@ -735,6 +748,8 @@
 		<allow>webservice/rest:use</allow>
 		<allow>webservice/soap:use</allow>
 		<allow>webservice/xmlrpc:use</allow>
+		<prevent>mod/hotpot:addinstance</prevent>
 		<prevent>mod/streamingvideo:addinstance</prevent>
+		<prohibit>enrol/self:holdkey</prohibit>
 	</permissions>
 </role>
