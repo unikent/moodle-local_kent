@@ -692,6 +692,8 @@ function xmldb_local_kent_upgrade($oldversion) {
 
     // Reset every user's home page for 2.9 deploy.
     if ($oldversion < 2015062200) {
+        require_once($CFG->dirroot . '/my/lib.php');
+
         $userids = $DB->get_fieldset_select('user', 'id');
         foreach ($userids as $userid) {
             my_reset_page($userid, MY_PAGE_PRIVATE);
@@ -699,6 +701,36 @@ function xmldb_local_kent_upgrade($oldversion) {
 
         // Kent savepoint reached.
         upgrade_plugin_savepoint(true, 2015062200, 'local', 'kent');
+    }
+
+    // Re-add manual notifications after rollover.
+    if ($oldversion < 2015062201) {
+        $contextpreload = \context_helper::get_preload_record_columns_sql('x');
+        $courses = $DB->get_records_sql("SELECT c.id, $contextpreload
+            FROM {course} c
+            INNER JOIN {context} x ON (c.id=x.instanceid AND x.contextlevel=".CONTEXT_COURSE.")
+            WHERE c.shortname LIKE 'DX%'
+        ");
+        foreach ($courses as $course) {
+            \context_helper::preload_from_record($course);
+            $ctx = \context_course::instance($course->id);
+
+            $rolloverlink = new \moodle_url('/local/kent/courseclassify.php', array(
+                'id' => $course->id,
+                'classify' => 1
+            ));
+
+            $norolloverlink = new \moodle_url('/local/kent/courseclassify.php', array(
+                'id' => $course->id,
+                'classify' => 0
+            ));
+
+            $kc = new \local_kent\Course($course->id);
+            $kc->add_notification($ctx->id, 'manual_classify', "This manually created module has not been classified. Do you want this module to rollover next year? <a href=\"$rolloverlink\" class=\"alert-link\">Yes</a> / <a href=\"$norolloverlink\" class=\"alert-link\">No</a>.", 'info', true, false);
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015062201, 'local', 'kent');
     }
 
     return true;
