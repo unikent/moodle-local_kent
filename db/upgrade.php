@@ -690,5 +690,16 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015061601, 'local', 'kent');
     }
 
+    // Reset every user's home page for 2.9 deploy.
+    if ($oldversion < 2015062200) {
+        $userids = $DB->get_fieldset_select('user', 'id');
+        foreach ($userids as $userid) {
+            my_reset_page($userid, MY_PAGE_PRIVATE);
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015062200, 'local', 'kent');
+    }
+
     return true;
 }
