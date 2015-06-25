@@ -44,15 +44,29 @@ class deprecated extends \local_notifications\base {
      * Returns the notification.
      */
     public function render() {
-        $modlist = array();
-        foreach ($this->other['mods'] as $mod) {
-            $mod = (object)$mod;
-            $modlist[] = \html_writer::link($mod->url, $mod->name, array(
-                'class' => 'alert-link'
-            ));
+        $relevantmods = array();
+        $modinfo = get_fast_modinfo($this->objectid);
+        foreach ($modinfo->get_section_info_all() as $section => $thissection) {
+            $section = $modinfo->get_section_info($section);
+            if (!empty($modinfo->sections[$section->section])) {
+                foreach ($modinfo->sections[$section->section] as $modnumber) {
+                    $mod = $modinfo->cms[$modnumber];
+                    $activityman = new \local_kent\manager\activity($mod->modname);
+                    if ($activityman->is_deprecated()) {
+                        $relevantmods[] = \html_writer::link($mod->url, $mod->name, array(
+                            'class' => 'alert-link'
+                        ));
+                    }
+                }
+            }
         }
 
-        $modlist = \html_writer::alist($modlist);
+        if (empty($relevantmods)) {
+            $this->delete();
+            return null;
+        }
+
+        $modlist = \html_writer::alist($relevantmods);
         return "You have some deprecated activities. They may be removed in a future Moodle update. {$modlist}";
     }
 

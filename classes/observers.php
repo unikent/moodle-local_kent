@@ -231,11 +231,10 @@ class observers
      * @param \local_rollover\event\rollover_finished $event
      */
     public static function rollover_finished(\local_rollover\event\rollover_finished $event) {
-        // Regenerate the deprecated notification.
-        $task = new \local_kent\task\generate_deprecated_notification();
-        $task->set_custom_data(array(
-            'courseid' => $event->courseid
+        // Attach a deprecated notification, just in case.
+        \local_kent\notification\deprecated::create(array(
+            'objectid' => $courseid,
+            'context' => \context_course::instance($courseid)
         ));
-        \core\task\manager::queue_adhoc_task($task);
     }
 }

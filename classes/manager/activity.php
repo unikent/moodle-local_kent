@@ -73,12 +73,10 @@ class activity
             return true;
         }
 
-        // Regenerate the deprecated notification.
-        $task = new \local_kent\task\generate_deprecated_notification();
-        $task->set_custom_data(array(
-            'courseid' => $courseid
+        \local_kent\notification\deprecated::create(array(
+            'objectid' => $courseid,
+            'context' => \context_course::instance($courseid)
         ));
-        \core\task\manager::queue_adhoc_task($task);
 
         return true;
     }
