@@ -734,7 +734,7 @@ function xmldb_local_kent_upgrade($oldversion) {
             $task->set_custom_data(array(
                 'courseid' => $course->id
             ));
-            $task->execute();
+            \core\task\manager::queue_adhoc_task($task);
         }
 
         // Kent savepoint reached.
