@@ -60,16 +60,6 @@ $observers = array (
     ),
 
     array (
-        'eventname' => '\local_catman\event\course_scheduled',
-        'callback' => '\local_kent\observers::course_scheduled',
-    ),
-
-    array (
-        'eventname' => '\local_catman\event\course_unscheduled',
-        'callback' => '\local_kent\observers::course_unscheduled',
-    ),
-
-    array (
         'eventname' => '\core\event\user_enrolment_deleted',
         'callback' => '\local_kent\observers::user_enrolment_deleted',
     ),
