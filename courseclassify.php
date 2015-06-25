@@ -23,6 +23,7 @@ $context = \context_course::instance($id);
 $classify = required_param("classify", PARAM_INT);
 
 require_login();
+require_sesskey();
 require_capability('moodle/course:update', $context);
 
 $PAGE->set_context($context);
@@ -35,13 +36,12 @@ $course->shortname = \local_kent\Course::get_manual_shortname($classify == 1);
 $DB->update_record('course', $course);
 
 // Remove the notification.
-$kc = new \local_kent\Course($id);
-$notification = $kc->get_notification($context->id, 'manual_classify');
+$notification = \local_kent\notification\classify::get($id, $context);
 if ($notification) {
     $notification->delete();
 }
 
 // Redirect to the course.
 redirect(new \moodle_url('/course/view.php', array(
-	'id' => $id
+     'id' => $id
 )));

@@ -703,42 +703,42 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015062200, 'local', 'kent');
     }
 
-    // Re-add manual notifications after rollover.
-    if ($oldversion < 2015062201) {
-        $contextpreload = \context_helper::get_preload_record_columns_sql('x');
-        $courses = $DB->get_records_sql("SELECT c.id, $contextpreload
-            FROM {course} c
-            INNER JOIN {context} x ON (c.id=x.instanceid AND x.contextlevel=".CONTEXT_COURSE.")
-            WHERE c.shortname LIKE 'DX%'
-        ");
-        foreach ($courses as $course) {
-            \context_helper::preload_from_record($course);
-            $ctx = \context_course::instance($course->id);
-
-            $rolloverlink = new \moodle_url('/local/kent/courseclassify.php', array(
-                'id' => $course->id,
-                'classify' => 1
-            ));
-
-            $norolloverlink = new \moodle_url('/local/kent/courseclassify.php', array(
-                'id' => $course->id,
-                'classify' => 0
-            ));
-
-            $kc = new \local_kent\Course($course->id);
-            $kc->add_notification($ctx->id, 'manual_classify', "This manually created module has not been classified. Do you want this module to rollover next year? <a href=\"$rolloverlink\" class=\"alert-link\">Yes</a> / <a href=\"$norolloverlink\" class=\"alert-link\">No</a>.", 'info', true, false);
-        }
-
-        // Kent savepoint reached.
-        upgrade_plugin_savepoint(true, 2015062201, 'local', 'kent');
-    }
-
     if ($oldversion < 2015062202) {
         // Add new capabilities.
         $roleman->add_capability('moodle/my:manageblocks', array('user'));
 
         // Kent savepoint reached.
         upgrade_plugin_savepoint(true, 2015062202, 'local', 'kent');
+    }
+
+    // Upgrade notifications.
+    if ($oldversion < 2015062500) {
+        $contextpreload = \context_helper::get_preload_record_columns_sql('x');
+        $courses = $DB->get_records_sql("SELECT c.id, c.shortname, $contextpreload
+            FROM {course} c
+            INNER JOIN {context} x ON (c.id=x.instanceid AND x.contextlevel=".CONTEXT_COURSE.")
+        ");
+        foreach ($courses as $course) {
+            \context_helper::preload_from_record($course);
+            $context = \context_course::instance($course->id);
+
+            if (strpos($course->shortname, 'DX') === 0) {
+                \local_kent\notification\classify::create(array(
+                    'objectid' => $course->id,
+                    'context' => $context
+                ));
+            }
+
+            // Regenerate the deprecated notification.
+            $task = new \local_kent\task\generate_deprecated_notification();
+            $task->set_custom_data(array(
+                'courseid' => $course->id
+            ));
+            $task->execute();
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015062500, 'local', 'kent');
     }
 
     return true;

@@ -93,34 +93,6 @@ class observers
     }
 
     /**
-     * Course scheduled observer.
-     */
-    public static function course_scheduled(\local_catman\event\course_scheduled $event) {
-        $ctx = $event->get_context();
-
-        $course = new \local_kent\Course($event->courseid);
-        if (($notification = $course->get_notification($ctx->id, 'catman'))) {
-            $notification->delete();
-        }
-
-        $time = strftime("%H:%M %d/%m/%Y", $event->other['expirationtime']);
-        $message = "<i class=\"fa fa-exclamation-triangle\"></i> This course is scheduled for deletion at {$time}.";
-        $course->add_notification($ctx->id, 'catman', $message, 'warning', false, false);
-
-        return true;
-    }
-
-    /**
-     * Course unscheduled observer.
-     */
-    public static function course_unscheduled(\local_catman\event\course_unscheduled $event) {
-        $course = new \local_kent\Course($event->courseid);
-        if (($notification = $course->get_notification($event->get_context()->id, 'catman'))) {
-            $notification->delete();
-        }
-    }
-
-    /**
      * Course purged observer.
      */
     public static function course_purged(\local_catman\event\course_purged $event) {

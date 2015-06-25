@@ -37,9 +37,7 @@ class generate_deprecated_notification extends \core\task\adhoc_task
         $data = (array)$this->get_custom_data();
         $courseid = $data['courseid'];
 
-        $ctx = \context_course::instance($courseid);
-
-        $message = '';
+        $relevantmods = array();
         $modinfo = get_fast_modinfo($courseid);
         foreach ($modinfo->get_section_info_all() as $section => $thissection) {
             $section = $modinfo->get_section_info($section);
@@ -48,25 +46,38 @@ class generate_deprecated_notification extends \core\task\adhoc_task
                     $mod = $modinfo->cms[$modnumber];
                     $activityman = new \local_kent\manager\activity($mod->modname);
                     if ($activityman->is_deprecated()) {
-                        $message .= '<li>' . \html_writer::link($mod->url, $mod->name, array('class' => 'alert-link')) . '</li>';
+                        $relevantmods[] = array(
+                            'id' => $mod->id,
+                            'instance' => $mod->instance,
+                            'name' => $mod->name,
+                            'module' => $mod->module,
+                            'modname' => $mod->modname,
+                            'url' => $mod->url
+                        );
                     }
                 }
             }
         }
 
-        $course = new \local_kent\Course($courseid);
-        if (($notification = $course->get_notification($ctx->id, 'deprecated_modules'))) {
-            $notification->delete();
-        }
+        $context = \context_course::instance($courseid);
 
-        if (empty($message)) {
+        // Delete?
+        if (empty($relevantmods)) {
+            $notification = \local_kent\notification\deprecated::get($courseid, $context);
+            if ($notification) {
+                $notification->delete();
+            }
             return true;
         }
 
-        $message = '<i class="fa fa-exclamation-triangle"></i> You have some deprecated activities. They may be removed in a future Moodle update.<ul>' . $message . '</ul>';
-        $course->add_notification($ctx->id, 'deprecated_modules', $message, 'warning', true, false);
-
-        return true;
+        // Create.
+        \local_kent\notification\deprecated::create(array(
+            'objectid' => $courseid,
+            'context' => $context,
+            'other' => array(
+                'mods' => $relevantmods
+            )
+        ));
     }
 
     /**
