@@ -733,5 +733,13 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015062201, 'local', 'kent');
     }
 
+    if ($oldversion < 2015062202) {
+        // Add new capabilities.
+        $roleman->add_capability('moodle/my:manageblocks', array('user'));
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015062202, 'local', 'kent');
+    }
+
     return true;
 }

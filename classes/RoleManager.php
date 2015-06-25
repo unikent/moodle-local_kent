@@ -91,8 +91,6 @@ class RoleManager
      */
     private function set_capability($capability, $permission, $roles) {
         global $DB;
-        
-        $ids = array();
 
         if ($roles = '*') {
             $roles = $DB->get_records('role', null, '', 'id');
@@ -107,13 +105,13 @@ class RoleManager
             }
         }
 
-        foreach ($roles as $role) {
-            $ids[] = $role->id;
-        }
-
         $context = \context_system::instance();
-        foreach ($ids as $roleid) {
-            assign_capability($capability, $permission, $roleid, $context->id, true);
+        foreach ($roles as $role) {
+            if (empty($permission)) {
+                unassign_capability($capability, $role->id);
+            } else {
+                assign_capability($capability, $permission, $role->id, $context->id, true);
+            }
         }
     }
 
@@ -128,7 +126,7 @@ class RoleManager
      * Remove a capability from a role (or roles).
      */
     public function remove_capability($capability, $roles = "*") {
-        $this->set_capability($capability, \CAP_PREVENT, $roles);
+        $this->set_capability($capability, '', $roles);
     }
 
     /**

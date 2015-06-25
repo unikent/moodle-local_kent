@@ -38,5 +38,5 @@ function local_kent_myprofile_navigation(core_user\output\myprofile\tree $tree, 
     $url = new moodle_url('/local/kent/preferences.php', array(
         'id' => $user->id
     ));
-    $tree->add_node(new core_user\output\myprofile\node('miscellaneous', 'kentprefs', 'Kent Preferences', 'notes', $url));
+    $tree->add_node(new core_user\output\myprofile\node('miscellaneous', 'kentprefs', 'Kent Preferences', '', $url));
 }
