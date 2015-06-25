@@ -46,6 +46,7 @@ class deprecated extends \local_notifications\base {
     public function render() {
         $modlist = array();
         foreach ($this->other['mods'] as $mod) {
+            $mod = (object)$mod;
             $modlist[] = \html_writer::link($mod->url, $mod->name, array(
                 'class' => 'alert-link'
             ));
