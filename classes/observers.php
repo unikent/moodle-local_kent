@@ -233,8 +233,8 @@ class observers
     public static function rollover_finished(\local_rollover\event\rollover_finished $event) {
         // Attach a deprecated notification, just in case.
         \local_kent\notification\deprecated::create(array(
-            'objectid' => $courseid,
-            'context' => \context_course::instance($courseid)
+            'objectid' => $event->courseid,
+            'context' => \context_course::instance($event->courseid)
         ));
     }
 }
