@@ -694,7 +694,7 @@ function xmldb_local_kent_upgrade($oldversion) {
     if ($oldversion < 2015062200) {
         require_once($CFG->dirroot . '/my/lib.php');
 
-        $userids = $DB->get_fieldset_select('user', 'id');
+        $userids = $DB->get_fieldset_select('user', 'id', null);
         foreach ($userids as $userid) {
             my_reset_page($userid, MY_PAGE_PRIVATE);
         }
