@@ -31,5 +31,5 @@ $plugin->requires  = 2014051200;
 $plugin->dependencies = array(
     'local_hipchat' => 2015060500,
     'local_connect' => 2015060500,
-    'local_notifications' => 2015062500
+    'local_notifications' => 2015062900 
 );

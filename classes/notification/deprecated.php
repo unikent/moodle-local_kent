@@ -18,7 +18,9 @@ namespace local_kent\notification;
 
 defined('MOODLE_INTERNAL') || die();
 
-class deprecated extends \local_notifications\notification\base {
+class deprecated extends \local_notifications\notification\listnotification {
+    private $_items = array();
+
     /**
      * Returns the component of the notification.
      */
@@ -41,43 +43,48 @@ class deprecated extends \local_notifications\notification\base {
     }
 
     /**
-     * Returns the notification.
+     * Retrieve all items from the list.
      */
-    public function render() {
-        $relevantmods = array();
-        $modinfo = get_fast_modinfo($this->objectid);
-        foreach ($modinfo->get_section_info_all() as $section => $thissection) {
-            $section = $modinfo->get_section_info($section);
-            if (!empty($modinfo->sections[$section->section])) {
-                foreach ($modinfo->sections[$section->section] as $modnumber) {
-                    $mod = $modinfo->cms[$modnumber];
-                    $activityman = new \local_kent\manager\activity($mod->modname);
-                    if ($activityman->is_deprecated()) {
-                        $relevantmods[] = \html_writer::link($mod->url, $mod->name, array(
-                            'class' => 'alert-link'
-                        ));
+    public function get_items() {
+        if (empty($this->_items)) {
+            $this->_items = array();
+
+            $modinfo = get_fast_modinfo($this->objectid);
+            foreach ($modinfo->get_section_info_all() as $section => $thissection) {
+                $section = $modinfo->get_section_info($section);
+                if (!empty($modinfo->sections[$section->section])) {
+                    foreach ($modinfo->sections[$section->section] as $modnumber) {
+                        $mod = $modinfo->cms[$modnumber];
+                        $activityman = new \local_kent\manager\activity($mod->modname);
+                        if ($activityman->is_deprecated()) {
+                            $this->_items[] = $mod;
+                        }
                     }
                 }
             }
         }
 
-        if (empty($relevantmods)) {
+        return $this->_items;
+    }
+
+    /**
+     * Returns the notification.
+     */
+    public function render() {
+        if (empty($this->get_items())) {
             $this->delete();
             return null;
         }
 
-        $modlist = \html_writer::alist($relevantmods);
-        return "You have some deprecated activities. They may be removed in a future Moodle update. {$modlist}";
+        return "You have some deprecated activities. They will be removed in a future Moodle update. " . parent::render();
     }
 
     /**
-     * Checks custom data.
+     * Returns a rendered item.
      */
-    public function set_custom_data($data) {
-        if (empty($data['mods'])) {
-            throw new \moodle_exception('You must set a mod list.');
-        }
-
-        parent::set_custom_data($data);
+    public function render_item($item) {
+        return \html_writer::link($item->url, $item->name, array(
+            'class' => 'alert-link'
+        ));
     }
 }
