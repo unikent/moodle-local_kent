@@ -711,5 +711,13 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015062202, 'local', 'kent');
     }
 
+    if ($oldversion < 2015062900) {
+        // Remove manageblocks cap.
+        $roleman->remove_capability('moodle/my:manageblocks');
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015062900, 'local', 'kent');
+    }
+
     return true;
 }
