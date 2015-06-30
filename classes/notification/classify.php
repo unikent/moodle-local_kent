@@ -43,7 +43,7 @@ class classify extends \local_notifications\notification\base {
     /**
      * Returns the notification.
      */
-    public function render() {
+    protected function get_contents() {
         $rolloverlink = \html_writer::link(new \moodle_url('/local/kent/courseclassify.php', array(
             'id' => $this->objectid,
             'classify' => 1,

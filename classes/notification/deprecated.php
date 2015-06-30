@@ -70,7 +70,7 @@ class deprecated extends \local_notifications\notification\listnotification {
     /**
      * Returns the notification.
      */
-    public function render_text() {
+    protected function render_text() {
         if (empty($this->get_items())) {
             $this->delete();
             return null;
@@ -82,7 +82,7 @@ class deprecated extends \local_notifications\notification\listnotification {
     /**
      * Returns a rendered item.
      */
-    public function render_item($item) {
+    protected function render_item($item) {
         return \html_writer::link($item->url, $item->name, array(
             'class' => 'alert-link'
         ));
