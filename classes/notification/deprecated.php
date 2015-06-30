@@ -70,13 +70,13 @@ class deprecated extends \local_notifications\notification\listnotification {
     /**
      * Returns the notification.
      */
-    public function render() {
+    public function render_text() {
         if (empty($this->get_items())) {
             $this->delete();
             return null;
         }
 
-        return "You have some deprecated activities. They will be removed in a future Moodle update. " . parent::render();
+        return "You have some deprecated activities. They will be removed in a future Moodle update.";
     }
 
     /**
