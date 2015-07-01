@@ -26,7 +26,7 @@ function xmldb_local_kent_upgrade($oldversion) {
     }
 
     $taskman = new \local_kent\manager\task();
-    $configman = new \local_kent\ConfigManager();
+    $configman = new \local_kent\manager\config();
     $roleman = new \local_kent\manager\role();
 
     if ($oldversion < 2014080100) {
