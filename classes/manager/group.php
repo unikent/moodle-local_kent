@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_kent;
+namespace local_kent\manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -24,7 +24,7 @@ require_once($CFG->dirroot . '/group/lib.php');
 /**
  * Group Manager.
  */
-class GroupManager
+class group
 {
     /**
      * Observe a course created event.
@@ -56,7 +56,6 @@ class GroupManager
 
     /**
      * Sync all enrolments for a course.
-     * This isnt usually used, just here for the upgrade script.
      */
     public static function enrolment_created($courseid, $userid) {
         global $DB;
