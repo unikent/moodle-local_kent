@@ -41,15 +41,15 @@ function xmldb_local_kent_install() {
     $dbman = $DB->get_manager();
 
     // Configure to Kent defaults.
-    $configman = new \local_kent\ConfigManager();
+    $configman = new \local_kent\manager\config();
     $configman->configure();
 
     // Configure scheduled tasks to Kent defaults.
-    $taskman = new \local_kent\TaskManager();
+    $taskman = new \local_kent\manager\task();
     $taskman->configure();
 
     // Configure Kent managed roles.
-    $roleman = new \local_kent\RoleManager();
+    $roleman = new \local_kent\manager\role();
     $roleman->configure();
 
     // Create basic categories.

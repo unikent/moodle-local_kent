@@ -25,9 +25,9 @@ function xmldb_local_kent_upgrade($oldversion) {
         $sharedbman = $SHAREDB->get_manager();
     }
 
-    $taskman = new \local_kent\TaskManager();
-    $configman = new \local_kent\ConfigManager();
-    $roleman = new \local_kent\RoleManager();
+    $taskman = new \local_kent\manager\task();
+    $configman = new \local_kent\manager\config();
+    $roleman = new \local_kent\manager\role();
 
     if ($oldversion < 2014080100) {
         // Define table to be dropped.
@@ -59,7 +59,7 @@ function xmldb_local_kent_upgrade($oldversion) {
         // Create any missing groups.
         $rs = $DB->get_recordset('course');
         foreach ($rs as $course) {
-            \local_kent\GroupManager::course_created($course);
+            \local_kent\manager\group::course_created($course);
         }
         $rs->close();
         unset($rs);
@@ -103,7 +103,7 @@ function xmldb_local_kent_upgrade($oldversion) {
             // These enrolments are missing.
             $userids = explode(',', $group->userids);
             foreach ($userids as $userid) {
-                \local_kent\GroupManager::enrolment_created($group->courseid, $userid);
+                \local_kent\manager\group::enrolment_created($group->courseid, $userid);
             }
         }
         $rs->close();
@@ -709,6 +709,14 @@ function xmldb_local_kent_upgrade($oldversion) {
 
         // Kent savepoint reached.
         upgrade_plugin_savepoint(true, 2015062202, 'local', 'kent');
+    }
+
+    if ($oldversion < 2015062900) {
+        // Remove manageblocks cap.
+        $roleman->remove_capability('moodle/my:manageblocks');
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015062900, 'local', 'kent');
     }
 
     return true;
