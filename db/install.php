@@ -45,7 +45,7 @@ function xmldb_local_kent_install() {
     $configman->configure();
 
     // Configure scheduled tasks to Kent defaults.
-    $taskman = new \local_kent\TaskManager();
+    $taskman = new \local_kent\manager\task();
     $taskman->configure();
 
     // Configure Kent managed roles.

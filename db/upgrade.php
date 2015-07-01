@@ -25,7 +25,7 @@ function xmldb_local_kent_upgrade($oldversion) {
         $sharedbman = $SHAREDB->get_manager();
     }
 
-    $taskman = new \local_kent\TaskManager();
+    $taskman = new \local_kent\manager\task();
     $configman = new \local_kent\ConfigManager();
     $roleman = new \local_kent\RoleManager();
 
