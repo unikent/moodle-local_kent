@@ -42,12 +42,25 @@ class User
     public static function has_course_update_role($userid) {
         global $DB;
 
-        if (has_capability('moodle/site:config', \context_system::instance())) {
-            return true;
-        }
+        $contextpreload = \context_helper::get_preload_record_columns_sql('x');
 
-        $courses = get_user_capability_course('moodle/course:update', $userid);
-        return count($courses) > 0;
+        $courses = array();
+        $rs = $DB->get_recordset_sql("SELECT c.id, $contextpreload
+                                        FROM {course} c
+                                        JOIN {context} x ON (c.id=x.instanceid AND x.contextlevel=".CONTEXT_COURSE.")");
+
+        // Check capability for each course in turn
+        foreach ($rs as $course) {
+            \context_helper::preload_from_record($course);
+            $context = \context_course::instance($course->id);
+            if (has_capability('moodle/course:update', $context, $userid)) {
+                $rs->close();
+                return true;
+            }
+        }
+        $rs->close();
+
+        return false;
     }
 
     /**
