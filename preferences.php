@@ -27,7 +27,7 @@ $form = new \local_kent\form\preference_form();
 
 // Did we cancel?
 if ($form->is_cancelled()) {
-    redirect($CFG->wwwroot . '/local/kent/preferences.php');
+    redirect($PAGE->url);
 }
 
 // Did we submit?
@@ -41,7 +41,7 @@ if ($data = $form->get_data()) {
     }
 
     set_user_preference("betaprefs", implode(',', $prefs));
-    redirect(new \moodle_url('/local/kent/preferences.php'));
+    redirect($PAGE->url);
 } else {
     // Set defaults.
     $prefs = \local_kent\User::get_beta_preferences();

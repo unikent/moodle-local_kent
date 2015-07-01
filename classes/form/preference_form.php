@@ -36,10 +36,14 @@ class preference_form extends \moodleform
     public function definition() {
         $mform =& $this->_form;
 
-        $mform->addElement('header', 'themesettings', 'Theme Settings');
-        $mform->addElement('checkbox', 'theme_fullscreen', 'Full Screen');
+        $mform->addElement('header', 'uxsettings', 'Interface Settings');
+        $mform->addElement('checkbox', 'theme_fullscreen', 'Use full screen width');
+        $mform->addElement('checkbox', 'kco_notifications', 'Show notifications in \'My Modules\' block');
+        $mform->setExpanded('uxsettings');
+
+        $mform->addElement('header', 'accesssettings', 'Accessibility Settings');
         $mform->addElement('checkbox', 'theme_contrast', 'Contrast Mode');
-        $mform->setExpanded('themesettings');
+        $mform->setExpanded('accesssettings');
 
         $this->add_action_buttons(true);
     }
