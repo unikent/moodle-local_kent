@@ -27,7 +27,7 @@ function xmldb_local_kent_upgrade($oldversion) {
 
     $taskman = new \local_kent\manager\task();
     $configman = new \local_kent\ConfigManager();
-    $roleman = new \local_kent\RoleManager();
+    $roleman = new \local_kent\manager\role();
 
     if ($oldversion < 2014080100) {
         // Define table to be dropped.

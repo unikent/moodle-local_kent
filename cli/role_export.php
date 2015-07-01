@@ -20,7 +20,7 @@ require_once(dirname(__FILE__) . '/../../../config.php');
 require_once($CFG->libdir . '/clilib.php');
 
 $syncset = array();
-$rm = new \local_kent\RoleManager();
+$rm = new \local_kent\manager\role();
 
 // Push up all system roles.
 $ctx = \context_system::instance();

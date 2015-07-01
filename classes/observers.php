@@ -191,7 +191,7 @@ class observers
         // Ping the role manager.
         $enabled = get_config('local_kent', 'enable_role_sync');
         if ($enabled) {
-            $rm = new \local_kent\RoleManager();
+            $rm = new \local_kent\manager\role();
             $rm->on_role_created($context, $event->objectid, $event->relateduserid);
         }
 
@@ -210,7 +210,7 @@ class observers
         // Ping the role manager.
         $enabled = get_config('local_kent', 'enable_role_sync');
         if ($enabled) {
-            $rm = new \local_kent\RoleManager();
+            $rm = new \local_kent\manager\role();
             $rm->on_role_deleted($context, $event->objectid, $event->relateduserid);
         }
     }

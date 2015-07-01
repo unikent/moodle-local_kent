@@ -14,16 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_kent;
+namespace local_kent\manager;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
  * Role Manager.
  */
-class RoleManager
+class role
 {
-    private static $_managed_roles = array(
+    private static $managedroles = array(
         'flt' => 'manager',
         'cla_admin' => null,
         'cla_viewer' => null,
@@ -46,7 +46,7 @@ class RoleManager
         'support' => null
     );
 
-    private static $_shared_roles = array(
+    private static $sharedroles = array(
         \CONTEXT_SYSTEM => array(
             'cla_viewer',
             'flt',
@@ -72,16 +72,16 @@ class RoleManager
      */
     public function configure($role = 'all') {
         if ($role != 'all') {
-            if (!isset(static::$_managed_roles[$role])) {
+            if (!isset(static::$managedroles[$role])) {
                 debugging("Invalid role '{$role}'!");
                 return;
             }
 
-            $this->install_or_update_role($role, static::$_managed_roles[$role]);
+            $this->install_or_update_role($role, static::$managedroles[$role]);
             return;
         }
 
-        foreach (static::$_managed_roles as $shortname => $archetype) {
+        foreach (static::$managedroles as $shortname => $archetype) {
             $this->install_or_update_role($shortname, $archetype);
         }
     }
@@ -181,7 +181,7 @@ class RoleManager
      * Is the roleid in our sphere of care?
      */
     public function is_managed($shortname, $contextlevel = null) {
-        foreach (static::$_shared_roles as $ctxlevel => $roles) {
+        foreach (static::$sharedroles as $ctxlevel => $roles) {
             if ($contextlevel && $contextlevel != $ctxlevel) {
                 continue;
             }
@@ -201,7 +201,7 @@ class RoleManager
         global $CFG;
 
         $CFG->in_role_sync = true;
-        foreach (static::$_shared_roles as $contextlevel => $roles) {
+        foreach (static::$sharedroles as $contextlevel => $roles) {
             foreach ($roles as $shortname) {
                 $this->sync_role_type($contextlevel, $shortname);
             }
@@ -216,7 +216,7 @@ class RoleManager
         global $DB, $SHAREDB;
 
         // Get all shared roles.
-        $shared = $SHAREDB->get_records('shared_roles', array(
+        $shared = $SHAREDB->get_records('sharedroles', array(
             'contextlevel' => $contextlevel,
             'shortname' => $shortname
         ));
@@ -253,7 +253,7 @@ class RoleManager
         }
 
         // Get all shared roles.
-        $shared = $SHAREDB->get_records('shared_roles', array(
+        $shared = $SHAREDB->get_records('sharedroles', array(
             'contextlevel' => $contextlevel,
             'contextname' => $contextname,
             'shortname' => $shortname
@@ -397,7 +397,7 @@ class RoleManager
 
         // What ARE we doing? >:/
         if ($delete) {
-            return $SHAREDB->delete_records('shared_roles', array(
+            return $SHAREDB->delete_records('sharedroles', array(
                 'contextlevel' => $context->contextlevel,
                 'contextname' => $contextname,
                 'shortname' => $shortname,
@@ -405,7 +405,7 @@ class RoleManager
             ));
         }
 
-        return $SHAREDB->insert_record('shared_roles', array(
+        return $SHAREDB->insert_record('sharedroles', array(
             'contextlevel' => $context->contextlevel,
             'contextname' => $contextname,
             'shortname' => $shortname,

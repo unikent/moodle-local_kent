@@ -61,7 +61,7 @@ class activity
         }
 
         // Remove capabilities.
-        $roleman = new \local_kent\RoleManager();
+        $roleman = new \local_kent\manager\role();
         $roleman->remove_capability("mod/{$this->_name}:addinstance");
     }
 

@@ -36,10 +36,10 @@ class role_sync extends \core\task\scheduled_task
     public function execute() {
         $enabled = get_config('local_kent', 'enable_role_sync');
         if ($enabled) {
-            $rm = new \local_kent\RoleManager();
+            $rm = new \local_kent\manager\role();
             $rm->sync();
         }
 
         return true;
     }
-} 
+}
