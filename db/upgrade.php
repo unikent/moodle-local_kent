@@ -690,19 +690,6 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015061601, 'local', 'kent');
     }
 
-    // Reset every user's home page for 2.9 deploy.
-    if ($oldversion < 2015062200) {
-        require_once($CFG->dirroot . '/my/lib.php');
-
-        $userids = $DB->get_fieldset_select('user', 'id', null);
-        foreach ($userids as $userid) {
-            my_reset_page($userid, MY_PAGE_PRIVATE);
-        }
-
-        // Kent savepoint reached.
-        upgrade_plugin_savepoint(true, 2015062200, 'local', 'kent');
-    }
-
     if ($oldversion < 2015062202) {
         // Add new capabilities.
         $roleman->add_capability('moodle/my:manageblocks', array('user'));
@@ -717,6 +704,19 @@ function xmldb_local_kent_upgrade($oldversion) {
 
         // Kent savepoint reached.
         upgrade_plugin_savepoint(true, 2015062900, 'local', 'kent');
+    }
+
+    // Reset every user's home page for 2.9 deploy.
+    if ($oldversion < 2015070101) {
+        require_once($CFG->dirroot . '/my/lib.php');
+
+        $userids = $DB->get_fieldset_select('user', 'id', null);
+        foreach ($userids as $userid) {
+            my_reset_page($userid, MY_PAGE_PRIVATE);
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015070101, 'local', 'kent');
     }
 
     return true;
