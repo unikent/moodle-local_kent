@@ -128,8 +128,10 @@ SQL;
      * Returns a user preference.
      */
     public static function get_preference($name, $default = null) {
+        if (strpos($name, 'kent_') !== 0) {
+            $name = "kent_{$name}";
+        }
 
-        $name = "kent_{$name}";
         $prefs = static::get_preferences();
 
         return isset($prefs[$name]) ? $prefs[$name] : $default;
