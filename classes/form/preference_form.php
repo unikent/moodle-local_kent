@@ -37,12 +37,13 @@ class preference_form extends \moodleform
         $mform =& $this->_form;
 
         $mform->addElement('header', 'uxsettings', 'Interface Settings');
-        $mform->addElement('checkbox', 'theme_fullscreen', 'Use full screen width');
-        $mform->addElement('checkbox', 'kco_notifications', 'Show notifications in \'My Modules\' block');
+        $mform->addElement('checkbox', 'kent_theme_fullscreen', 'Use full screen width');
+        $mform->addElement('checkbox', 'kent_kco_notifications', 'Show notifications in \'My Modules\' block');
+        $mform->addElement('checkbox', 'kent_theme_menu_hide_text', 'Hide menu icon\'s text');
         $mform->setExpanded('uxsettings');
 
         $mform->addElement('header', 'accesssettings', 'Accessibility Settings');
-        $mform->addElement('checkbox', 'theme_contrast', 'Contrast Mode');
+        $mform->addElement('checkbox', 'kent_theme_contrast', 'Contrast mode');
         $mform->setExpanded('accesssettings');
 
         $this->add_action_buttons(true);

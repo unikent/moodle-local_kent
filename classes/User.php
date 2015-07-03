@@ -66,7 +66,7 @@ class User
     /**
      * Returns a user preference.
      */
-    public static function get_user_preferences() {
+    public static function get_all_infodata() {
         global $DB, $USER;
 
         if (!isloggedin()) {
@@ -104,9 +104,35 @@ SQL;
     /**
      * Returns a user preference.
      */
-    public static function get_user_preference($name, $default = null) {
-        $content = static::get_user_preferences();
+    public static function get_infodata($name, $default = null) {
+        $content = static::get_all_infodata();
         return isset($content[$name]) ? $content[$name] : $default;
+    }
+
+    /**
+     * Returns a user preference.
+     */
+    public static function get_preferences() {
+        global $USER;
+
+        if (!isloggedin() || !isset($USER->preference)) {
+            return array();
+        }
+
+        check_user_preferences_loaded($USER);
+
+        return $USER->preference;
+    }
+
+    /**
+     * Returns a user preference.
+     */
+    public static function get_preference($name, $default = null) {
+
+        $name = "kent_{$name}";
+        $prefs = static::get_preferences();
+
+        return isset($prefs[$name]) ? $prefs[$name] : $default;
     }
 
     /**
