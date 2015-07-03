@@ -719,5 +719,36 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015070101, 'local', 'kent');
     }
 
+    // Update beta prefs.
+    if ($oldversion < 2015070202) {
+        $prefs = $DB->get_recordset('user_preferences', array(
+            'name' => 'betaprefs'
+        ));
+
+        $insertset = array();
+        foreach ($prefs as $pref) {
+            $vals = explode(',', $pref->value);
+            foreach ($vals as $val) {
+                list($k, $v) = explode('=', $val);
+
+                $insertset[] = array(
+                    'userid' => $pref->userid,
+                    'name' => "kent_{$k}",
+                    'value' => $v
+                );
+            }
+        }
+
+        $prefs->close();
+
+        $DB->insert_records('user_preferences', $insertset);
+        $DB->delete_records('user_preferences', array(
+            'name' => 'betaprefs'
+        ));
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015070202, 'local', 'kent');
+    }
+
     return true;
 }

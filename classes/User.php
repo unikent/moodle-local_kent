@@ -139,24 +139,17 @@ SQL;
      * Return beta preferences.
      */
     public static function get_beta_preferences() {
-        global $USER;
-
-        if (!isloggedin() || !isset($USER->preference)) {
-            return array();
-        }
-
-        check_user_preferences_loaded($USER);
-        $prefs = $USER->preference;
-        if (empty($prefs['betaprefs'])) {
+        $prefs = static::get_preference('betaprefs', array());
+        if (empty($prefs)) {
             return array();
         }
 
         $data = array();
 
-        $prefs = explode(',', $prefs['betaprefs']);
+        $prefs = explode(',', $prefs);
         foreach ($prefs as $pref) {
             list($k, $v) = explode('=', $pref);
-            $data[$k] = $v == '1' ? true : false;
+            $data[$k] = $v == '1';
         }
 
         return $data;
