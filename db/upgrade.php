@@ -731,11 +731,13 @@ function xmldb_local_kent_upgrade($oldversion) {
             foreach ($vals as $val) {
                 list($k, $v) = explode('=', $val);
 
-                $insertset[] = array(
-                    'userid' => $pref->userid,
-                    'name' => "kent_{$k}",
-                    'value' => $v
-                );
+                if ($v) {
+                    $insertset[] = array(
+                        'userid' => $pref->userid,
+                        'name' => "kent_{$k}",
+                        'value' => $v
+                    );
+                }
             }
         }
 
