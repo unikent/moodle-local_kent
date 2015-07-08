@@ -27,7 +27,7 @@ $form = new \local_kent\form\preference_form();
 
 // Did we cancel?
 if ($form->is_cancelled()) {
-    redirect($CFG->wwwroot . '/local/kent/preferences.php');
+    redirect($PAGE->url);
 }
 
 // Did we submit?
@@ -35,17 +35,35 @@ if ($data = $form->get_data()) {
     $arr = (array)$data;
     unset($arr['submitbutton']);
 
-    $prefs = array();
-    foreach ($arr as $k => $v) {
-        $prefs[] = $k . "=" . ($v ? '1' : '0');
+    // Update and remove.
+    foreach ($USER->preference as $k => $v) {
+        if (strpos($k, 'kent') !== 0) {
+            continue;
+        }
+
+        set_user_preference($k, (isset($arr[$k]) ? '1' : '0'));
     }
 
-    set_user_preference("betaprefs", implode(',', $prefs));
-    redirect(new \moodle_url('/local/kent/preferences.php'));
+    // Add new prefs.
+    foreach ($arr as $k => $v) {
+        if (strpos($k, 'kent') !== 0) {
+            continue;
+        }
+
+        if (!isset($USER->preference[$k])) {
+            set_user_preference($k, 1);
+        }
+    }
+
+    redirect($PAGE->url);
 } else {
     // Set defaults.
-    $prefs = \local_kent\User::get_beta_preferences();
-    foreach ($prefs as $k => $v) {
+    check_user_preferences_loaded($USER);
+    foreach ($USER->preference as $k => $v) {
+        if (strpos($k, 'kent') !== 0) {
+            continue;
+        }
+
         $form->set_field_default($k, $v);
     }
 }

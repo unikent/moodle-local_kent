@@ -42,18 +42,31 @@ class User
     public static function has_course_update_role($userid) {
         global $DB;
 
-        if (has_capability('moodle/site:config', \context_system::instance())) {
-            return true;
-        }
+        $contextpreload = \context_helper::get_preload_record_columns_sql('x');
 
-        $courses = get_user_capability_course('moodle/course:update', $userid);
-        return count($courses) > 0;
+        $courses = array();
+        $rs = $DB->get_recordset_sql("SELECT c.id, $contextpreload
+                                        FROM {course} c
+                                        JOIN {context} x ON (c.id=x.instanceid AND x.contextlevel=".CONTEXT_COURSE.")");
+
+        // Check capability for each course in turn
+        foreach ($rs as $course) {
+            \context_helper::preload_from_record($course);
+            $context = \context_course::instance($course->id);
+            if (has_capability('moodle/course:update', $context, $userid)) {
+                $rs->close();
+                return true;
+            }
+        }
+        $rs->close();
+
+        return false;
     }
 
     /**
      * Returns a user preference.
      */
-    public static function get_user_preferences() {
+    public static function get_all_infodata() {
         global $DB, $USER;
 
         if (!isloggedin()) {
@@ -91,15 +104,15 @@ SQL;
     /**
      * Returns a user preference.
      */
-    public static function get_user_preference($name, $default = null) {
-        $content = static::get_user_preferences();
+    public static function get_infodata($name, $default = null) {
+        $content = static::get_all_infodata();
         return isset($content[$name]) ? $content[$name] : $default;
     }
 
     /**
-     * Return beta preferences.
+     * Returns a user preference.
      */
-    public static function get_beta_preferences() {
+    public static function get_preferences() {
         global $USER;
 
         if (!isloggedin() || !isset($USER->preference)) {
@@ -107,17 +120,38 @@ SQL;
         }
 
         check_user_preferences_loaded($USER);
-        $prefs = $USER->preference;
-        if (empty($prefs['betaprefs'])) {
+
+        return $USER->preference;
+    }
+
+    /**
+     * Returns a user preference.
+     */
+    public static function get_preference($name, $default = null) {
+        if (strpos($name, 'kent_') !== 0) {
+            $name = "kent_{$name}";
+        }
+
+        $prefs = static::get_preferences();
+
+        return isset($prefs[$name]) ? $prefs[$name] : $default;
+    }
+
+    /**
+     * Return beta preferences.
+     */
+    public static function get_beta_preferences() {
+        $prefs = static::get_preference('betaprefs', array());
+        if (empty($prefs)) {
             return array();
         }
 
         $data = array();
 
-        $prefs = explode(',', $prefs['betaprefs']);
+        $prefs = explode(',', $prefs);
         foreach ($prefs as $pref) {
             list($k, $v) = explode('=', $pref);
-            $data[$k] = $v == '1' ? true : false;
+            $data[$k] = $v == '1';
         }
 
         return $data;
