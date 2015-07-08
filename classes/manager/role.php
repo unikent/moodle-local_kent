@@ -69,6 +69,7 @@ class role
     /**
      * Configure all managed roles, call this from an upgrade script when
      * you change something.
+     * @param string $role
      */
     public function configure($role = 'all') {
         if ($role != 'all') {
@@ -88,6 +89,12 @@ class role
 
     /**
      * Helper for add_capability and remove_capability.
+     * @param $capability
+     * @param $permission
+     * @param $roles
+     * @throws \Exception
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     private function set_capability($capability, $permission, $roles) {
         global $DB;
@@ -117,6 +124,8 @@ class role
 
     /**
      * Add a capability to a role (or roles).
+     * @param $capability
+     * @param string $roles
      */
     public function add_capability($capability, $roles = "*") {
         $this->set_capability($capability, \CAP_ALLOW, $roles);
@@ -124,6 +133,8 @@ class role
 
     /**
      * Remove a capability from a role (or roles).
+     * @param $capability
+     * @param string $roles
      */
     public function remove_capability($capability, $roles = "*") {
         $this->set_capability($capability, '', $roles);
@@ -131,6 +142,12 @@ class role
 
     /**
      * Either update or install a managed role.
+     * @param $shortname
+     * @param $archetype
+     * @return bool
+     * @throws \Exception
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     private function install_or_update_role($shortname, $archetype) {
         global $CFG, $DB;
@@ -179,6 +196,9 @@ class role
 
     /**
      * Is the roleid in our sphere of care?
+     * @param $shortname
+     * @param null $contextlevel
+     * @return bool
      */
     public function is_managed($shortname, $contextlevel = null) {
         foreach (static::$sharedroles as $ctxlevel => $roles) {
@@ -211,6 +231,8 @@ class role
 
     /**
      * Sync a given context and shortname.
+     * @param $contextlevel
+     * @param $shortname
      */
     private function sync_role_type($contextlevel, $shortname) {
         global $DB, $SHAREDB;
@@ -236,6 +258,10 @@ class role
 
     /**
      * Sync a given context and shortname.
+     * @param $contextlevel
+     * @param $contextname
+     * @param $shortname
+     * @throws \coding_exception
      */
     private function sync_role_context($contextlevel, $contextname, $shortname) {
         global $DB, $SHAREDB;
@@ -291,6 +317,11 @@ class role
 
     /**
      * Resolve shared context-isms.
+     * @param $contextlevel
+     * @param $ident
+     * @return \context_coursecat|\context_system|null
+     * @throws \Exception
+     * @throws \dml_exception
      */
     private function get_context($contextlevel, $ident) {
         global $DB;
@@ -314,6 +345,9 @@ class role
 
     /**
      * Get a user ID for a username.
+     * @param $username
+     * @return
+     * @throws \moodle_exception
      */
     private function get_userid($username) {
         global $CFG, $DB, $SHAREDB;
@@ -351,6 +385,10 @@ class role
 
     /**
      * Migrate the action up to SHAREDB.
+     * @param $context
+     * @param $roleid
+     * @param $userid
+     * @return bool
      */
     public function on_role_created($context, $roleid, $userid) {
         return $this->update_sharedb_role($context, $roleid, $userid, false);
@@ -358,6 +396,10 @@ class role
 
     /**
      * Migrate the action up to SHAREDB.
+     * @param $context
+     * @param $roleid
+     * @param $userid
+     * @return bool
      */
     public function on_role_deleted($context, $roleid, $userid) {
         return $this->update_sharedb_role($context, $roleid, $userid, true);
@@ -365,6 +407,11 @@ class role
 
     /**
      * Update a new role in SHAREDB.
+     * @param $context
+     * @param $roleid
+     * @param $userid
+     * @param bool $delete
+     * @return bool
      */
     private function update_sharedb_role($context, $roleid, $userid, $delete = false) {
         global $CFG, $DB, $SHAREDB;
@@ -415,6 +462,7 @@ class role
 
     /**
      * Create record in SHAREDB for user.
+     * @param $user
      */
     private function share_user($user) {
         global $SHAREDB;
@@ -431,6 +479,8 @@ class role
     /**
      * Returns a list of local enrolments within a given context.
      * Returns a mapped list ready for SHAREDB (shortname, username).
+     * @param $ctx
+     * @return array
      */
     public function get_local_enrolments_context($ctx) {
         global $DB;

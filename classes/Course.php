@@ -34,6 +34,8 @@ class Course
     /**
      * Helper for creating a manual module code.
      * Rollover should be true or false, null means we don't know.
+     * @param null $rollover
+     * @return string
      */
     public static function get_manual_shortname($rollover = null) {
         global $DB;

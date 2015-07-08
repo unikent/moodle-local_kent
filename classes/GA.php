@@ -51,7 +51,7 @@ class GA
         $tracker = $this->get_tracker();
 
         // Grab the GA Code.
-        return <<<HTML
+        return <<<HTML5
     <!-- Start of Google Analytics -->
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -76,7 +76,7 @@ class GA
 
     </script>
     <!-- End of Google Analytics -->
-HTML;
+HTML5;
     }
 
     /**
@@ -174,6 +174,8 @@ HTML;
 
     /**
      * Returns user information.
+     * @param $var
+     * @return bool|string
      */
     private function get_user_var($var) {
         global $USER;

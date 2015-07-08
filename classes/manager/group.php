@@ -28,6 +28,9 @@ class group
 {
     /**
      * Observe a course created event.
+     * @param $course
+     * @return bool
+     * @throws \moodle_exception
      */
     public static function course_created($course) {
         global $DB;
@@ -56,6 +59,10 @@ class group
 
     /**
      * Sync all enrolments for a course.
+     * @param $courseid
+     * @param $userid
+     * @return bool
+     * @throws \coding_exception
      */
     public static function enrolment_created($courseid, $userid) {
         global $DB;

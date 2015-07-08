@@ -25,6 +25,8 @@ class observers
 {
     /**
      * Course created observer.
+     * @param \core\event\course_created $event
+     * @return bool
      */
     public static function course_created(\core\event\course_created $event) {
         global $CFG, $DB, $SHAREDB;
@@ -59,6 +61,8 @@ class observers
 
     /**
      * Course deleted observer.
+     * @param \core\event\course_deleted $event
+     * @return bool
      */
     public static function course_deleted(\core\event\course_deleted $event) {
         global $CFG, $SHAREDB;
@@ -78,6 +82,8 @@ class observers
 
     /**
      * Course module created observer.
+     * @param \core\event\course_module_created $event
+     * @return bool
      */
     public static function course_module_created(\core\event\course_module_created $event) {
         $activityman = new \local_kent\manager\activity($event->other['modulename']);
@@ -86,6 +92,8 @@ class observers
 
     /**
      * Course module deleted observer.
+     * @param \core\event\course_module_deleted $event
+     * @return bool
      */
     public static function course_module_deleted(\core\event\course_module_deleted $event) {
         $activityman = new \local_kent\manager\activity($event->other['modulename']);
@@ -94,6 +102,8 @@ class observers
 
     /**
      * Course purged observer.
+     * @param \local_catman\event\course_purged $event
+     * @return bool
      */
     public static function course_purged(\local_catman\event\course_purged $event) {
         $shortname = $event->other['shortname'];
@@ -112,6 +122,9 @@ class observers
 
     /**
      * User enrolment created.
+     * @param \core\event\user_enrolment_created $event
+     * @return bool
+     * @throws \coding_exception
      */
     public static function user_enrolment_created(\core\event\user_enrolment_created $event) {
         global $CFG, $DB, $SHAREDB;
@@ -144,6 +157,8 @@ class observers
 
     /**
      * User enrolment deleted.
+     * @param \core\event\user_enrolment_deleted $event
+     * @return bool
      */
     public static function user_enrolment_deleted(\core\event\user_enrolment_deleted $event) {
         global $CFG, $DB, $SHAREDB;

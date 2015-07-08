@@ -59,6 +59,10 @@ class course_shouter extends \core\task\scheduled_task
 
     /**
      * Send a message about a new course to HipChat.
+     * @param $courses
+     * @throws \Exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
      */
     private function send_hipchats($courses) {
         $hipchat = get_config("local_kent", "enable_course_shouter");
@@ -77,6 +81,9 @@ class course_shouter extends \core\task\scheduled_task
 
     /**
      * Emails Academic Liason Team
+     * @param $courses
+     * @throws \Exception
+     * @throws \dml_exception
      */
     private function send_emails($courses) {
         global $CFG;

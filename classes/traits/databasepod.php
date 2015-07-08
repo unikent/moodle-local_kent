@@ -58,6 +58,8 @@ trait databasepod
 
     /**
      * Magic method!
+     * @param $name
+     * @return null
      */
     public function __get($name) {
         $additional = "_get_" . $name;
@@ -88,11 +90,15 @@ trait databasepod
 
     /**
      * Magic!
+     * @param $name
+     * @param $value
+     * @throws \moodle_exception
      */
     public function __set($name, $value) {
         $additional = "_set_" . $name;
         if (method_exists($this, $additional)) {
-            return $this->$additional($value);
+            $this->$additional($value);
+            return;
         }
 
         // Are we trying to set the object for an id column?
@@ -143,6 +149,8 @@ trait databasepod
     /**
      * This is *basically* a public version of set_class_data.
      * Pseudo-forces singletons.
+     * @param $data
+     * @return
      */
     public static function from_sql_result($data) {
         $cache = static::get_internal_cache();
@@ -194,6 +202,11 @@ trait databasepod
 
     /**
      * Get an object by a specified field.
+     * @param $field
+     * @param $val
+     * @param bool $forcearray
+     * @return array|null
+     * @throws \moodle_exception
      */
     public static function get_by($field, $val, $forcearray = false) {
         global $DB;
@@ -235,6 +248,8 @@ trait databasepod
 
     /**
      * Get an object by ID
+     * @param $id
+     * @return array|null
      */
     public static function get($id) {
         return static::get_by('id', $id);
@@ -244,6 +259,7 @@ trait databasepod
      * Returns all known objects.
      *
      * @param bool raw Return raw (stdClass) objects?
+     * @return array
      */
     public static function get_all($raw = false) {
         global $DB;
@@ -262,6 +278,10 @@ trait databasepod
     /**
      * Run a given method against all objects in a memory-efficient way.
      * The method will be provided with a single argument (object).
+     * @param $func
+     * @param array $conditions
+     * @return array
+     * @throws \moodle_exception
      */
     public static function batch_all($func, $conditions = array()) {
         global $DB;
@@ -287,6 +307,8 @@ trait databasepod
 
     /**
      * Returns a flexitable.
+     * @param $baseurl
+     * @return \flexible_table
      */
     public function get_flexible_table($baseurl) {
         global $CFG;

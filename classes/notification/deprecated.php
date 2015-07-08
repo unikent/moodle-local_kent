@@ -81,6 +81,8 @@ class deprecated extends \local_notifications\notification\listnotification {
 
     /**
      * Returns a rendered item.
+     * @param $item
+     * @return string
      */
     protected function render_item($item) {
         return \html_writer::link($item->url, $item->name, array(

@@ -25,6 +25,8 @@ class User
 {
     /**
      * Is the user a Departmental Admin?
+     * @param $userid
+     * @return bool
      */
     public static function is_dep_admin($userid) {
         global $DB;
@@ -38,6 +40,9 @@ class User
 
     /**
      * Returns true if a user has any access to edit any course.
+     * @param $userid
+     * @return bool
+     * @throws \coding_exception
      */
     public static function has_course_update_role($userid) {
         global $DB;
@@ -103,6 +108,9 @@ SQL;
 
     /**
      * Returns a user preference.
+     * @param $name
+     * @param null $default
+     * @return null
      */
     public static function get_infodata($name, $default = null) {
         $content = static::get_all_infodata();
@@ -126,6 +134,9 @@ SQL;
 
     /**
      * Returns a user preference.
+     * @param $name
+     * @param null $default
+     * @return null
      */
     public static function get_preference($name, $default = null) {
         if (strpos($name, 'kent_') !== 0) {
@@ -159,6 +170,9 @@ SQL;
 
     /**
      * Returns a beta preference.
+     * @param $name
+     * @param null $default
+     * @return null
      */
     public static function get_beta_preference($name, $default = null) {
         static $content = null;
