@@ -729,15 +729,20 @@ function xmldb_local_kent_upgrade($oldversion) {
         foreach ($prefs as $pref) {
             $vals = explode(',', $pref->value);
             foreach ($vals as $val) {
-                list($k, $v) = explode('=', $val);
-
-                if ($v) {
-                    $insertset[] = array(
-                        'userid' => $pref->userid,
-                        'name' => "kent_{$k}",
-                        'value' => $v
-                    );
+                if (strpos($val, '=') === false) {
+                    continue;
                 }
+
+                list($k, $v) = explode('=', $val);
+                if (!$v) {
+                    continue;
+                }
+
+                $insertset[] = array(
+                    'userid' => $pref->userid,
+                    'name' => "kent_{$k}",
+                    'value' => $v
+                );
             }
         }
 
