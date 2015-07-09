@@ -26,7 +26,7 @@ namespace local_kent\external;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once("$CFG->libdir/externallib.php");
+require_once("{$CFG->libdir}/externallib.php");
 
 use external_api;
 use external_value;
@@ -77,7 +77,7 @@ class user extends external_api
     /**
      * Returns description of get_my_info_data() result value.
      *
-     * @return external_description
+     * @return external_multiple_structure
      */
     public static function get_my_info_data_returns() {
         return new external_multiple_structure(
@@ -130,7 +130,7 @@ class user extends external_api
     /**
      * Returns description of get_my_prefs() result value.
      *
-     * @return external_description
+     * @return external_multiple_structure
      */
     public static function get_my_prefs_returns() {
         return new external_multiple_structure(

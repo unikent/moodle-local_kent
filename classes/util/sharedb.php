@@ -35,16 +35,16 @@ class sharedb {
 
     /**
      * Sets up global $SHAREDB moodle_database instance
-     *
+     * @return bool|void Returns true when finished setting up $SHAREDB. Returns void when $SHAREDB has already been set.
+     * @throws \dml_exception
      * @global stdClass $CFG The global configuration instance.
      * @global stdClass $SHAREDB The global moodle_database instance for Connect.
-     * @return void|bool Returns true when finished setting up $SHAREDB. Returns void when $SHAREDB has already been set.
      */
     private static function setup_database() {
         global $CFG, $SHAREDB;
 
         if (static::$setup) {
-            return;
+            return true;
         }
 
         if (!$SHAREDB = \moodle_database::get_driver_instance($CFG->kent->sharedb['driver'],
@@ -70,6 +70,10 @@ class sharedb {
     /**
      * Override magic method for call to create the correct global
      * variable (as we obviously want it...)
+     * @param $name
+     * @param $arguments
+     * @return mixed
+     * @throws \dml_exception
      */
     public function __call($name, $arguments) {
         global $SHAREDB;

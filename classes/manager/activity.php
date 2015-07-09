@@ -27,6 +27,7 @@ class activity
 
     /**
      * Create an instance of the activity manager.
+     * @param $activity
      */
     public function __construct($activity) {
         $this->_name = $activity;
@@ -67,6 +68,9 @@ class activity
 
     /**
      * Generate a deprecation notification if required.
+     * @param $courseid
+     * @return bool
+     * @throws \coding_exception
      */
     public function notify($courseid) {
         if (!$this->is_deprecated()) {

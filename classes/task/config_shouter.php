@@ -39,16 +39,16 @@ class config_shouter extends \core\task\scheduled_task
         // What was the last time we shouted about in the config logs table?
         $lasttime = $this->get_last_run_time();
         if (empty($lasttime)) {
-            return;
+            return true;
         }
 
         $enabled = get_config("local_kent", "enable_config_shouter");
         if (!$enabled) {
-            return;
+            return true;
         }
 
         if (!\local_hipchat\HipChat::available()) {
-            return;
+            return true;
         }
 
         // Grab all entries since then, not made by admin.

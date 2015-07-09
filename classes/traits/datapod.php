@@ -43,6 +43,7 @@ trait datapod
     /**
      * Given an object containing data, set appropriate class vars.
      * This is done quickly, and skips most checks.
+     * @param $data
      */
     protected function set_data($data) {
         if (!is_array($data)) {
@@ -58,6 +59,8 @@ trait datapod
 
     /**
      * Magic method!
+     * @param $name
+     * @return null
      */
     public function __get($name) {
         $additional = "_get_" . $name;
@@ -79,6 +82,9 @@ trait datapod
 
     /**
      * Magic!
+     * @param $name
+     * @param $value
+     * @throws \moodle_exception
      */
     public function __set($name, $value) {
         $validfields = $this->valid_fields();
@@ -99,6 +105,8 @@ trait datapod
 
     /**
      * Magic!
+     * @param $name
+     * @return bool
      */
     public function __isset($name) {
         return isset($this->_data[$name]);
@@ -106,6 +114,7 @@ trait datapod
 
     /**
      * Magic!
+     * @param $name
      */
     public function __unset($name) {
         unset($this->_data[$name]);
@@ -113,6 +122,8 @@ trait datapod
 
     /**
      * Returns a flexitable.
+     * @param $baseurl
+     * @return \flexible_table
      */
     public function get_flexible_table($baseurl) {
         global $CFG;

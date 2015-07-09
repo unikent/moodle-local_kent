@@ -63,6 +63,12 @@ class task
 
     /**
      * Configure a task.
+     * @param $taskname
+     * @param string $minute
+     * @param string $hour
+     * @param string $month
+     * @param string $dayofweek
+     * @param string $day
      */
     private function configure_task($taskname, $minute = '*', $hour = '*', $month = '*', $dayofweek = '*', $day = '*') {
         try {
@@ -87,6 +93,7 @@ class task
 
     /**
      * Enable a task.
+     * @param $taskname
      */
     private function enable_task($taskname) {
         try {
@@ -107,6 +114,7 @@ class task
 
     /**
      * Disable a task.
+     * @param $taskname
      */
     private function disable_task($taskname) {
         try {

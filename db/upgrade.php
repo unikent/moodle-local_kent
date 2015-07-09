@@ -729,7 +729,14 @@ function xmldb_local_kent_upgrade($oldversion) {
         foreach ($prefs as $pref) {
             $vals = explode(',', $pref->value);
             foreach ($vals as $val) {
+                if (strpos($val, '=') === false) {
+                    continue;
+                }
+
                 list($k, $v) = explode('=', $val);
+                if (!$v) {
+                    continue;
+                }
 
                 $insertset[] = array(
                     'userid' => $pref->userid,
