@@ -50,8 +50,9 @@ trait datapod
             $data = get_object_vars($data);
         }
 
+        $validfields = $this->valid_fields();
         foreach ($data as $key => $value) {
-            if (in_array($key, $this->valid_fields())) {
+            if (empty($validfields) || in_array($key, $validfields)) {
                 $this->_data[$key] = $value;
             }
         }
