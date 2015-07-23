@@ -34,32 +34,30 @@ if (!PHPUNIT_TEST or PHPUNIT_UTIL) {
         global $CFG, $USER;
 
         // In case the error is with Splunk..
-        if (isset($CFG->kent_error_handler_ran)) {
-            return default_error_handler($errno, $errstr, $errfile, $errline, $errcontext);
+        if (!isset($CFG->kent_error_handler_ran) && !empty(trim($errstr))) {
+            $CFG->kent_error_handler_ran = true;
+
+            // Splunk it.
+            $splunkparams = array(
+                'timecreated' => time(),
+                'eventname' => 'phperror',
+                'other' => serialize(array(
+                    'errno' => $errno,
+                    'errstr' => $errstr,
+                    'errfile' => $errfile,
+                    'errline' => $errline
+                ))
+            );
+
+            if ($USER) {
+                $splunkparams['userid'] = $USER->id;
+                $splunkparams['realuserid'] = $USER->id;
+                $splunkparams['relateduserid'] = $USER->id;
+            }
+
+            // Send to Splunk.
+            \logstore_splunk\splunk::log_standardentry($splunkparams);
         }
-
-        $CFG->kent_error_handler_ran = true;
-
-        // Splunk it.
-        $splunkparams = array(
-            'timecreated' => time(),
-            'eventname' => 'phperror',
-            'other' => serialize(array(
-                'errno' => $errno,
-                'errstr' => $errstr,
-                'errfile' => $errfile,
-                'errline' => $errline
-            ))
-        );
-
-        if ($USER) {
-            $splunkparams['userid'] = $USER->id;
-            $splunkparams['realuserid'] = $USER->id;
-            $splunkparams['relateduserid'] = $USER->id;
-        }
-
-        // Send to Splunk.
-        \logstore_splunk\splunk::log_standardentry($splunkparams);
 
         // Get Moodle's default error handler to handle this.
         return default_error_handler($errno, $errstr, $errfile, $errline, $errcontext);
