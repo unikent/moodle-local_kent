@@ -113,7 +113,7 @@ class course_shouter extends \core\task\scheduled_task
             }
 
             $courseurl = "{$CFG->wwwroot}/course/view.php?id={$course->id}";
-            $categoryurl = "{$CFG->wwwroot}/course/category.php?id={$course->category}";
+            $categoryurl = "{$CFG->wwwroot}/course/index.php?categoryid={$course->category}";
 
             $formatted[] = <<<HTML
 -----------------------------------
