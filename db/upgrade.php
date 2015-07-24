@@ -757,5 +757,18 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015070202, 'local', 'kent');
     }
 
+    if ($oldversion < 2015072400) {
+        // Grab a list of meta enrolments with no valid course, and update them.
+        $DB->execute('
+            UPDATE {enrol} e
+            LEFT OUTER JOIN {course} c ON c.id = e.customint1
+            SET e.customint1 = 0
+            WHERE c.id IS NULL
+        ');
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015072400, 'local', 'kent');
+    }
+
     return true;
 }

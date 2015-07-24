@@ -14,22 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Version information
- *
- * @package    local_kent
- * @copyright  2015 University of Kent
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+define('CLI_SCRIPT', true);
 
-defined('MOODLE_INTERNAL') || die();
+require_once(dirname(__FILE__) . '/../../../config.php');
+require_once($CFG->libdir . '/clilib.php');
 
-$plugin->component = 'local_kent';
-$plugin->version   = 2015072400;
-$plugin->requires  = 2014051200;
-
-$plugin->dependencies = array(
-    'local_hipchat' => 2015060500,
-    'local_connect' => 2015060500,
-    'local_notifications' => 2015062900
-);
+get_string_manager()->reset_caches();

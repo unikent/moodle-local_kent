@@ -444,7 +444,7 @@ class role
 
         // What ARE we doing? >:/
         if ($delete) {
-            return $SHAREDB->delete_records('sharedroles', array(
+            return $SHAREDB->delete_records('shared_roles', array(
                 'contextlevel' => $context->contextlevel,
                 'contextname' => $contextname,
                 'shortname' => $shortname,
@@ -452,7 +452,7 @@ class role
             ));
         }
 
-        return $SHAREDB->insert_record('sharedroles', array(
+        return $SHAREDB->insert_record('shared_roles', array(
             'contextlevel' => $context->contextlevel,
             'contextname' => $contextname,
             'shortname' => $shortname,
