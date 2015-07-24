@@ -46,6 +46,22 @@ class string extends \core_string_manager_standard
         }
 
         $this->cache = array();
+
+        // Load language.
+        $language = file_get_contents($CFG->alternative_lang_cache);
+        if (empty($language)) {
+            $this->build_global_cache();
+        } else {
+            $this->cache['language'] = unserialize($language);
+
+            // Load deprecated.
+            $deprecated = file_get_contents($CFG->alternative_deprecated_lang_cache);
+            if (!empty($deprecated)) {
+                $this->cache['deprecated'] = unserialize($deprecated);
+            } else {
+                $this->cache['deprecated'] = array();
+            }
+        }
     }
 
     /**
@@ -111,6 +127,9 @@ class string extends \core_string_manager_standard
 
         // Write all this to a file.
         file_put_contents($CFG->alternative_lang_cache, serialize($language));
+
+        // Cleanup.
+        $this->cache['language'] = $language;
         unset($language);
 
         // Now deprecated strings.
@@ -131,6 +150,8 @@ class string extends \core_string_manager_standard
         $strings = preg_split('/\s*\n\s*/', $content, -1, PREG_SPLIT_NO_EMPTY);
         $strings = array_flip($strings);
         file_put_contents($CFG->alternative_deprecated_lang_cache, serialize($strings));
+
+        $this->cache['deprecated'] = $strings;
     }
 
     /**
@@ -144,10 +165,6 @@ class string extends \core_string_manager_standard
      */
     public function load_component_strings($component, $lang, $disablecache = false, $disablelocal = false) {
         global $CFG;
-
-        if (!isset($this->cache['language'])) {
-            $this->cache['language'] = unserialize(file_get_contents($CFG->alternative_lang_cache));
-        }
 
         $language = $this->cache['language'];
 
@@ -186,12 +203,6 @@ class string extends \core_string_manager_standard
      *     where component is a normalised component (i.e. "core_moodle", "mod_assign", etc.)
      */
     protected function load_deprecated_strings() {
-        global $CFG;
-
-        if (!isset($this->cache['deprecated'])) {
-            $this->cache['deprecated'] = unserialize(file_get_contents($CFG->alternative_deprecated_lang_cache));
-        }
-
         return $this->cache['deprecated'];
     }
 
