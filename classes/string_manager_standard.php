@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_kent\manager;
-
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . "/classes/string_manager.php");
@@ -26,7 +24,7 @@ require_once($CFG->libdir . "/classes/string_manager_standard.php");
  *
  * Implements string_manager with getting and printing localised strings
  */
-class string extends \core_string_manager_standard
+class local_kent_string_manager_standard extends \core_string_manager_standard
 {
     /**
      * Create new instance of string manager
@@ -36,6 +34,8 @@ class string extends \core_string_manager_standard
      * @param array $translist limit list of visible translations
      */
     public function __construct($otherroot, $localroot, $translist) {
+        global $CFG;
+
         $this->otherroot = $otherroot;
         $this->localroot = $localroot;
 
