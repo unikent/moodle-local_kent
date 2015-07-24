@@ -19,4 +19,4 @@ define('CLI_SCRIPT', true);
 require_once(dirname(__FILE__) . '/../../../config.php');
 require_once($CFG->libdir . '/clilib.php');
 
-get_string_manager()->build_global_cache();
+get_string_manager()->reset_caches();
