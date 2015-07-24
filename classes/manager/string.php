@@ -19,29 +19,15 @@ namespace local_kent\manager;
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . "/classes/string_manager.php");
+require_once($CFG->libdir . "/classes/string_manager_standard.php");
 
 /**
  * Kent's string_manager implementation
  *
  * Implements string_manager with getting and printing localised strings
  */
-class string implements \core_string_manager
+class string extends \core_string_manager_standard
 {
-    /** @var string location of all packs except 'en' */
-    protected $otherroot;
-
-    /** @var string location of all lang pack local modifications */
-    protected $localroot;
-
-    /** @var int get_string() counter */
-    protected $countgetstring = 0;
-
-    /** @var bool use disk cache */
-    protected $translist;
-
-    /** @var array file cache */
-    protected $cache;
-
     /**
      * Create new instance of string manager
      *
@@ -208,251 +194,6 @@ class string implements \core_string_manager
     }
 
     /**
-     * Has string been deprecated?
-     *
-     * Usually checked only inside get_string() to display debug warnings.
-     *
-     * @param string $identifier The identifier of the string to search for
-     * @param string $component The module the string is associated with
-     * @return bool true if deprecated
-     */
-    public function string_deprecated($identifier, $component) {
-        $deprecated = $this->load_deprecated_strings();
-        list($plugintype, $pluginname) = \core_component::normalize_component($component);
-        $normcomponent = $pluginname ? ($plugintype . '_' . $pluginname) : $plugintype;
-        return isset($deprecated[$identifier . ',' . $normcomponent]);
-    }
-
-    /**
-     * Does the string actually exist?
-     *
-     * get_string() is throwing debug warnings, sometimes we do not want them
-     * or we want to display better explanation of the problem.
-     * Note: Use with care!
-     *
-     * @param string $identifier The identifier of the string to search for
-     * @param string $component The module the string is associated with
-     * @return boot true if exists
-     */
-    public function string_exists($identifier, $component) {
-        $lang = current_language();
-        $string = $this->load_component_strings($component, $lang);
-        return isset($string[$identifier]);
-    }
-
-    /**
-     * Get String returns a requested string
-     *
-     * @param string $identifier The identifier of the string to search for
-     * @param string $component The module the string is associated with
-     * @param string|object|array $a An object, string or number that can be used
-     *      within translation strings
-     * @param string $lang moodle translation language, null means use current
-     * @return string The String !
-     */
-    public function get_string($identifier, $component = '', $a = null, $lang = null) {
-        global $CFG;
-
-        $this->countgetstring++;
-        // There are very many uses of these time formatting strings without the 'langconfig' component,
-        // it would not be reasonable to expect that all of them would be converted during 2.0 migration.
-        static $langconfigstrs = array(
-            'strftimedate' => 1,
-            'strftimedatefullshort' => 1,
-            'strftimedateshort' => 1,
-            'strftimedatetime' => 1,
-            'strftimedatetimeshort' => 1,
-            'strftimedaydate' => 1,
-            'strftimedaydatetime' => 1,
-            'strftimedayshort' => 1,
-            'strftimedaytime' => 1,
-            'strftimemonthyear' => 1,
-            'strftimerecent' => 1,
-            'strftimerecentfull' => 1,
-            'strftimetime' => 1);
-
-        if (empty($component)) {
-            if (isset($langconfigstrs[$identifier])) {
-                $component = 'langconfig';
-            } else {
-                $component = 'moodle';
-            }
-        }
-
-        if ($lang === null) {
-            $lang = current_language();
-        }
-
-        $string = $this->load_component_strings($component, $lang);
-
-        if (!isset($string[$identifier])) {
-            if ($component === 'pix' or $component === 'core_pix') {
-                // This component contains only alt tags for emoticons, not all of them are supposed to be defined.
-                return '';
-            }
-            if ($identifier === 'parentlanguage' and ($component === 'langconfig' or $component === 'core_langconfig')) {
-                // Identifier parentlanguage is a special string, undefined means use English if not defined.
-                return 'en';
-            }
-            // Do not rebuild caches here!
-            // Devs need to learn to purge all caches after any change or disable $CFG->langstringcache.
-            if (!isset($string[$identifier])) {
-                // The string is still missing - should be fixed by developer.
-                if ($CFG->debugdeveloper) {
-                    list($plugintype, $pluginname) = \core_component::normalize_component($component);
-                    if ($plugintype === 'core') {
-                        $file = "lang/en/{$component}.php";
-                    } else if ($plugintype == 'mod') {
-                        $file = "mod/{$pluginname}/lang/en/{$pluginname}.php";
-                    } else {
-                        $path = \core_component::get_plugin_directory($plugintype, $pluginname);
-                        $file = "{$path}/lang/en/{$plugintype}_{$pluginname}.php";
-                    }
-                    debugging("Invalid get_string() identifier: '{$identifier}' or component '{$component}'. " .
-                    "Perhaps you are missing \$string['{$identifier}'] = ''; in {$file}?", DEBUG_DEVELOPER);
-                }
-                return "[[$identifier]]";
-            }
-        }
-
-        $string = $string[$identifier];
-
-        if ($a !== null) {
-            // Process array's and objects (except lang_strings).
-            if (is_array($a) or (is_object($a) && !($a instanceof lang_string))) {
-                $a = (array)$a;
-                $search = array();
-                $replace = array();
-                foreach ($a as $key => $value) {
-                    if (is_int($key)) {
-                        // We do not support numeric keys - sorry!
-                        continue;
-                    }
-                    if (is_array($value) or (is_object($value) && !($value instanceof lang_string))) {
-                        // We support just string or lang_string as value.
-                        continue;
-                    }
-                    $search[]  = '{$a->'.$key.'}';
-                    $replace[] = (string)$value;
-                }
-                if ($search) {
-                    $string = str_replace($search, $replace, $string);
-                }
-            } else {
-                $string = str_replace('{$a}', (string)$a, $string);
-            }
-        }
-
-        if ($CFG->debugdeveloper) {
-            // Display a debugging message if sting exists but was deprecated.
-            if ($this->string_deprecated($identifier, $component)) {
-                list($plugintype, $pluginname) = \core_component::normalize_component($component);
-                $normcomponent = $pluginname ? ($plugintype . '_' . $pluginname) : $plugintype;
-                debugging("String [{$identifier},{$normcomponent}] is deprecated. ".
-                    'Either you should no longer be using that string, or the string has been incorrectly deprecated, in which case you should report this as a bug. '.
-                    'Please refer to https://docs.moodle.org/dev/String_deprecation', DEBUG_DEVELOPER);
-            }
-        }
-
-        return $string;
-    }
-
-    /**
-     * Returns information about the core_string_manager performance.
-     *
-     * @return array
-     */
-    public function get_performance_summary() {
-        return array(array(
-            'langcountgetstring' => $this->countgetstring,
-        ), array(
-            'langcountgetstring' => 'get_string calls',
-        ));
-    }
-
-    /**
-     * Returns a localised list of all country names, sorted by localised name.
-     *
-     * @param bool $returnall return all or just enabled
-     * @param string $lang moodle translation language, null means use current
-     * @return array two-letter country code => translated name.
-     */
-    public function get_list_of_countries($returnall = false, $lang = null) {
-        global $CFG;
-
-        if ($lang === null) {
-            $lang = current_language();
-        }
-
-        $countries = $this->load_component_strings('core_countries', $lang);
-        \core_collator::asort($countries);
-        if (!$returnall and !empty($CFG->allcountrycodes)) {
-            $enabled = explode(',', $CFG->allcountrycodes);
-            $return = array();
-            foreach ($enabled as $c) {
-                if (isset($countries[$c])) {
-                    $return[$c] = $countries[$c];
-                }
-            }
-            return $return;
-        }
-
-        return $countries;
-    }
-
-    /**
-     * Returns a localised list of languages, sorted by code keys.
-     *
-     * @param string $lang moodle translation language, null means use current
-     * @param string $standard language list standard
-     *    - iso6392: three-letter language code (ISO 639-2/T) => translated name
-     *    - iso6391: two-letter language code (ISO 639-1) => translated name
-     * @return array language code => translated name
-     */
-    public function get_list_of_languages($lang = null, $standard = 'iso6391') {
-        if ($lang === null) {
-            $lang = current_language();
-        }
-
-        if ($standard === 'iso6392') {
-            $langs = $this->load_component_strings('core_iso6392', $lang);
-            ksort($langs);
-            return $langs;
-
-        } else if ($standard === 'iso6391') {
-            $langs2 = $this->load_component_strings('core_iso6392', $lang);
-            static $mapping = array('aar' => 'aa', 'abk' => 'ab', 'afr' => 'af', 'aka' => 'ak', 'sqi' => 'sq', 'amh' => 'am', 'ara' => 'ar', 'arg' => 'an', 'hye' => 'hy',
-                'asm' => 'as', 'ava' => 'av', 'ave' => 'ae', 'aym' => 'ay', 'aze' => 'az', 'bak' => 'ba', 'bam' => 'bm', 'eus' => 'eu', 'bel' => 'be', 'ben' => 'bn', 'bih' => 'bh',
-                'bis' => 'bi', 'bos' => 'bs', 'bre' => 'br', 'bul' => 'bg', 'mya' => 'my', 'cat' => 'ca', 'cha' => 'ch', 'che' => 'ce', 'zho' => 'zh', 'chu' => 'cu', 'chv' => 'cv',
-                'cor' => 'kw', 'cos' => 'co', 'cre' => 'cr', 'ces' => 'cs', 'dan' => 'da', 'div' => 'dv', 'nld' => 'nl', 'dzo' => 'dz', 'eng' => 'en', 'epo' => 'eo', 'est' => 'et',
-                'ewe' => 'ee', 'fao' => 'fo', 'fij' => 'fj', 'fin' => 'fi', 'fra' => 'fr', 'fry' => 'fy', 'ful' => 'ff', 'kat' => 'ka', 'deu' => 'de', 'gla' => 'gd', 'gle' => 'ga',
-                'glg' => 'gl', 'glv' => 'gv', 'ell' => 'el', 'grn' => 'gn', 'guj' => 'gu', 'hat' => 'ht', 'hau' => 'ha', 'heb' => 'he', 'her' => 'hz', 'hin' => 'hi', 'hmo' => 'ho',
-                'hrv' => 'hr', 'hun' => 'hu', 'ibo' => 'ig', 'isl' => 'is', 'ido' => 'io', 'iii' => 'ii', 'iku' => 'iu', 'ile' => 'ie', 'ina' => 'ia', 'ind' => 'id', 'ipk' => 'ik',
-                'ita' => 'it', 'jav' => 'jv', 'jpn' => 'ja', 'kal' => 'kl', 'kan' => 'kn', 'kas' => 'ks', 'kau' => 'kr', 'kaz' => 'kk', 'khm' => 'km', 'kik' => 'ki', 'kin' => 'rw',
-                'kir' => 'ky', 'kom' => 'kv', 'kon' => 'kg', 'kor' => 'ko', 'kua' => 'kj', 'kur' => 'ku', 'lao' => 'lo', 'lat' => 'la', 'lav' => 'lv', 'lim' => 'li', 'lin' => 'ln',
-                'lit' => 'lt', 'ltz' => 'lb', 'lub' => 'lu', 'lug' => 'lg', 'mkd' => 'mk', 'mah' => 'mh', 'mal' => 'ml', 'mri' => 'mi', 'mar' => 'mr', 'msa' => 'ms', 'mlg' => 'mg',
-                'mlt' => 'mt', 'mon' => 'mn', 'nau' => 'na', 'nav' => 'nv', 'nbl' => 'nr', 'nde' => 'nd', 'ndo' => 'ng', 'nep' => 'ne', 'nno' => 'nn', 'nob' => 'nb', 'nor' => 'no',
-                'nya' => 'ny', 'oci' => 'oc', 'oji' => 'oj', 'ori' => 'or', 'orm' => 'om', 'oss' => 'os', 'pan' => 'pa', 'fas' => 'fa', 'pli' => 'pi', 'pol' => 'pl', 'por' => 'pt',
-                'pus' => 'ps', 'que' => 'qu', 'roh' => 'rm', 'ron' => 'ro', 'run' => 'rn', 'rus' => 'ru', 'sag' => 'sg', 'san' => 'sa', 'sin' => 'si', 'slk' => 'sk', 'slv' => 'sl',
-                'sme' => 'se', 'smo' => 'sm', 'sna' => 'sn', 'snd' => 'sd', 'som' => 'so', 'sot' => 'st', 'spa' => 'es', 'srd' => 'sc', 'srp' => 'sr', 'ssw' => 'ss', 'sun' => 'su',
-                'swa' => 'sw', 'swe' => 'sv', 'tah' => 'ty', 'tam' => 'ta', 'tat' => 'tt', 'tel' => 'te', 'tgk' => 'tg', 'tgl' => 'tl', 'tha' => 'th', 'bod' => 'bo', 'tir' => 'ti',
-                'ton' => 'to', 'tsn' => 'tn', 'tso' => 'ts', 'tuk' => 'tk', 'tur' => 'tr', 'twi' => 'tw', 'uig' => 'ug', 'ukr' => 'uk', 'urd' => 'ur', 'uzb' => 'uz', 'ven' => 've',
-                'vie' => 'vi', 'vol' => 'vo', 'cym' => 'cy', 'wln' => 'wa', 'wol' => 'wo', 'xho' => 'xh', 'yid' => 'yi', 'yor' => 'yo', 'zha' => 'za', 'zul' => 'zu');
-            $langs1 = array();
-            foreach ($mapping as $c2 => $c1) {
-                $langs1[$c1] = $langs2[$c2];
-            }
-            ksort($langs1);
-            return $langs1;
-
-        } else {
-            debugging('Unsupported $standard parameter in get_list_of_languages() method: '.$standard);
-        }
-
-        return array();
-    }
-
-    /**
      * Returns list of all explicit parent languages for the given language.
      *
      * English (en) is considered as the top implicit parent of all language packs
@@ -488,23 +229,6 @@ class string implements \core_string_manager
     }
 
     /**
-     * Returns localised list of currencies.
-     *
-     * @param string $lang moodle translation language, null means use current
-     * @return array currency code => localised currency name
-     */
-    public function get_list_of_currencies($lang = null) {
-        if ($lang === null) {
-            $lang = current_language();
-        }
-
-        $currencies = $this->load_component_strings('core_currencies', $lang);
-        asort($currencies);
-
-        return $currencies;
-    }
-
-    /**
      * Clears both in-memory and on-disk caches
      * @param bool $phpunitreset true means called from our PHPUnit integration test reset
      */
@@ -528,38 +252,6 @@ class string implements \core_string_manager
         // Lang packs use PHP files in dataroot, it is better to invalidate opcode caches.
         if (function_exists('opcache_reset')) {
             opcache_reset();
-        }
-    }
-
-    /**
-     * Returns cache key suffix, this enables us to store string + lang menu
-     * caches in local caches on cluster nodes. We can not use prefix because
-     * it would cause problems when creating subdirs in cache file store.
-     * @return string
-     */
-    protected function get_key_suffix() {
-        $rev = $this->get_revision();
-        if ($rev < 0) {
-            // Simple keys do not like minus char.
-            $rev = 0;
-        }
-
-        return $rev;
-    }
-
-    /**
-     * Returns string revision counter, this is incremented after any string cache reset.
-     * @return int lang string revision counter, -1 if unknown
-     */
-    public function get_revision() {
-        global $CFG;
-        if (empty($CFG->langstringcache)) {
-            return -1;
-        }
-        if (isset($CFG->langrev)) {
-            return (int)$CFG->langrev;
-        } else {
-            return -1;
         }
     }
 }
