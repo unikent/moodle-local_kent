@@ -39,6 +39,9 @@ class string implements \core_string_manager
     /** @var bool use disk cache */
     protected $translist;
 
+    /** @var array file cache */
+    protected $cache;
+
     /**
      * Create new instance of string manager
      *
@@ -55,6 +58,8 @@ class string implements \core_string_manager
         } else {
             $this->translist = array();
         }
+
+        $this->cache = array();
     }
 
     /**
@@ -99,7 +104,7 @@ class string implements \core_string_manager
         // Now plugins.
         foreach (\core_component::get_plugin_types() as $plugintype => $plugintypedir) {
             foreach (\core_component::get_plugin_list($plugintype) as $pluginname => $plugindir) {
-                if (!$location = \core_component::get_plugin_directory($plugintype, $pluginname) || !is_dir($location)) {
+                if (!($location = \core_component::get_plugin_directory($plugintype, $pluginname)) || !is_dir($location)) {
                     continue;
                 }
 
@@ -111,7 +116,7 @@ class string implements \core_string_manager
                 $component = $plugintype . '_' . $pluginname;
 
                 if (file_exists("$location/lang/en/$file.php")) {
-                    $language[$component] = $this->build_string_list("$location/lang/en/$file.php");
+                    $language["en"][$component] = $this->build_string_list("$location/lang/en/$file.php");
                 }
 
                 if (file_exists("{$CFG->dirroot}/lang/en_local/$file.php")) {
@@ -156,7 +161,11 @@ class string implements \core_string_manager
     public function load_component_strings($component, $lang, $disablecache = false, $disablelocal = false) {
         global $CFG;
 
-        $language = unserialize(file_get_contents($CFG->alternative_lang_cache));
+        if (!isset($this->cache['language'])) {
+            $this->cache['language'] = unserialize(file_get_contents($CFG->alternative_lang_cache));
+        }
+
+        $language = $this->cache['language'];
 
         list($plugintype, $pluginname) = \core_component::normalize_component($component);
 
@@ -191,7 +200,11 @@ class string implements \core_string_manager
     protected function load_deprecated_strings() {
         global $CFG;
 
-        return unserialize(file_get_contents($CFG->alternative_deprecated_lang_cache));
+        if (!isset($this->cache['deprecated'])) {
+            $this->cache['deprecated'] = unserialize(file_get_contents($CFG->alternative_deprecated_lang_cache));
+        }
+
+        return $this->cache['deprecated'];
     }
 
     /**
