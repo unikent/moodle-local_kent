@@ -27,7 +27,7 @@ require_once($CFG->libdir . "/classes/string_manager_standard.php");
 class local_kent_string_manager_standard extends \core_string_manager_standard
 {
     /** @var cache lang string cache - it will be optimised more later */
-    protected $kentcache;
+    protected static $kentcache;
 
     /**
      * Create new instance of string manager
@@ -41,21 +41,23 @@ class local_kent_string_manager_standard extends \core_string_manager_standard
 
         parent::__construct($otherroot, $localroot, $translist);
 
-        $this->kentcache = array();
+        if (!isset(static::$kentcache)) {
+            static::$kentcache = array();
 
-        // Load language.
-        $language = file_get_contents($CFG->alternative_lang_cache);
-        if (empty($language)) {
-            $this->build_global_cache();
-        } else {
-            $this->kentcache['language'] = unserialize($language);
-
-            // Load deprecated.
-            $deprecated = file_get_contents($CFG->alternative_deprecated_lang_cache);
-            if (!empty($deprecated)) {
-                $this->kentcache['deprecated'] = unserialize($deprecated);
+            // Load language.
+            $language = file_get_contents($CFG->alternative_lang_cache);
+            if (empty($language)) {
+                $this->build_global_cache();
             } else {
-                $this->kentcache['deprecated'] = array();
+                static::$kentcache['language'] = unserialize($language);
+
+                // Load deprecated.
+                $deprecated = file_get_contents($CFG->alternative_deprecated_lang_cache);
+                if (!empty($deprecated)) {
+                    static::$kentcache['deprecated'] = unserialize($deprecated);
+                } else {
+                    static::$kentcache['deprecated'] = array();
+                }
             }
         }
     }
@@ -126,7 +128,7 @@ class local_kent_string_manager_standard extends \core_string_manager_standard
         file_put_contents($CFG->alternative_lang_cache, serialize($language));
 
         // Cleanup.
-        $this->kentcache['language'] = $language;
+        static::$kentcache['language'] = $language;
         unset($language);
 
         // Now deprecated strings.
@@ -148,7 +150,7 @@ class local_kent_string_manager_standard extends \core_string_manager_standard
         $strings = array_flip($strings);
         file_put_contents($CFG->alternative_deprecated_lang_cache, serialize($strings));
 
-        $this->kentcache['deprecated'] = $strings;
+        static::$kentcache['deprecated'] = $strings;
     }
 
     /**
@@ -181,7 +183,7 @@ class local_kent_string_manager_standard extends \core_string_manager_standard
             }
         }
 
-        $language = $this->kentcache['language'];
+        $language = static::$kentcache['language'];
         if (!isset($language[$file])) {
             return array();
         }
@@ -198,7 +200,7 @@ class local_kent_string_manager_standard extends \core_string_manager_standard
      *     where component is a normalised component (i.e. "core_moodle", "mod_assign", etc.)
      */
     protected function load_deprecated_strings() {
-        return $this->kentcache['deprecated'];
+        return static::$kentcache['deprecated'];
     }
 
     /**
