@@ -33,17 +33,11 @@ class string implements \core_string_manager
     /** @var string location of all lang pack local modifications */
     protected $localroot;
 
-    /** @var cache lang string cache - it will be optimised more later */
-    protected $cache;
-
     /** @var int get_string() counter */
     protected $countgetstring = 0;
 
     /** @var bool use disk cache */
     protected $translist;
-
-    /** @var array list of cached deprecated strings */
-    protected $cacheddeprecated;
 
     /**
      * Create new instance of string manager
@@ -60,18 +54,6 @@ class string implements \core_string_manager
             $this->translist = array_combine($translist, $translist);
         } else {
             $this->translist = array();
-        }
-
-        if ($this->get_revision() > 0) {
-            // We can use a proper cache, establish the cache using the 'String cache' definition.
-            $this->cache = \cache::make('core', 'string');
-        } else {
-            // We only want a cache for the length of the request, create a static cache.
-            $options = array(
-                'simplekeys' => true,
-                'simpledata' => true
-            );
-            $this->cache = \cache::make_from_params(\cache_store::MODE_REQUEST, 'core', 'string', array(), $options);
         }
     }
 
@@ -140,6 +122,26 @@ class string implements \core_string_manager
 
         // Write all this to a file.
         file_put_contents($CFG->alternative_lang_cache, serialize($language));
+        unset($language);
+
+        // Now deprecated strings.
+        $content = '';
+        $filename = $CFG->dirroot . '/lang/en/deprecated.txt';
+        if (file_exists($filename)) {
+            $content .= file_get_contents($filename);
+        }
+        foreach (\core_component::get_plugin_types() as $plugintype => $plugintypedir) {
+            foreach (\core_component::get_plugin_list($plugintype) as $pluginname => $plugindir) {
+                $filename = $plugindir . '/lang/en/deprecated.txt';
+                if (file_exists($filename)) {
+                    $content .= "\n" . file_get_contents($filename);
+                }
+            }
+        }
+
+        $strings = preg_split('/\s*\n\s*/', $content, -1, PREG_SPLIT_NO_EMPTY);
+        $strings = array_flip($strings);
+        file_put_contents($CFG->alternative_deprecated_lang_cache, serialize($strings));
     }
 
     /**
@@ -154,104 +156,28 @@ class string implements \core_string_manager
     public function load_component_strings($component, $lang, $disablecache = false, $disablelocal = false) {
         global $CFG;
 
+        $language = unserialize(file_get_contents($CFG->alternative_lang_cache));
+
         list($plugintype, $pluginname) = \core_component::normalize_component($component);
-        if ($plugintype === 'core' and is_null($pluginname)) {
-            $component = 'core';
-        } else {
-            $component = $plugintype . '_' . $pluginname;
-        }
 
-        $cachekey = $lang.'_'.$component.'_'.$this->get_key_suffix();
-
-        $cachedstring = $this->cache->get($cachekey);
-        if (!$disablecache and !$disablelocal) {
-            if ($cachedstring !== false) {
-                return $cachedstring;
-            }
-        }
-
-        // No cache found - let us merge all possible sources of the strings.
-        if ($plugintype === 'core') {
-            $file = $pluginname;
-            if ($file === null) {
-                $file = 'moodle';
-            }
-            $string = array();
-            // First load english pack.
-            if (!file_exists("$CFG->dirroot/lang/en/$file.php")) {
-                return array();
-            }
-            include("$CFG->dirroot/lang/en/$file.php");
-            $enstring = $string;
-
-            // And then corresponding local if present and allowed.
-            if (!$disablelocal and file_exists("$this->localroot/en_local/$file.php")) {
-                include("$this->localroot/en_local/$file.php");
-            }
-            // Now loop through all langs in correct order.
-            $deps = $this->get_language_dependencies($lang);
-            foreach ($deps as $dep) {
-                // The main lang string location.
-                if (file_exists("$this->otherroot/$dep/$file.php")) {
-                    include("$this->otherroot/$dep/$file.php");
+        // What component are we using?
+        $file = $pluginname;
+        if ($plugintype !== 'mod') {
+            if ($plugintype === 'core') {
+                if ($file === null) {
+                    $file = 'moodle';
                 }
-                if (!$disablelocal and file_exists("$this->localroot/{$dep}_local/$file.php")) {
-                    include("$this->localroot/{$dep}_local/$file.php");
-                }
-            }
-
-        } else {
-            if (!$location = \core_component::get_plugin_directory($plugintype, $pluginname) or !is_dir($location)) {
-                return array();
-            }
-            if ($plugintype === 'mod') {
-                // Bloody mod hack.
-                $file = $pluginname;
             } else {
                 $file = $plugintype . '_' . $pluginname;
             }
-            $string = array();
-            // First load English pack.
-            if (!file_exists("$location/lang/en/$file.php")) {
-                // English pack does not exist, so do not try to load anything else.
-                return array();
-            }
-            include("$location/lang/en/$file.php");
-            $enstring = $string;
-            // And then corresponding local english if present.
-            if (!$disablelocal and file_exists("$this->localroot/en_local/$file.php")) {
-                include("$this->localroot/en_local/$file.php");
-            }
-
-            // Now loop through all langs in correct order.
-            $deps = $this->get_language_dependencies($lang);
-            foreach ($deps as $dep) {
-                // Legacy location - used by contrib only.
-                if (file_exists("$location/lang/$dep/$file.php")) {
-                    include("$location/lang/$dep/$file.php");
-                }
-                // The main lang string location.
-                if (file_exists("$this->otherroot/$dep/$file.php")) {
-                    include("$this->otherroot/$dep/$file.php");
-                }
-                // Local customisations.
-                if (!$disablelocal and file_exists("$this->localroot/{$dep}_local/$file.php")) {
-                    include("$this->localroot/{$dep}_local/$file.php");
-                }
-            }
         }
 
-        // We do not want any extra strings from other languages - everything must be in en lang pack.
-        $string = array_intersect_key($string, $enstring);
-
-        if (!$disablelocal) {
-            // Now we have a list of strings from all possible sources,
-            // cache it in MUC cache if not already there.
-            if ($cachedstring === false) {
-                $this->cache->set($cachekey, $string);
-            }
+        $result = $language['en'][$file];
+        if (!$disablelocal && isset($language['en_local'][$file])) {
+            $result = array_merge($result, $language['en_local'][$file]);
         }
-        return $string;
+
+        return $result;
     }
 
     /**
@@ -265,29 +191,7 @@ class string implements \core_string_manager
     protected function load_deprecated_strings() {
         global $CFG;
 
-        if ($this->cacheddeprecated !== null) {
-            return $this->cacheddeprecated;
-        }
-
-        $this->cacheddeprecated = array();
-        $content = '';
-        $filename = $CFG->dirroot . '/lang/en/deprecated.txt';
-        if (file_exists($filename)) {
-            $content .= file_get_contents($filename);
-        }
-        foreach (\core_component::get_plugin_types() as $plugintype => $plugintypedir) {
-            foreach (\core_component::get_plugin_list($plugintype) as $pluginname => $plugindir) {
-                $filename = $plugindir.'/lang/en/deprecated.txt';
-                if (file_exists($filename)) {
-                    $content .= "\n". file_get_contents($filename);
-                }
-            }
-        }
-
-        $strings = preg_split('/\s*\n\s*/', $content, -1, PREG_SPLIT_NO_EMPTY);
-        $this->cacheddeprecated = array_flip($strings);
-
-        return $this->cacheddeprecated;
+        return unserialize(file_get_contents($CFG->alternative_deprecated_lang_cache));
     }
 
     /**
@@ -593,7 +497,7 @@ class string implements \core_string_manager
      */
     public function reset_caches($phpunitreset = false) {
         // Clear the on-disk disk with aggregated string files.
-        $this->cache->purge();
+        $this->build_global_cache();
 
         if (!$phpunitreset) {
             // Increment the revision counter.
