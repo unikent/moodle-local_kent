@@ -99,14 +99,12 @@ class string extends \core_string_manager_standard
                     $file = $plugintype . '_' . $pluginname;
                 }
 
-                $component = $plugintype . '_' . $pluginname;
-
                 if (file_exists("$location/lang/en/$file.php")) {
-                    $language["en"][$component] = $this->build_string_list("$location/lang/en/$file.php");
+                    $language["en"][$file] = $this->build_string_list("$location/lang/en/$file.php");
                 }
 
                 if (file_exists("{$CFG->dirroot}/lang/en_local/$file.php")) {
-                    $language["en_local"][$component] = $this->build_string_list("{$CFG->dirroot}/lang/en_local/$file.php");
+                    $language["en_local"][$file] = $this->build_string_list("{$CFG->dirroot}/lang/en_local/$file.php");
                 }
             }
         }
@@ -165,6 +163,10 @@ class string extends \core_string_manager_standard
             } else {
                 $file = $plugintype . '_' . $pluginname;
             }
+        }
+
+        if (!isset($language['en'][$file])) {
+            return array();
         }
 
         $result = $language['en'][$file];
