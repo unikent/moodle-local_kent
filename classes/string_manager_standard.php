@@ -26,6 +26,9 @@ require_once($CFG->libdir . "/classes/string_manager_standard.php");
  */
 class local_kent_string_manager_standard extends \core_string_manager_standard
 {
+    /** @var cache lang string cache - it will be optimised more later */
+    protected $kentcache;
+
     /**
      * Create new instance of string manager
      *
@@ -36,30 +39,23 @@ class local_kent_string_manager_standard extends \core_string_manager_standard
     public function __construct($otherroot, $localroot, $translist) {
         global $CFG;
 
-        $this->otherroot = $otherroot;
-        $this->localroot = $localroot;
+        parent::__construct($otherroot, $localroot, $translist);
 
-        if ($translist) {
-            $this->translist = array_combine($translist, $translist);
-        } else {
-            $this->translist = array();
-        }
-
-        $this->cache = array();
+        $this->kentcache = array();
 
         // Load language.
         $language = file_get_contents($CFG->alternative_lang_cache);
         if (empty($language)) {
             $this->build_global_cache();
         } else {
-            $this->cache['language'] = unserialize($language);
+            $this->kentcache['language'] = unserialize($language);
 
             // Load deprecated.
             $deprecated = file_get_contents($CFG->alternative_deprecated_lang_cache);
             if (!empty($deprecated)) {
-                $this->cache['deprecated'] = unserialize($deprecated);
+                $this->kentcache['deprecated'] = unserialize($deprecated);
             } else {
-                $this->cache['deprecated'] = array();
+                $this->kentcache['deprecated'] = array();
             }
         }
     }
@@ -82,8 +78,7 @@ class local_kent_string_manager_standard extends \core_string_manager_standard
         // Okay, first build a giant array of language.
         // Component => array (k => v).
         $language = array(
-            "en" => array(),
-            "en_local" => array()
+            "core" => array()
         );
 
         // First, core.
@@ -95,11 +90,12 @@ class local_kent_string_manager_standard extends \core_string_manager_standard
 
             $component = substr($file, 0, -4);
 
-            $language["en"][$component] = $this->build_string_list("{$CFG->dirroot}/lang/en/{$file}");
+            $language["core_{$component}"] = $this->build_string_list("{$CFG->dirroot}/lang/en/{$file}");
 
             // Is there an override in local?
             if (file_exists("{$CFG->dirroot}/lang/en_local/{$file}")) {
-                $language["en_local"][$component] = $this->build_string_list("{$CFG->dirroot}/lang/en_local/{$file}");
+                $altlist = $this->build_string_list("{$CFG->dirroot}/lang/en_local/{$file}");
+                $language["core_{$component}"] = array_replace($language["core_{$component}"], $altlist);
             }
         }
 
@@ -116,11 +112,12 @@ class local_kent_string_manager_standard extends \core_string_manager_standard
                 }
 
                 if (file_exists("$location/lang/en/$file.php")) {
-                    $language["en"][$file] = $this->build_string_list("$location/lang/en/$file.php");
+                    $language[$file] = $this->build_string_list("$location/lang/en/$file.php");
                 }
 
                 if (file_exists("{$CFG->dirroot}/lang/en_local/$file.php")) {
-                    $language["en_local"][$file] = $this->build_string_list("{$CFG->dirroot}/lang/en_local/$file.php");
+                    $altlist = $this->build_string_list("{$CFG->dirroot}/lang/en_local/$file.php");
+                    $language[$file] = array_replace($language[$file], $altlist);
                 }
             }
         }
@@ -129,7 +126,7 @@ class local_kent_string_manager_standard extends \core_string_manager_standard
         file_put_contents($CFG->alternative_lang_cache, serialize($language));
 
         // Cleanup.
-        $this->cache['language'] = $language;
+        $this->kentcache['language'] = $language;
         unset($language);
 
         // Now deprecated strings.
@@ -151,7 +148,7 @@ class local_kent_string_manager_standard extends \core_string_manager_standard
         $strings = array_flip($strings);
         file_put_contents($CFG->alternative_deprecated_lang_cache, serialize($strings));
 
-        $this->cache['deprecated'] = $strings;
+        $this->kentcache['deprecated'] = $strings;
     }
 
     /**
@@ -164,9 +161,9 @@ class local_kent_string_manager_standard extends \core_string_manager_standard
      * @return array of all string for given component and lang
      */
     public function load_component_strings($component, $lang, $disablecache = false, $disablelocal = false) {
-        global $CFG;
-
-        $language = $this->cache['language'];
+        if ($disablecache || $disablelocal) {
+            return parent::load_component_strings($component, $lang, $disablecache, $disablelocal);
+        }
 
         list($plugintype, $pluginname) = \core_component::normalize_component($component);
 
@@ -177,21 +174,19 @@ class local_kent_string_manager_standard extends \core_string_manager_standard
                 if ($file === null) {
                     $file = 'moodle';
                 }
+
+                $file = "core_{$file}";
             } else {
                 $file = $plugintype . '_' . $pluginname;
             }
         }
 
-        if (!isset($language['en'][$file])) {
+        $language = $this->kentcache['language'];
+        if (!isset($language[$file])) {
             return array();
         }
 
-        $result = $language['en'][$file];
-        if (!$disablelocal && isset($language['en_local'][$file])) {
-            $result = array_merge($result, $language['en_local'][$file]);
-        }
-
-        return $result;
+        return $language[$file];
     }
 
     /**
@@ -203,7 +198,7 @@ class local_kent_string_manager_standard extends \core_string_manager_standard
      *     where component is a normalised component (i.e. "core_moodle", "mod_assign", etc.)
      */
     protected function load_deprecated_strings() {
-        return $this->cache['deprecated'];
+        return $this->kentcache['deprecated'];
     }
 
     /**
