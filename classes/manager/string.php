@@ -116,15 +116,30 @@ class string implements \core_string_manager
 
         // Now plugins.
         foreach (\core_component::get_plugin_types() as $plugintype => $plugintypedir) {
-            echo "{$plugintype}\n";
             foreach (\core_component::get_plugin_list($plugintype) as $pluginname => $plugindir) {
-                echo "   {$pluginname}\n";
+                if (!$location = \core_component::get_plugin_directory($plugintype, $pluginname) || !is_dir($location)) {
+                    continue;
+                }
+
+                $file = $pluginname;
+                if ($plugintype !== 'mod') {
+                    $file = $plugintype . '_' . $pluginname;
+                }
+
+                $component = $plugintype . '_' . $pluginname;
+
+                if (file_exists("$location/lang/en/$file.php")) {
+                    $language[$component] = $this->build_string_list("$location/lang/en/$file.php");
+                }
+
+                if (file_exists("{$CFG->dirroot}/lang/en_local/$file.php")) {
+                    $language["en_local"][$component] = $this->build_string_list("{$CFG->dirroot}/lang/en_local/$file.php");
+                }
             }
         }
 
-        print_r($language);
-
-        die;
+        // Write all this to a file.
+        file_put_contents($CFG->alternative_lang_cache, serialize($language));
     }
 
     /**
