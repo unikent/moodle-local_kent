@@ -206,13 +206,15 @@ class observers
             'id' => $event->objectid
         ));
 
-        // Ping the group manager?
-        if ($context->contextlevel == \CONTEXT_COURSE && strpos($shortname, 'student') !== false) {
+        if ($context->contextlevel == \CONTEXT_COURSE) {
             // Delete contacts cache.
             $cache = \cache::make('core', 'coursecontacts');
             $cache->delete($context->instanceid);
 
-            \local_kent\manager\group::enrolment_created($context->instanceid, $event->relateduserid);
+            // Ping the group manager?
+            if (strpos($shortname, 'student') !== false) {
+                \local_kent\manager\group::enrolment_created($context->instanceid, $event->relateduserid);
+            }
         }
 
         // Ping the role manager.
