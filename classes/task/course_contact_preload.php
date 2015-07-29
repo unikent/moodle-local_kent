@@ -43,7 +43,19 @@ class course_contact_preload extends \core\task\scheduled_task
         // Delete ALL the cache.
         $cache = \cache::make('core', 'coursecontacts');
         $cache->delete_many($keys);
-        $cache->set('contacts', $CFG->coursecontact);
+
+        // Preload CTX.
+        $ctxselect = \context_helper::get_preload_record_columns_sql('ctx');
+        $courses = $DB->get_records_sql("SELECT c.id, $ctxselect
+            FROM {course} c
+            JOIN {context} ctx
+                ON ctx.instanceid = c.id AND ctx.contextlevel = :contextcourse
+        ", array(
+            'contextcourse' => \CONTEXT_COURSE
+        ));
+        foreach ($courses as $course) {
+            \context_helper::preload_from_record($course);
+        }
 
         // Preload contacts.
         $courses = array();
