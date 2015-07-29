@@ -51,8 +51,7 @@ class course extends external_api
             'courseid' => new external_value(
                 PARAM_INT,
                 'The course ID',
-                VALUE_DEFAULT,
-                ''
+                VALUE_REQUIRED
             )
         ));
     }
