@@ -49,9 +49,10 @@ $functions = array(
         'type'        => 'read'
     ),
     'local_kent_course_provision_fresh' => array(
-        'classname'   => 'local_kent\external\course',
-        'methodname'  => 'provision_fresh',
-        'description' => 'Provision a fresh, new course.',
-        'type'        => 'write'
+        'classname'    => 'local_kent\external\course',
+        'methodname'   => 'provision_fresh',
+        'description'  => 'Provision a fresh, new course.',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:update'
     )
 );
