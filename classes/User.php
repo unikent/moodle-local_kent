@@ -123,7 +123,7 @@ SQL;
     public static function get_preferences() {
         global $USER;
 
-        if (!isloggedin() || !isset($USER->preference)) {
+        if (!isloggedin()) {
             return array();
         }
 
