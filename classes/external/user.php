@@ -35,7 +35,7 @@ use external_multiple_structure;
 use external_function_parameters;
 
 /**
- * Kent's module external services.
+ * Kent's user external services.
  */
 class user extends external_api
 {

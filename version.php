@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_kent';
-$plugin->version   = 2015072800;
+$plugin->version   = 2015072900;
 $plugin->requires  = 2014051200;
 
 $plugin->dependencies = array(
