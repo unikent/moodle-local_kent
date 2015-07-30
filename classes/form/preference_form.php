@@ -46,6 +46,11 @@ class preference_form extends \moodleform
         $mform->addElement('checkbox', 'kent_theme_contrast', 'Contrast mode');
         $mform->setExpanded('accesssettings');
 
+        $mform->addElement('header', 'betasettings', 'Beta Programs');
+        $mform->addElement('html', '<div class="alert alert-warning"><i class="fa fa-warning"></i> These options are not well tested and may not work properly!</div>');
+        $mform->addElement('checkbox', 'kent_theme_lightnav', 'Light nav bar', 'Enables a lighter navigation bar.');
+        $mform->setExpanded('betasettings');
+
         $this->add_action_buttons(true);
     }
 

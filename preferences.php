@@ -37,7 +37,7 @@ if ($data = $form->get_data()) {
 
     // Update and remove.
     foreach ($USER->preference as $k => $v) {
-        if (strpos($k, 'kent') !== 0) {
+        if (strpos($k, 'kent') !== 0 || strpos($k, 'isexpanded') !== false) {
             continue;
         }
 
@@ -46,7 +46,7 @@ if ($data = $form->get_data()) {
 
     // Add new prefs.
     foreach ($arr as $k => $v) {
-        if (strpos($k, 'kent') !== 0) {
+        if (strpos($k, 'kent') !== 0 || strpos($k, 'isexpanded') !== false) {
             continue;
         }
 
