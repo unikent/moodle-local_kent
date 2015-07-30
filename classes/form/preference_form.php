@@ -34,6 +34,8 @@ class preference_form extends \moodleform
      * Form definition
      */
     public function definition() {
+        global $USER;
+
         $mform =& $this->_form;
 
         $mform->addElement('header', 'uxsettings', 'Interface Settings');
@@ -49,6 +51,9 @@ class preference_form extends \moodleform
         $mform->addElement('header', 'betasettings', 'Beta Programs');
         $mform->addElement('html', '<div class="alert alert-warning"><i class="fa fa-warning"></i> These options are not well tested and may not work properly!</div>');
         $mform->addElement('checkbox', 'kent_theme_lightnav', 'Light nav bar', 'Enables a lighter navigation bar.');
+        if (has_capability('moodle/site:config', \context_system::instance()) || \local_kent\User::is_dep_admin($USER->id)) {
+            $mform->addElement('checkbox', 'kent_beta_connect', 'DA Pages', 'Enables access to the new DA pages.');
+        }
         $mform->setExpanded('betasettings');
 
         $this->add_action_buttons(true);
