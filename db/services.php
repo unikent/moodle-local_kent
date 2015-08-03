@@ -26,7 +26,8 @@ $services = array(
     'Kent service' => array(
         'functions' => array (
             'local_kent_user_get_my_prefs',
-            'local_kent_user_get_my_info_data'
+            'local_kent_user_get_my_info_data',
+            'local_kent_course_provision_fresh'
         ),
         'requiredcapability' => '',
         'restrictedusers' => 0,
@@ -46,5 +47,12 @@ $functions = array(
         'methodname'  => 'get_my_info_data',
         'description' => 'Get my info data.',
         'type'        => 'read'
+    ),
+    'local_kent_course_provision_fresh' => array(
+        'classname'    => 'local_kent\external\course',
+        'methodname'   => 'provision_fresh',
+        'description'  => 'Provision a fresh, new course.',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:update'
     )
 );

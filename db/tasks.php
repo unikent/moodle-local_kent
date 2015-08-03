@@ -58,5 +58,14 @@ $tasks = array(
         'day' => '*',
         'dayofweek' => '*',
         'month' => '*'
+    ),
+    array(
+        'classname' => 'local_kent\task\course_contact_preload',
+        'blocking' => 0,
+        'minute' => 'R',
+        'hour' => '*',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*'
     )
 );

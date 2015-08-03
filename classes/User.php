@@ -123,7 +123,7 @@ SQL;
     public static function get_preferences() {
         global $USER;
 
-        if (!isloggedin() || !isset($USER->preference)) {
+        if (!isloggedin()) {
             return array();
         }
 
@@ -146,40 +146,5 @@ SQL;
         $prefs = static::get_preferences();
 
         return isset($prefs[$name]) ? $prefs[$name] : $default;
-    }
-
-    /**
-     * Return beta preferences.
-     */
-    public static function get_beta_preferences() {
-        $prefs = static::get_preference('betaprefs', array());
-        if (empty($prefs)) {
-            return array();
-        }
-
-        $data = array();
-
-        $prefs = explode(',', $prefs);
-        foreach ($prefs as $pref) {
-            list($k, $v) = explode('=', $pref);
-            $data[$k] = $v == '1';
-        }
-
-        return $data;
-    }
-
-    /**
-     * Returns a beta preference.
-     * @param $name
-     * @param null $default
-     * @return null
-     */
-    public static function get_beta_preference($name, $default = null) {
-        static $content = null;
-        if (!isset($content)) {
-            $content = static::get_beta_preferences();
-        }
-
-        return isset($content[$name]) ? $content[$name] : $default;
     }
 }

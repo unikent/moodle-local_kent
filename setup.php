@@ -34,7 +34,7 @@ if (!PHPUNIT_TEST or PHPUNIT_UTIL) {
         global $CFG, $USER;
 
         // In case the error is with Splunk..
-        if (!isset($CFG->kent_error_handler_ran) && !empty(trim($errstr))) {
+        if (error_reporting() > 0 && !isset($CFG->kent_error_handler_ran) && !empty(trim($errstr))) {
             $CFG->kent_error_handler_ran = true;
 
             // Splunk it.
