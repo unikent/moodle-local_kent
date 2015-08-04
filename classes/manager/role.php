@@ -238,7 +238,7 @@ class role
         global $DB, $SHAREDB;
 
         // Get all shared roles.
-        $shared = $SHAREDB->get_records('sharedroles', array(
+        $shared = $SHAREDB->get_records('shared_roles', array(
             'contextlevel' => $contextlevel,
             'shortname' => $shortname
         ));
@@ -279,7 +279,7 @@ class role
         }
 
         // Get all shared roles.
-        $shared = $SHAREDB->get_records('sharedroles', array(
+        $shared = $SHAREDB->get_records('shared_roles', array(
             'contextlevel' => $contextlevel,
             'contextname' => $contextname,
             'shortname' => $shortname
