@@ -53,33 +53,8 @@ function xmldb_local_kent_install() {
     $roleman->configure();
 
     // Create basic categories.
-    $localcatmap = array();
-
-    global $kentcategories;
-    require(dirname(__FILE__) . "/categories.php");
-
-    while (!empty($kentcategories)) {
-        foreach ($kentcategories as $category) {
-            $category = (object)$category;
-
-            if ($category->parent > 1) {
-                if (!isset($localcatmap[$category->parent])) {
-                    continue;
-                }
-
-                $category->parent = $localcatmap[$category->parent];
-            }
-
-            if (empty($category->idnumber)) {
-                $category->idnumber = $category->id;
-            }
-
-            $coursecat = \coursecat::create($category);
-            $localcatmap[$category->id] = $coursecat->id;
-
-            unset($kentcategories[$category->id]);
-        }
-    }
+    $catman = new \local_kent\manager\category();
+    $catman->install();
 
     // Define index ip (not unique) to be added to logstore_standard_log.
     $table = new xmldb_table('logstore_standard_log');

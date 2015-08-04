@@ -28,6 +28,7 @@ function xmldb_local_kent_upgrade($oldversion) {
     $taskman = new \local_kent\manager\task();
     $configman = new \local_kent\manager\config();
     $roleman = new \local_kent\manager\role();
+    $catman = \local_kent\manager\category::instance();
 
     if ($oldversion < 2014080100) {
         // Define table to be dropped.
@@ -768,6 +769,30 @@ function xmldb_local_kent_upgrade($oldversion) {
 
         // Kent savepoint reached.
         upgrade_plugin_savepoint(true, 2015072400, 'local', 'kent');
+    }
+
+    if ($oldversion < 2015080403) {
+        // Force-set idnumber based on names and parents.
+        $categories = $DB->get_records('course_categories');
+        foreach ($categories as $category) {
+            try {
+                $idnumber = $catman->get_idnumber($category, $categories);
+                if ($idnumber == $category->idnumber) {
+                    continue;
+                }
+
+                $category->idnumber = $idnumber;
+                $DB->update_record('course_categories', $category);
+
+                echo "  - Updated category {$category->idnumber}.\n";
+            } catch (\Exception $e) {
+                // Ignore.
+                continue;
+            }
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015080403, 'local', 'kent');
     }
 
     return true;
