@@ -795,5 +795,14 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015080403, 'local', 'kent');
     }
 
+    if ($oldversion < 2015080404) {
+        if ($CFG->kent->distribution == '2015') {
+            echo "Remember to run the role_export CLI script\n";
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015080404, 'local', 'kent');
+    }
+
     return true;
 }
