@@ -48,7 +48,7 @@ foreach ($categories as $category) {
                 'shortname' => $ra->shortname,
                 'username' => $ra->username,
                 'contextlevel' => \CONTEXT_COURSECAT,
-                'contextname' => $category->name
+                'contextname' => $category->idnumber
             );
         }
     }

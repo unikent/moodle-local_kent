@@ -238,7 +238,7 @@ class role
         global $DB, $SHAREDB;
 
         // Get all shared roles.
-        $shared = $SHAREDB->get_records('sharedroles', array(
+        $shared = $SHAREDB->get_records('shared_roles', array(
             'contextlevel' => $contextlevel,
             'shortname' => $shortname
         ));
@@ -279,7 +279,7 @@ class role
         }
 
         // Get all shared roles.
-        $shared = $SHAREDB->get_records('sharedroles', array(
+        $shared = $SHAREDB->get_records('shared_roles', array(
             'contextlevel' => $contextlevel,
             'contextname' => $contextname,
             'shortname' => $shortname
@@ -332,7 +332,7 @@ class role
 
         if ($contextlevel == \CONTEXT_COURSECAT) {
             $coursecat = $DB->get_record('course_categories', array(
-                'name' => $ident
+                'idnumber' => $ident
             ));
 
             if ($coursecat) {
@@ -437,7 +437,7 @@ class role
         // Resolve context.
         $contextname = '';
         if ($context->contextlevel == \CONTEXT_COURSECAT) {
-            $contextname = $DB->get_field('course_categories', 'name', array(
+            $contextname = $DB->get_field('course_categories', 'idnumber', array(
                 'id' => $context->instanceid
             ));
         }
