@@ -804,5 +804,34 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015080404, 'local', 'kent');
     }
 
+    if ($oldversion < 2015081001) {
+        $category = $DB->get_record('course_categories', array(
+            'idnumber' => 43,
+            'name' => 'Languages'
+        ));
+        if ($category) {
+            $category->name = 'Modern Languages';
+            $DB->update_record('course_categories', $category);
+
+            mtrace("Renamed SECL's 'Languages' category to 'Modern Languages'");
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015081001, 'local', 'kent');
+    }
+
+    if ($oldversion < 2015081200) {
+        // Remove some capabilities.
+        $roleman->remove_capability('local/recyclebin:delete', array(
+            'editingteacher', 'manager'
+        ));
+        $roleman->remove_capability('local/recyclebin:empty', array(
+            'editingteacher', 'manager'
+        ));
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015081200, 'local', 'kent');
+    }
+
     return true;
 }

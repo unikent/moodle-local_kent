@@ -675,7 +675,7 @@ $kentcategories = array(
     ),
     43 => array(
         "id" => 43,
-        "name" => "Languages",
+        "name" => "Modern Languages",
         "idnumber" => "43",
         "description" => "",
         "descriptionformat" => 1,
