@@ -87,5 +87,7 @@ class course_sharedb_sync extends \core\task\scheduled_task
         $SHAREDB->insert_records("shared_course_admins", $adminset);
 
         $transaction->allow_commit();
+
+        return true;
     }
-} 
+}
