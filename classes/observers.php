@@ -102,10 +102,10 @@ class observers
 
     /**
      * Course purged observer.
-     * @param \local_catman\event\course_purged $event
+     * @param \tool_cat\event\recyclebin_purged $event
      * @return bool
      */
-    public static function course_purged(\local_catman\event\course_purged $event) {
+    public static function course_purged(\tool_cat\event\recyclebin_purged $event) {
         $shortname = $event->other['shortname'];
         $msg = "Deleting '{$shortname}' ({$event->objectid})...";
 

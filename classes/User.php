@@ -49,7 +49,6 @@ class User
 
         $contextpreload = \context_helper::get_preload_record_columns_sql('x');
 
-        $courses = array();
         $rs = $DB->get_recordset_sql("SELECT c.id, $contextpreload
                                         FROM {course} c
                                         JOIN {context} x ON (c.id=x.instanceid AND x.contextlevel=".CONTEXT_COURSE.")");

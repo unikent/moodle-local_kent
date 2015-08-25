@@ -55,7 +55,7 @@ $observers = array (
     ),
 
     array (
-        'eventname' => '\local_catman\event\course_purged',
+        'eventname' => '\tool_cat\event\recyclebin_purged',
         'callback' => '\local_kent\observers::course_purged',
     ),
 
