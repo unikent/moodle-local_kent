@@ -32,6 +32,7 @@ class config
         $this->configure_20150313();
         $this->configure_20150415();
         $this->configure_20150416();
+        $this->configure_20150826();
     }
 
     /**
@@ -248,5 +249,18 @@ class config
     public function configure_20150428() {
         set_config('format', 'standardweeks', 'moodlecourse');
         set_config('disabled', 0, 'format_standardweeks');
+    }
+
+    /**
+     * Set the creatornewroleid.
+     */
+    public function configure_20150826() {
+        global $DB;
+
+        $id = $DB->get_field('role', 'id', array(
+            'shortname' => 'convenor'
+        ));
+
+        set_config('creatornewroleid', $id);
     }
 }
