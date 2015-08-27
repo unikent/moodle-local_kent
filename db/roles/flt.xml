@@ -241,10 +241,12 @@
 		<allow>gradereport/user:view</allow>
 		<allow>local/connect:helpdesk</allow>
 		<allow>local/connect:manage</allow>
-		<allow>local/recyclebin:delete</allow>
-		<allow>local/recyclebin:empty</allow>
-		<allow>local/recyclebin:restore</allow>
-		<allow>local/recyclebin:view</allow>
+		<allow>local/recyclebin:delete_item</allow>
+		<allow>local/recyclebin:restore_item</allow>
+		<allow>local/recyclebin:view_item</allow>
+		<allow>local/recyclebin:delete_course</allow>
+		<allow>local/recyclebin:restore_course</allow>
+		<allow>local/recyclebin:view_course</allow>
 		<allow>message/airnotifier:managedevice</allow>
 		<allow>mod/aspirelists:addinstance</allow>
 		<allow>mod/assign:addinstance</allow>

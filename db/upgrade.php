@@ -820,17 +820,14 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015081001, 'local', 'kent');
     }
 
-    if ($oldversion < 2015081200) {
+    if ($oldversion < 2015082600) {
         // Remove some capabilities.
-        $roleman->remove_capability('local/recyclebin:delete', array(
-            'editingteacher', 'manager'
-        ));
-        $roleman->remove_capability('local/recyclebin:empty', array(
+        $roleman->remove_capability('local/recyclebin:delete_item', array(
             'editingteacher', 'manager'
         ));
 
         // Kent savepoint reached.
-        upgrade_plugin_savepoint(true, 2015081200, 'local', 'kent');
+        upgrade_plugin_savepoint(true, 2015082600, 'local', 'kent');
     }
 
     return true;
