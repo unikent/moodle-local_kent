@@ -55,11 +55,6 @@ $observers = array (
     ),
 
     array (
-        'eventname' => '\tool_cat\event\recyclebin_purged',
-        'callback' => '\local_kent\observers::course_purged',
-    ),
-
-    array (
         'eventname' => '\core\event\user_enrolment_deleted',
         'callback' => '\local_kent\observers::user_enrolment_deleted',
     ),

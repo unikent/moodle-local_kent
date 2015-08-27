@@ -679,7 +679,6 @@
 		<prevent>mod/cla:manage</prevent>
 		<prevent>mod/cla:viewresource</prevent>
 		<prevent>mod/streamingvideo:addinstance</prevent>
-		<prevent>local/recyclebin:delete</prevent>
-		<prevent>local/recyclebin:empty</prevent>
+		<prevent>local/recyclebin:delete_item</prevent>
 	</permissions>
 </role>

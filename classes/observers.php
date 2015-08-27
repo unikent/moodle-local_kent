@@ -101,26 +101,6 @@ class observers
     }
 
     /**
-     * Course purged observer.
-     * @param \tool_cat\event\recyclebin_purged $event
-     * @return bool
-     */
-    public static function course_purged(\tool_cat\event\recyclebin_purged $event) {
-        $shortname = $event->other['shortname'];
-        $msg = "Deleting '{$shortname}' ({$event->objectid})...";
-
-        // Notify HipChat.
-        try {
-            \local_hipchat\Message::send($msg, "purple", "text");
-        } catch (\Exception $e) {
-            // Ignore.
-            debugging($e->getMessage());
-        }
-
-        return true;
-    }
-
-    /**
      * User enrolment created.
      * @param \core\event\user_enrolment_created $event
      * @return bool
