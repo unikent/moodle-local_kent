@@ -39,9 +39,7 @@ class role
         'teacher' => 'teacher',
         'student' => 'student',
         'marker' => null,
-        'panopto_academic' => null,
         'panopto_creator' => null,
-        'panopto_non_academic' => null,
         'readinglist' => null,
         'support' => null
     );
@@ -51,8 +49,6 @@ class role
             'cla_viewer',
             'flt',
             'cla_admin',
-            'panopto_academic',
-            'panopto_non_academic',
             'support'
         ),
         \CONTEXT_COURSECAT => array(
