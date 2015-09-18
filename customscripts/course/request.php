@@ -52,11 +52,11 @@ $PAGE->set_title($strtitle);
 $PAGE->set_heading($strtitle);
 
 // Standard form processing if statement.
-if ($requestform->is_cancelled()){
+if ($requestform->is_cancelled()) {
     redirect($returnurl);
 
 } else if ($data = $requestform->get_data()) {
-	$data->shortname = \local_kent\Course::get_manual_shortname($data->type == 'true');
+    $data->shortname = \local_kent\Course::get_manual_shortname($data->type == 'true');
     $request = course_request::create($data);
 
     // And redirect back to the course listing.
@@ -66,8 +66,16 @@ if ($requestform->is_cancelled()){
 $PAGE->navbar->add($strtitle);
 echo $OUTPUT->header();
 echo $OUTPUT->heading($strtitle);
+
+$icon = \html_writer::tag('i', '', array(
+    'class' => 'fa fa-info-circle'
+));
+$text = 'This form is for ancillary modules only. Academic modules are created automatically from SDS data and should not be requested here.';
+echo $OUTPUT->notification("{$icon} {$text}", 'notifyinfo');
+
 // Show the request form.
 $requestform->display();
+
 echo $OUTPUT->footer();
 
 die;
