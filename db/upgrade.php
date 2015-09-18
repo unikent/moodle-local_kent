@@ -830,5 +830,14 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015082600, 'local', 'kent');
     }
 
+    if ($oldversion < 2015091800) {
+        // Create Undergraduate and Postgraduate sub categories for the School of Economics.
+        $catman->create(67);
+        $catman->create(68);
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015091800, 'local', 'kent');
+    }
+
     return true;
 }

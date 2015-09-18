@@ -59,7 +59,7 @@ class category
             foreach ($kentcategories as $category) {
                 $category = (object)$category;
 
-                if ($category->parent > 1) {
+                if ($category->parent > 0) {
                     if (!isset($localcatmap[$category->parent])) {
                         continue;
                     }
@@ -77,6 +77,28 @@ class category
                 unset($kentcategories[$category->id]);
             }
         }
+    }
+
+    /**
+     * Create a specific category from the datafile.
+     */
+    public function create($id) {
+        global $DB;
+
+        if (!isset($this->categories[$id])) {
+            throw new \moodle_exception("Invalid kent category id {$id}!");
+        }
+
+        $category = $this->categories[$id];
+        $category = (object)$category;
+
+        if ($category->parent > 0) {
+            $category->parent = $DB->get_field('course_categories', 'id', array(
+                'idnumber' => $category->parent
+            ), \MUST_EXIST);
+        }
+
+        return \coursecat::create($category);
     }
 
     /**
