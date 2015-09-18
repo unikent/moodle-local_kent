@@ -21,8 +21,6 @@
 		<shortname>cla_admin</shortname>
 		<shortname>readinglist</shortname>
 		<shortname>support</shortname>
-		<shortname>panopto_non_academic</shortname>
-		<shortname>panopto_academic</shortname>
 		<shortname>panopto_creator</shortname>
 		<shortname>marker</shortname>
 		<shortname>flt</shortname>
@@ -45,8 +43,6 @@
 		<shortname>cla_admin</shortname>
 		<shortname>readinglist</shortname>
 		<shortname>support</shortname>
-		<shortname>panopto_non_academic</shortname>
-		<shortname>panopto_academic</shortname>
 		<shortname>panopto_creator</shortname>
 		<shortname>marker</shortname>
 		<shortname>flt</shortname>
@@ -72,8 +68,6 @@
 		<shortname>cla_admin</shortname>
 		<shortname>readinglist</shortname>
 		<shortname>support</shortname>
-		<shortname>panopto_non_academic</shortname>
-		<shortname>panopto_academic</shortname>
 		<shortname>panopto_creator</shortname>
 		<shortname>marker</shortname>
 		<shortname>flt</shortname>
