@@ -101,6 +101,8 @@ class corner extends external_api
                 'rolecorrect' => $enrolment->is_in_moodle_precise()
             );
         }
+
+        return $ret;
     }
 
     /**

@@ -839,5 +839,13 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015091800, 'local', 'kent');
     }
 
+    if ($oldversion < 2015092100) {
+        // Install restwsu system role.
+        $roleman->configure('restwsu');
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015092100, 'local', 'kent');
+    }
+
     return true;
 }

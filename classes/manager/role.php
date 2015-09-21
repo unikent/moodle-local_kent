@@ -41,7 +41,8 @@ class role
         'marker' => null,
         'panopto_creator' => null,
         'readinglist' => null,
-        'support' => null
+        'support' => null,
+        'restwsu' => null
     );
 
     private static $sharedroles = array(
@@ -49,7 +50,8 @@ class role
             'cla_viewer',
             'flt',
             'cla_admin',
-            'support'
+            'support',
+            'restwsu'
         ),
         \CONTEXT_COURSECAT => array(
             'cla_viewer',
