@@ -41,7 +41,8 @@ class role
         'marker' => null,
         'panopto_creator' => null,
         'readinglist' => null,
-        'support' => null
+        'support' => null,
+        'restwsu' => null
     );
 
     private static $sharedroles = array(
@@ -70,8 +71,7 @@ class role
     public function configure($role = 'all') {
         if ($role != 'all') {
             if (!isset(static::$managedroles[$role])) {
-                debugging("Invalid role '{$role}'!");
-                return;
+                throw new \coding_exception("Invalid role '{$role}'!");
             }
 
             $this->install_or_update_role($role, static::$managedroles[$role]);

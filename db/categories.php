@@ -1040,5 +1040,37 @@ $kentcategories = array(
         "depth" => 2,
         "path" => "/1/66",
         "theme" => ""
+    ),
+    67 => array(
+        "id" => 67,
+        "name" => "Undergraduate",
+        "idnumber" => "67",
+        "description" => "Undergraduate modules under the School of Economics",
+        "descriptionformat" => 1,
+        "parent" => 12,
+        "sortorder" => 640000,
+        "coursecount" => 0,
+        "visible" => 1,
+        "visibleold" => 1,
+        "timemodified" => 0,
+        "depth" => 3,
+        "path" => "/11/12/67",
+        "theme" => ""
+    ),
+    68 => array(
+        "id" => 68,
+        "name" => "Postgraduate",
+        "idnumber" => "68",
+        "description" => "Postgraduate modules under the School of Economics",
+        "descriptionformat" => 1,
+        "parent" => 12,
+        "sortorder" => 640000,
+        "coursecount" => 0,
+        "visible" => 1,
+        "visibleold" => 1,
+        "timemodified" => 0,
+        "depth" => 3,
+        "path" => "/11/12/68",
+        "theme" => ""
     )
 );
