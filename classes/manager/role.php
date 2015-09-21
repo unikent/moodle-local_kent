@@ -50,8 +50,7 @@ class role
             'cla_viewer',
             'flt',
             'cla_admin',
-            'support',
-            'restwsu'
+            'support'
         ),
         \CONTEXT_COURSECAT => array(
             'cla_viewer',
@@ -72,8 +71,7 @@ class role
     public function configure($role = 'all') {
         if ($role != 'all') {
             if (!isset(static::$managedroles[$role])) {
-                debugging("Invalid role '{$role}'!");
-                return;
+                throw new \coding_exception("Invalid role '{$role}'!");
             }
 
             $this->install_or_update_role($role, static::$managedroles[$role]);
