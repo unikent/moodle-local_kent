@@ -32,6 +32,14 @@ $services = array(
         'requiredcapability' => '',
         'restrictedusers' => 0,
         'enabled' => 1
+    ),
+    'Corner service' => array(
+        'functions' => array (
+            'corner_user_enrol_details'
+        ),
+        'requiredcapability' => '',
+        'restrictedusers' => 1,
+        'enabled' => 1
     )
 );
 
@@ -54,5 +62,11 @@ $functions = array(
         'description'  => 'Provision a fresh, new course.',
         'type'         => 'write',
         'capabilities' => 'moodle/course:update'
+    ),
+    'corner_user_enrol_details' => array(
+        'classname'    => 'local_kent\external\corner',
+        'methodname'   => 'user_enrol_detail',
+        'description'  => 'Grab user enrolment details for display on corner.',
+        'type'         => 'read'
     )
 );
