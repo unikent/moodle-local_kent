@@ -86,18 +86,6 @@
         <INDEX NAME="index_rollovers_status" UNIQUE="false" FIELDS="status"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="shared_roles" COMMENT="Shared roles">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Role shortname"/>
-        <FIELD NAME="username" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="username"/>
-        <FIELD NAME="contextlevel" TYPE="int" LENGTH="3" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="contextname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The UID for the given context level"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-    </TABLE>
     <TABLE NAME="shared_vimeo_quota" COMMENT="Stores Vimeo quota usage stats">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
