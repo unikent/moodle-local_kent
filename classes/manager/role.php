@@ -70,7 +70,7 @@ class role
      */
     public function configure($role = 'all') {
         if ($role != 'all') {
-            if (!isset(static::$managedroles[$role])) {
+            if (!in_array($role, array_keys(static::$managedroles))) {
                 throw new \coding_exception("Invalid role '{$role}'!");
             }
 
