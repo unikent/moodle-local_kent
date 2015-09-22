@@ -54,11 +54,4 @@ if ($hassiteconfig) {
         'Enable Footprints tickets to be sent.',
         0
     ));
-
-    $settings->add(new admin_setting_configcheckbox(
-        'local_kent/enable_role_sync',
-        'Enable Role Synchronization',
-        'Synchronizes roles between connected Moodle installations.',
-        0
-    ));
 }
