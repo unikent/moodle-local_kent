@@ -192,6 +192,7 @@ class role
 
     /**
      * Is the roleid in our sphere of care?
+     *
      * @param $shortname
      * @param null $contextlevel
      * @return bool
@@ -227,6 +228,7 @@ class role
 
     /**
      * Sync a given context and shortname.
+     *
      * @param $contextlevel
      * @param $shortname
      */
