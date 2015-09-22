@@ -73,7 +73,7 @@ class group
 
         $course = $DB->get_record('course', array(
             'id' => $courseid
-        ));
+        ), 'id, shortname');
 
         if (!$course) {
             return false;
