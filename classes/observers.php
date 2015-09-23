@@ -179,11 +179,13 @@ class observers
             $cache = \cache::make('core', 'coursecontacts');
             $cache->delete($context->instanceid);
 
-            // Get the role.
-            $role = $event->get_record_snapshot('role_assignments', $event->other['id']);
+            // Get the role shortname.
+            $shortname = $DB->get_field('role', 'shortname', array(
+                'id' => $event->objectid
+            ));
 
             // Ping the group manager?
-            if (strpos($role->shortname, 'student') !== false) {
+            if (strpos($shortname, 'student') !== false) {
                 \local_kent\manager\group::enrolment_created($context->instanceid, $event->relateduserid);
             }
         }
