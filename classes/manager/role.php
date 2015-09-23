@@ -192,6 +192,7 @@ class role
 
     /**
      * Is the roleid in our sphere of care?
+     *
      * @param $shortname
      * @param null $contextlevel
      * @return bool
@@ -214,24 +215,23 @@ class role
      * Sync with SHAREDB.
      */
     public function sync() {
-        global $CFG;
-
-        $CFG->in_role_sync = true;
         foreach (static::$sharedroles as $contextlevel => $roles) {
             foreach ($roles as $shortname) {
                 $this->sync_role_type($contextlevel, $shortname);
             }
         }
-        $CFG->in_role_sync = false;
     }
 
     /**
      * Sync a given context and shortname.
+     *
      * @param $contextlevel
      * @param $shortname
      */
     private function sync_role_type($contextlevel, $shortname) {
         global $DB, $SHAREDB;
+
+        throw new \coding_exception("This function is not currently usable.");
 
         // Get all shared roles.
         $shared = $SHAREDB->get_records('shared_roles', array(
@@ -261,6 +261,8 @@ class role
      */
     private function sync_role_context($contextlevel, $contextname, $shortname) {
         global $DB, $SHAREDB;
+
+        throw new \coding_exception("This function is not currently usable.");
 
         // Resolve local context.
         $context = $this->get_context($contextlevel, $contextname);
@@ -377,83 +379,6 @@ class role
         }
 
         return $cache[$username];
-    }
-
-    /**
-     * Migrate the action up to SHAREDB.
-     * @param $context
-     * @param $roleid
-     * @param $userid
-     * @return bool
-     */
-    public function on_role_created($context, $roleid, $userid) {
-        return $this->update_sharedb_role($context, $roleid, $userid, false);
-    }
-
-    /**
-     * Migrate the action up to SHAREDB.
-     * @param $context
-     * @param $roleid
-     * @param $userid
-     * @return bool
-     */
-    public function on_role_deleted($context, $roleid, $userid) {
-        return $this->update_sharedb_role($context, $roleid, $userid, true);
-    }
-
-    /**
-     * Update a new role in SHAREDB.
-     * @param $context
-     * @param $roleid
-     * @param $userid
-     * @param bool $delete
-     * @return bool
-     */
-    private function update_sharedb_role($context, $roleid, $userid, $delete = false) {
-        global $CFG, $DB, $SHAREDB;
-
-        if (isset($CFG->in_role_sync)) {
-            return true;
-        }
-
-        // Get the role shortname.
-        $shortname = $DB->get_field('role', 'shortname', array(
-            'id' => $roleid
-        ));
-        if (!$this->is_managed($shortname, $context->contextlevel)) {
-            return true;
-        }
-
-        // Get the user.
-        $user = $DB->get_record('user', array(
-            'id' => $userid
-        ));
-        $this->share_user($user);
-
-        // Resolve context.
-        $contextname = '';
-        if ($context->contextlevel == \CONTEXT_COURSECAT) {
-            $contextname = $DB->get_field('course_categories', 'idnumber', array(
-                'id' => $context->instanceid
-            ));
-        }
-
-        // What ARE we doing? >:/
-        if ($delete) {
-            return $SHAREDB->delete_records('shared_roles', array(
-                'contextlevel' => $context->contextlevel,
-                'contextname' => $contextname,
-                'shortname' => $shortname,
-                'username' => $user->username
-            ));
-        }
-
-        return $SHAREDB->insert_record('shared_roles', array(
-            'contextlevel' => $context->contextlevel,
-            'contextname' => $contextname,
-            'shortname' => $shortname,
-            'username' => $user->username
-        ));
     }
 
     /**

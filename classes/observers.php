@@ -113,27 +113,22 @@ class observers
         $cache = \cache::make('core', 'coursecontacts');
         $cache->delete($event->courseid);
 
-        if (!util\sharedb::available()) {
-            return true;
-        }
+        $context = $event->get_context();
+        if (util\sharedb::available() && has_capability('moodle/course:update', $context, $event->relateduserid)) {
+            $username = $DB->get_field('user', 'username', array(
+                'id' => $event->relateduserid
+            ));
 
-        if (!has_capability('moodle/course:update', $event->get_context(), $event->relateduserid)) {
-            return true;
-        }
+            $params = array(
+                "moodle_env" => $CFG->kent->environment,
+                "moodle_dist" => $CFG->kent->distribution,
+                "courseid" => $event->courseid,
+                "username" => $username
+            );
 
-        $username = $DB->get_field('user', 'username', array(
-            'id' => $event->relateduserid
-        ));
-
-        $params = array(
-            "moodle_env" => $CFG->kent->environment,
-            "moodle_dist" => $CFG->kent->distribution,
-            "courseid" => $event->courseid,
-            "username" => $username
-        );
-
-        if (!$SHAREDB->record_exists('shared_course_admins', $params)) {
-            $SHAREDB->insert_record('shared_course_admins', $params);
+            if (!$SHAREDB->record_exists('shared_course_admins', $params)) {
+                $SHAREDB->insert_record('shared_course_admins', $params);
+            }
         }
 
         return true;
@@ -151,20 +146,18 @@ class observers
         $cache = \cache::make('core', 'coursecontacts');
         $cache->delete($event->courseid);
 
-        if (!util\sharedb::available()) {
-            return true;
+        if (util\sharedb::available()) {
+            $username = $DB->get_field('user', 'username', array(
+                'id' => $event->relateduserid
+            ));
+
+            $SHAREDB->delete_records('shared_course_admins', array(
+                "moodle_env" => $CFG->kent->environment,
+                "moodle_dist" => $CFG->kent->distribution,
+                "courseid" => $event->courseid,
+                "username" => $username
+            ));
         }
-
-        $username = $DB->get_field('user', 'username', array(
-            'id' => $event->relateduserid
-        ));
-
-        $SHAREDB->delete_records('shared_course_admins', array(
-            "moodle_env" => $CFG->kent->environment,
-            "moodle_dist" => $CFG->kent->distribution,
-            "courseid" => $event->courseid,
-            "username" => $username
-        ));
 
         return true;
     }
@@ -181,27 +174,18 @@ class observers
         // Get the context.
         $context = $event->get_context();
 
-        // Get the role.
-        $shortname = $DB->get_field('role', 'shortname', array(
-            'id' => $event->objectid
-        ));
-
         if ($context->contextlevel == \CONTEXT_COURSE) {
             // Delete contacts cache.
             $cache = \cache::make('core', 'coursecontacts');
             $cache->delete($context->instanceid);
 
+            // Get the role.
+            $role = $event->get_record_snapshot('role_assignments', $event->other['id']);
+
             // Ping the group manager?
-            if (strpos($shortname, 'student') !== false) {
+            if (strpos($role->shortname, 'student') !== false) {
                 \local_kent\manager\group::enrolment_created($context->instanceid, $event->relateduserid);
             }
-        }
-
-        // Ping the role manager.
-        $enabled = get_config('local_kent', 'enable_role_sync');
-        if ($enabled) {
-            $rm = new \local_kent\manager\role();
-            $rm->on_role_created($context, $event->objectid, $event->relateduserid);
         }
 
         return true;
@@ -220,13 +204,6 @@ class observers
         if ($context->contextlevel == \CONTEXT_COURSE) {
             $cache = \cache::make('core', 'coursecontacts');
             $cache->delete($context->instanceid);
-        }
-
-        // Ping the role manager.
-        $enabled = get_config('local_kent', 'enable_role_sync');
-        if ($enabled) {
-            $rm = new \local_kent\manager\role();
-            $rm->on_role_deleted($context, $event->objectid, $event->relateduserid);
         }
     }
 

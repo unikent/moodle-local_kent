@@ -18,7 +18,7 @@
  * Local lib code
  *
  * @package    local_kent
- * @copyright  2014 University of Kent
+ * @copyright  2015 University of Kent
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

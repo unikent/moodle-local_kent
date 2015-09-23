@@ -18,20 +18,11 @@
  * Local stuff for Moodle Kent
  *
  * @package    local_kent
- * @copyright  2014 Skylar Kelty <S.Kelty@kent.ac.uk>
+ * @copyright  2015 Skylar Kelty <S.Kelty@kent.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $tasks = array(
-    array(
-        'classname' => 'local_kent\task\role_sync',
-        'blocking' => 0,
-        'minute' => '*/5',
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
     array(
         'classname' => 'local_kent\task\config_shouter',
         'blocking' => 0,
