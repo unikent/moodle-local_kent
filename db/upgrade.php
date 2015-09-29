@@ -840,5 +840,21 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015092100, 'local', 'kent');
     }
 
+    if ($oldversion < 2015092900) {
+        require_once($CFG->libdir . "/questionlib.php");
+
+        // Delete old questions.
+        $questions = $DB->get_records('question', array(
+            'qtype' => 'ddmatch'
+        ));
+
+        foreach ($questions as $question) {
+            question_delete_question($question->id);
+        }
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015092900, 'local', 'kent');
+    }
+
     return true;
 }
