@@ -339,6 +339,10 @@ trait databasepod
 
                 $table->add_data(array($k, $v));
             } else {
+                if ($k == 'id' && method_exists($this, 'get_url')) {
+                    $v = \html_writer::link($this->get_url(), $v);
+                }
+
                 $table->add_data(array($k, $v));
             }
         }
