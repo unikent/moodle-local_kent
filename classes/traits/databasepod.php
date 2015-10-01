@@ -328,8 +328,15 @@ trait databasepod
 
         foreach ($this->_data as $k => $v) {
             if (isset($linkedfields[$k])) {
+                $class = $linkedfields[$k];
+                $obj = $class::get($v);
+
                 $k = substr($k, 0, -2);
                 $v = $this->$k . "";
+                if (method_exists($obj, 'get_url')) {
+                    $v = \html_writer::link($obj->get_url(), $v);
+                }
+
                 $table->add_data(array($k, $v));
             } else {
                 $table->add_data(array($k, $v));
