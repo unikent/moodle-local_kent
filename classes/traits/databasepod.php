@@ -213,7 +213,7 @@ trait databasepod
 
         if (!in_array($field, static::valid_fields())) {
             debugging("Invalid field: $field!");
-            return;
+            return null;
         }
 
         // We can cache on id!

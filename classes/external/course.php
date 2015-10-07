@@ -34,7 +34,6 @@ require_once($CFG->dirroot . '/mod/forum/lib.php');
 use external_api;
 use external_value;
 use external_single_structure;
-use external_multiple_structure;
 use external_function_parameters;
 
 /**

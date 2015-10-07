@@ -71,6 +71,6 @@ class footprints_send extends \core\task\adhoc_task
             throw new \moodle_exception("JSON cannot be empty!");
         }
 
-        return parent::set_custom_data($customdata);
+        parent::set_custom_data($customdata);
     }
 }

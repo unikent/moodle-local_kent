@@ -17,7 +17,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 function xmldb_local_kent_install() {
-    global $CFG, $DB, $SHAREDB;
+    global $DB, $SHAREDB;
 
     // Install SHAREDB if needs be.
     if (\local_kent\util\sharedb::available()) {
@@ -53,7 +53,7 @@ function xmldb_local_kent_install() {
     $taskman->configure();
 
     // Create basic categories.
-    $catman = new \local_kent\manager\category();
+    $catman = \local_kent\manager\category::instance();
     $catman->install();
 
     // Define index ip (not unique) to be added to logstore_standard_log.

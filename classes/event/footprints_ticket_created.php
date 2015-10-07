@@ -34,7 +34,7 @@ class footprints_ticket_created extends \core\event\base
 
     /**
      * Returns localised general event name.
-     * 
+     *
      * @return string
      */
     public static function get_name() {
