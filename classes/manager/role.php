@@ -385,7 +385,7 @@ class role
      * Create record in SHAREDB for user.
      * @param $user
      */
-    private function share_user($user) {
+    private function share_user(\stdClass $user) {
         global $SHAREDB;
 
         if (!$SHAREDB->record_exists('shared_users', array('username' => $user->username))) {
@@ -403,7 +403,7 @@ class role
      * @param $ctx
      * @return array
      */
-    public function get_local_enrolments_context($ctx) {
+    public function get_local_enrolments_context(\context $ctx) {
         global $DB;
 
         return $DB->get_records_sql('
