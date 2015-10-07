@@ -856,5 +856,17 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015092900, 'local', 'kent');
     }
 
+    if ($oldversion < 2015100700) {
+        // Fix #78f12ecba0cccb04118cedd1d50c373671d4056e
+        $roleman->remove_capability('report/turnitin:view');
+
+        $roleman->add_capability('report/turnitin:view', array(
+            'manager', 'teacher', 'editingteacher', 'convenor', 'flt'
+        ));
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015100700, 'local', 'kent');
+    }
+
     return true;
 }
