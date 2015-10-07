@@ -46,7 +46,6 @@ class define_role_table_kent extends \core_role_define_role_table_advanced
                 continue;
             }
 
-            // TODO - be a bit more intelligent about this one day.
             $this->changed[] = $cap->name;
         }
     }
