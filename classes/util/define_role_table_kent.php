@@ -51,8 +51,6 @@ class define_role_table_kent extends \core_role_define_role_table_advanced
     }
 
     protected function save_allow($type) {
-        global $DB;
-
         $arr = $this->{'allow'.$type};
         if (in_array($this->roleid, $arr) && in_array(-1, $arr)) {
             $key = array_search($this->roleid, $arr);

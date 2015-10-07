@@ -68,8 +68,6 @@ class corner extends external_api
      * @return array[string]
      */
     public static function user_enrol_detail($username) {
-        global $DB;
-
         // Validate the username.
         $params = self::validate_parameters(self::user_enrol_detail_parameters(), array(
             'username' => $username

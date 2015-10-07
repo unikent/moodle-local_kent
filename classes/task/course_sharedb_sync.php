@@ -37,7 +37,7 @@ class course_sharedb_sync extends \core\task\scheduled_task
         global $CFG, $DB, $SHAREDB;
 
         if (!\local_kent\util\sharedb::available()) {
-            return;
+            return true;
         }
 
         // Grab a list of courses in Moodle.

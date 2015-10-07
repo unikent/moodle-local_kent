@@ -95,7 +95,7 @@ class role
     private function set_capability($capability, $permission, $roles) {
         global $DB;
 
-        if ($roles = '*') {
+        if ($roles == '*') {
             $roles = $DB->get_records('role', null, '', 'id');
         } else {
             if (is_array($roles)) {
@@ -229,7 +229,7 @@ class role
      * @param $shortname
      */
     private function sync_role_type($contextlevel, $shortname) {
-        global $DB, $SHAREDB;
+        global $SHAREDB;
 
         throw new \coding_exception("This function is not currently usable.");
 
