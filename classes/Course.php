@@ -34,13 +34,13 @@ class Course
     /**
      * Helper for creating a manual module code.
      * Rollover should be true or false, null means we don't know.
-     * @param null $rollover
+     * @param boolean $rollover
      * @return string
      */
     public static function get_manual_shortname($rollover = null) {
         global $DB;
 
-        $rollover = $rollover === null ? 'X' : ($rollover == true ? 'P' : 'O');
+        $rollover = $rollover === null ? 'X' : ($rollover === true ? 'P' : 'O');
         $shortname = "D{$rollover}";
 
         $like = $DB->sql_like('shortname', ':shortname');
