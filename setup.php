@@ -29,7 +29,7 @@ global $SHAREDB;
 require_once(dirname(__FILE__) . "/classes/util/sharedb.php");
 $SHAREDB = new \local_kent\util\sharedb();
 
-if (!PHPUNIT_TEST or PHPUNIT_UTIL) {
+if (!PHPUNIT_TEST || PHPUNIT_UTIL) {
     set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {
         global $CFG, $USER;
 

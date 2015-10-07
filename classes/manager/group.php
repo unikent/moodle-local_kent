@@ -32,7 +32,7 @@ class group
      * @return bool
      * @throws \moodle_exception
      */
-    public static function course_created($course) {
+    public static function course_created(\stdClass $course) {
         global $DB;
 
         if (defined("PHPUNIT_TEST") && PHPUNIT_TEST) {

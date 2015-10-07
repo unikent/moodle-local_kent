@@ -104,7 +104,7 @@ class category
     /**
      * Returns true if we are managed by the category manager.
      */
-    public function is_managed($category) {
+    public function is_managed(\stdClass $category) {
         foreach ($this->categories as $match) {
             if ($match['idnumber'] == $category->idnumber) {
                 return true;
@@ -117,7 +117,7 @@ class category
     /**
      * Returns true if the given category is unique.
      */
-    public function is_unique($category) {
+    public function is_unique(\stdClass $category) {
         $matches = 0;
         foreach ($this->categories as $match) {
             if ($match['name'] == $category->name) {
@@ -131,7 +131,7 @@ class category
     /**
      * Returns the ID number for a given category based on name and parents.
      */
-    public function get_idnumber($category, $allcategories) {
+    public function get_idnumber(\stdClass $category, $allcategories) {
         // Special case.
         if ($category->id == 1) {
             return 'miscellaneous';

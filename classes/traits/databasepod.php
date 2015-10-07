@@ -152,7 +152,7 @@ trait databasepod
      * @param $data
      * @return
      */
-    public static function from_sql_result($data) {
+    public static function from_sql_result(\stdClass $data) {
         $cache = static::get_internal_cache();
         if (!isset($cache[$data->id])) {
             $result = new static();
