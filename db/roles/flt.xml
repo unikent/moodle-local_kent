@@ -82,7 +82,6 @@
 		<inherit>block/panopto:provision_aspublisher</inherit>
 		<inherit>block/panopto:provision_asteacher</inherit>
 		<inherit>enrol/category:synchronised</inherit>
-		<inherit>enrol/connect:config</inherit>
 		<inherit>enrol/database:config</inherit>
 		<inherit>enrol/imsenterprise:config</inherit>
 		<inherit>enrol/mnet:config</inherit>
@@ -190,6 +189,7 @@
 		<allow>enrol/category:config</allow>
 		<allow>enrol/cohort:config</allow>
 		<allow>enrol/cohort:unenrol</allow>
+		<allow>enrol/connect:config</allow>
 		<allow>enrol/database:unenrol</allow>
 		<allow>enrol/flatfile:manage</allow>
 		<allow>enrol/flatfile:unenrol</allow>
