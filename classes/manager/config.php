@@ -33,6 +33,7 @@ class config
         $this->configure_20150415();
         $this->configure_20150416();
         $this->configure_20150826();
+        $this->configure_20151103();
     }
 
     /**
@@ -262,5 +263,16 @@ class config
         ));
 
         set_config('creatornewroleid', $id);
+    }
+
+    /**
+     * Support new enrol connect config.
+     */
+    public function configure_20151103() {
+        if (KENT_MOODLE == LIVE_MOODLE) {
+            set_config('defaultstatuses', 'A,J,P,R,T,W,Y,H,?', 'enrol_connect');
+        } else {
+            set_config('defaultstatuses', 'A,J,P,R,T,W,Y,H,X,?', 'enrol_connect');
+        }
     }
 }
