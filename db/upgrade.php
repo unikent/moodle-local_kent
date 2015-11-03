@@ -884,5 +884,14 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015110300, 'local', 'kent');
     }
 
+    if ($oldversion < 2015110301) {
+        $roleman->add_capability('report/turnitin:view', array(
+            'dep_admin'
+        ));
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015110301, 'local', 'kent');
+    }
+
     return true;
 }
