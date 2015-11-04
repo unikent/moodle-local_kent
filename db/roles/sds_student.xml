@@ -663,7 +663,6 @@
 		<prevent>local/connect:manage</prevent>
 		<prevent>mod/cla:manage</prevent>
 		<prevent>mod/cla:report</prevent>
-		<prevent>mod/talis:pub</prevent>
 		<prevent>mod/streamingvideo:addinstance</prevent>
 	</permissions>
 </role>

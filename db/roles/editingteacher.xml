@@ -109,7 +109,6 @@
 		<inherit>mod/resource:view</inherit>
 		<inherit>mod/scorm:deleteownresponses</inherit>
 		<inherit>mod/scorm:skipview</inherit>
-		<inherit>mod/talis:pub</inherit>
 		<inherit>mod/thesis:emailnotes</inherit>
 		<inherit>mod/turnitintool:submit</inherit>
 		<inherit>mod/turnitintooltwo:submit</inherit>

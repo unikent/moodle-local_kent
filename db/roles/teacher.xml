@@ -230,7 +230,6 @@
 		<inherit>mod/scorm:deleteownresponses</inherit>
 		<inherit>mod/scorm:skipview</inherit>
 		<inherit>mod/survey:addinstance</inherit>
-		<inherit>mod/talis:pub</inherit>
 		<inherit>mod/taskchain:addinstance</inherit>
 		<inherit>mod/taskchain:manage</inherit>
 		<inherit>mod/thesis:addinstance</inherit>

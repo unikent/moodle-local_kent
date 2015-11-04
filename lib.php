@@ -33,3 +33,47 @@ if ((!defined("CLI_SCRIPT") || !CLI_SCRIPT) &&
     )) {
     \local_kent\GA::inject();
 }
+
+/**
+ * Adds a Tii report to the category menu.
+ *
+ * @param  settings_navigation $nav     Nav menu
+ * @param  context             $context Context of the menu
+ * @return navigation_node              A new navigation mode to insert.
+ */
+function local_kent_extend_settings_navigation(\settings_navigation $nav, \context $context) {
+    global $PAGE;
+
+    if ($context->contextlevel != \CONTEXT_COURSECAT) {
+        return;
+    }
+
+    // Check we can view the Tii report.
+    if (!has_capability('report/turnitin:view', $context)) {
+        return null;
+    }
+
+    $url = new \moodle_url('/report/turnitin/index.php', array(
+        'category' => $context->instanceid
+    ));
+
+    $pluginname = get_string('pluginname', 'report_turnitin');
+    $node = \navigation_node::create(
+        $pluginname,
+        $url,
+        \navigation_node::NODETYPE_LEAF,
+        'report_turnitin',
+        'report_turnitin',
+        new \pix_icon('e/document_properties', $pluginname)
+    );
+
+    if ($PAGE->url->compare($url, \URL_MATCH_BASE)) {
+        $node->make_active();
+    }
+
+    $settingnode = $nav->find('categorysettings', null);
+    $reportsnode = $settingnode->add('Reports', $settingnode->action, \navigation_node::TYPE_CONTAINER);
+    $reportsnode->add_node($node);
+
+    return $node;
+}

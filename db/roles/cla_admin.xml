@@ -662,7 +662,6 @@
 		<allow>moodle/course:viewhiddenuserfields</allow>
 		<allow>moodle/course:viewparticipants</allow>
 		<allow>moodle/course:viewscales</allow>
-		<prevent>mod/talis:pub</prevent>
 		<prevent>mod/streamingvideo:addinstance</prevent>
 	</permissions>
 </role>

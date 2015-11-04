@@ -88,7 +88,6 @@
 		<inherit>mod/quiz:reviewmyattempts</inherit>
 		<inherit>mod/scorm:deleteownresponses</inherit>
 		<inherit>mod/scorm:skipview</inherit>
-		<inherit>mod/talis:pub</inherit>
 		<inherit>mod/thesis:emailnotes</inherit>
 		<inherit>mod/turnitintool:submit</inherit>
 		<inherit>mod/turnitintooltwo:submit</inherit>
@@ -682,6 +681,7 @@
 		<allow>report/participation:view</allow>
 		<allow>report/progress:view</allow>
 		<allow>report/stats:view</allow>
+		<allow>report/turnitin:view</allow>
 		<allow>repository/coursefiles:view</allow>
 		<allow>repository/filesystem:view</allow>
 		<allow>repository/local:view</allow>

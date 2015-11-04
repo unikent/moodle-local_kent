@@ -456,7 +456,6 @@
 		<allow>mod/survey:download</allow>
 		<allow>mod/survey:participate</allow>
 		<allow>mod/survey:readresponses</allow>
-		<allow>mod/talis:pub</allow>
 		<allow>mod/taskchain:addinstance</allow>
 		<allow>mod/taskchain:attempt</allow>
 		<allow>mod/taskchain:deleteallattempts</allow>

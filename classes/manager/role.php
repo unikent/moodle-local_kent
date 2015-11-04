@@ -38,6 +38,7 @@ class role
         'editingteacher' => 'editingteacher',
         'teacher' => 'teacher',
         'student' => 'student',
+        'is_helpdesk' => 'user',
         'marker' => null,
         'panopto_creator' => null,
         'readinglist' => null,
