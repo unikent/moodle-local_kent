@@ -380,7 +380,6 @@
 		<inherit>mod/survey:download</inherit>
 		<inherit>mod/survey:participate</inherit>
 		<inherit>mod/survey:readresponses</inherit>
-		<inherit>mod/talis:pub</inherit>
 		<inherit>mod/taskchain:addinstance</inherit>
 		<inherit>mod/taskchain:attempt</inherit>
 		<inherit>mod/taskchain:deleteallattempts</inherit>

@@ -663,7 +663,6 @@
 		<inherit>webservice/soap:use</inherit>
 		<inherit>webservice/xmlrpc:use</inherit>
 		<allow>enrol/category:synchronised</allow>
-		<allow>mod/talis:pub</allow>
 		<prevent>mod/streamingvideo:addinstance</prevent>
 	</permissions>
 </role>
