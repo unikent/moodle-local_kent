@@ -34,6 +34,7 @@ class config
         $this->configure_20150416();
         $this->configure_20150826();
         $this->configure_20151103();
+        $this->configure_20151106();
     }
 
     /**
@@ -274,5 +275,15 @@ class config
         } else {
             set_config('defaultstatuses', 'A,J,P,R,T,W,Y,H,X,?', 'enrol_connect');
         }
+    }
+
+    /**
+     * Support Moodle 3.0.
+     */
+    public function configure_20151106() {
+        set_config('showdate', 1, 'resource');
+        set_config('allowborders', 1, 'atto_table');
+        set_config('allowborderstyles', 1, 'atto_table');
+        set_config('allowwidth', 1, 'atto_table');
     }
 }

@@ -44,6 +44,7 @@ class csvtable extends \table_sql {
 		// Copy columns into headers if we have no columns defined.
 		if (empty($this->columns) && !empty($this->headers)) {
 			$columns = array_map(function($header) {
+				$header = preg_replace('/[^a-zA-Z _]/', '', $header);
 				return str_replace(' ', '_', strtolower($header));
 			}, $this->headers);
 			$this->define_columns($columns);
