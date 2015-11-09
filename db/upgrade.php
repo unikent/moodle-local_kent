@@ -907,7 +907,7 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015110600, 'local', 'kent');
     }
 
-    if ($oldversion < 2015110900) {
+    if ($oldversion < 2015110901) {
         require_once($CFG->libdir . "/blocklib.php");
 
         $oldids = $DB->get_records_menu('block_instances', array('blockname' => 'aspirelists'));
@@ -920,7 +920,7 @@ function xmldb_local_kent_upgrade($oldversion) {
         blocks_delete_instances($oldids);
 
         // Kent savepoint reached.
-        upgrade_plugin_savepoint(true, 2015110900, 'local', 'kent');
+        upgrade_plugin_savepoint(true, 2015110901, 'local', 'kent');
     }
 
     return true;
