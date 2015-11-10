@@ -907,5 +907,21 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015110600, 'local', 'kent');
     }
 
+    if ($oldversion < 2015110901) {
+        require_once($CFG->libdir . "/blocklib.php");
+
+        $oldids = $DB->get_records_menu('block_instances', array('blockname' => 'aspirelists'));
+
+        $courses = $DB->get_records('course');
+        foreach ($courses as $course) {
+            blocks_add_default_course_blocks($course);
+        }
+
+        blocks_delete_instances($oldids);
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015110901, 'local', 'kent');
+    }
+
     return true;
 }
