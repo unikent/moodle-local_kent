@@ -837,7 +837,9 @@ function xmldb_local_kent_upgrade($oldversion) {
             blocks_add_default_course_blocks($course);
         }
 
-        blocks_delete_instances($oldids);
+        if (function_exists('blocks_delete_instances')) {
+            blocks_delete_instances($oldids);
+        }
 
         // Kent savepoint reached.
         upgrade_plugin_savepoint(true, 2015110901, 'local', 'kent');
