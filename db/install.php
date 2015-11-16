@@ -56,59 +56,5 @@ function xmldb_local_kent_install() {
     $catman = \local_kent\manager\category::instance();
     $catman->install();
 
-    // Define index ip (not unique) to be added to logstore_standard_log.
-    $table = new xmldb_table('logstore_standard_log');
-    $index = new xmldb_index('ip', XMLDB_INDEX_NOTUNIQUE, array('ip'));
-
-    // Conditionally launch add index ip.
-    if (!$dbman->index_exists($table, $index)) {
-        $dbman->add_index($table, $index);
-    }
-
-    // Define index eventname (not unique) to be added to logstore_standard_log.
-    $table = new xmldb_table('logstore_standard_log');
-    $index = new xmldb_index('eventname', XMLDB_INDEX_NOTUNIQUE, array('eventname'));
-
-    // Conditionally launch add index eventname.
-    if (!$dbman->index_exists($table, $index)) {
-        $dbman->add_index($table, $index);
-    }
-
-    // Define index context (not unique) to be added to logstore_standard_log.
-    $table = new xmldb_table('logstore_standard_log');
-    $index = new xmldb_index('context', XMLDB_INDEX_NOTUNIQUE, array('contextlevel', 'contextinstanceid'));
-
-    // Conditionally launch add index context.
-    if (!$dbman->index_exists($table, $index)) {
-        $dbman->add_index($table, $index);
-    }
-
-    // Define index userid (not unique) to be added to logstore_standard_log.
-    $table = new xmldb_table('logstore_standard_log');
-    $index = new xmldb_index('userid', XMLDB_INDEX_NOTUNIQUE, array('userid'));
-
-    // Conditionally launch add index userid.
-    if (!$dbman->index_exists($table, $index)) {
-        $dbman->add_index($table, $index);
-    }
-
-    // Define index relateduserid (not unique) to be added to logstore_standard_log.
-    $table = new xmldb_table('logstore_standard_log');
-    $index = new xmldb_index('relateduserid', XMLDB_INDEX_NOTUNIQUE, array('relateduserid'));
-
-    // Conditionally launch add index relateduserid.
-    if (!$dbman->index_exists($table, $index)) {
-        $dbman->add_index($table, $index);
-    }
-
-    // Define index enablecompletion (not unique) to be added to course.
-    $table = new xmldb_table('course');
-    $index = new xmldb_index('enablecompletion', XMLDB_INDEX_NOTUNIQUE, array('enablecompletion'));
-
-    // Conditionally launch add index enablecompletion.
-    if (!$dbman->index_exists($table, $index)) {
-        $dbman->add_index($table, $index);
-    }
-
     return true;
 }
