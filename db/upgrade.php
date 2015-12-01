@@ -845,5 +845,12 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015110901, 'local', 'kent');
     }
 
+    if ($oldversion < 2015120100) {
+        $roleman->add_capability('moodle/webservice:createtoken', 'user');
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015120100, 'local', 'kent');
+    }
+
     return true;
 }
