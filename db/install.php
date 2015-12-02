@@ -43,6 +43,7 @@ function xmldb_local_kent_install() {
     // Configure Kent managed roles.
     $roleman = new \local_kent\manager\role();
     $roleman->configure();
+    $roleman->add_capability('moodle/webservice:createtoken', 'user');
 
     // Configure to Kent defaults.
     $configman = new \local_kent\manager\config();
