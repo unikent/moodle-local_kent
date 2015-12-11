@@ -852,5 +852,20 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015120100, 'local', 'kent');
     }
 
+    if ($oldversion < 2015121000) {
+        $configman->configure_20151210();
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015121000, 'local', 'kent');
+    }
+
+    if ($oldversion < 2015121200) {
+        $path = "{$CFG->dataroot}/climaintenance.template.html";
+        symlink("{$CFG->dirroot}/theme/kent/pages/climaintenance.html", $path);
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015121200, 'local', 'kent');
+    }
+
     return true;
 }
