@@ -57,5 +57,9 @@ function xmldb_local_kent_install() {
     $catman = \local_kent\manager\category::instance();
     $catman->install();
 
+    // Symlink the maintenance template.
+    $path = "{$CFG->dataroot}/climaintenance.template.html";
+    symlink("{$CFG->dirroot}/theme/kent/pages/climaintenance.html", $path);
+
     return true;
 }
