@@ -48,14 +48,6 @@ class user extends external_api
     }
 
     /**
-     * Expose to AJAX
-     * @return boolean
-     */
-    public static function get_my_info_data_is_allowed_from_ajax() {
-        return true;
-    }
-
-    /**
      * Returns the current user's preferences.
      *
      * @return array[string]
@@ -96,14 +88,6 @@ class user extends external_api
      */
     public static function get_my_prefs_parameters() {
         return new external_function_parameters(array());
-    }
-
-    /**
-     * Expose to AJAX
-     * @return boolean
-     */
-    public static function get_my_prefs_is_allowed_from_ajax() {
-        return true;
     }
 
     /**

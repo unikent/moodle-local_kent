@@ -54,14 +54,6 @@ class corner extends external_api
     }
 
     /**
-     * Expose to AJAX
-     * @return boolean
-     */
-    public static function user_enrol_detail_is_allowed_from_ajax() {
-        return false;
-    }
-
-    /**
      * Returns the current user's preferences.
      *
      * @param $username

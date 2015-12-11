@@ -48,25 +48,29 @@ $functions = array(
         'classname'   => 'local_kent\external\user',
         'methodname'  => 'get_my_prefs',
         'description' => 'Get my preferences.',
-        'type'        => 'read'
+        'type'        => 'read',
+        'ajax'        => true
     ),
     'local_kent_user_get_my_info_data' => array(
         'classname'   => 'local_kent\external\user',
         'methodname'  => 'get_my_info_data',
         'description' => 'Get my info data.',
-        'type'        => 'read'
+        'type'        => 'read',
+        'ajax'        => true
     ),
     'local_kent_course_provision_fresh' => array(
         'classname'    => 'local_kent\external\course',
         'methodname'   => 'provision_fresh',
         'description'  => 'Provision a fresh, new course.',
         'type'         => 'write',
-        'capabilities' => 'moodle/course:update'
+        'capabilities' => 'moodle/course:update',
+        'ajax'         => true
     ),
     'corner_user_enrol_details' => array(
         'classname'    => 'local_kent\external\corner',
         'methodname'   => 'user_enrol_detail',
         'description'  => 'Grab user enrolment details for display on corner.',
-        'type'         => 'read'
+        'type'         => 'read',
+        'ajax'         => false
     )
 );

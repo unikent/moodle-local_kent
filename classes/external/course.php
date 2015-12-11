@@ -56,14 +56,6 @@ class course extends external_api
     }
 
     /**
-     * Expose to AJAX
-     * @return boolean
-     */
-    public static function provision_fresh_is_allowed_from_ajax() {
-        return true;
-    }
-
-    /**
      * Search a list of modules.
      *
      * @param $modulecode
