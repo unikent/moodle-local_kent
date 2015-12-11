@@ -35,6 +35,7 @@ class config
         $this->configure_20150826();
         $this->configure_20151103();
         $this->configure_20151106();
+        $this->configure_20151210();
     }
 
     /**
@@ -285,5 +286,12 @@ class config
         set_config('allowborders', 1, 'atto_table');
         set_config('allowborderstyles', 1, 'atto_table');
         set_config('allowwidth', 1, 'atto_table');
+    }
+
+    /**
+     * Improve topcoll.
+     */
+    public function configure_20151210() {
+        set_config('defaultdisplayinstructions', 1, 'format_topcoll');
     }
 }
