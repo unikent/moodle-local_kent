@@ -874,5 +874,12 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015121400, 'local', 'kent');
     }
 
+    if ($oldversion < 2015121401) {
+        \local_kent\manager\abtest::finish_test('kent_theme_lightnav');
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2015121401, 'local', 'kent');
+    }
+
     return true;
 }
