@@ -476,7 +476,6 @@
 		<allow>mod/turnitintooltwo:addinstance</allow>
 		<allow>mod/turnitintooltwo:grade</allow>
 		<allow>mod/turnitintooltwo:read</allow>
-		<allow>mod/turnitintooltwo:submit</allow>
 		<allow>mod/turnitintooltwo:view</allow>
 		<allow>mod/url:addinstance</allow>
 		<allow>mod/url:view</allow>
@@ -743,6 +742,7 @@
 		<allow>webservice/rest:use</allow>
 		<allow>webservice/soap:use</allow>
 		<allow>webservice/xmlrpc:use</allow>
+		<prevent>mod/turnitintooltwo:submit</prevent>
 		<prevent>mod/hotpot:addinstance</prevent>
 		<prevent>mod/streamingvideo:addinstance</prevent>
 		<prohibit>enrol/self:holdkey</prohibit>
