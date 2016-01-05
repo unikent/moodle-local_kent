@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-define('CLI_SCRIPT', true);
-
-require_once(dirname(__FILE__) . '/../../../config.php');
+if (!defined('KENT_MOODLE')) {
+    define('CLI_SCRIPT', true);
+    require_once(dirname(__FILE__) . '/../../../config.php');
+}
 
 /**
  * Post deploy hooks.
@@ -25,8 +26,11 @@ require_once(dirname(__FILE__) . '/../../../config.php');
 
 // Re-symlink the climaintenance template.
 $path = "{$CFG->dataroot}/climaintenance.template.html";
-if (file_exists($path)) {
+if (file_exists($path) || is_link($path)) {
     unlink($path);
 }
 
 symlink("{$CFG->dirroot}/theme/kent/pages/climaintenance.html", $path);
+
+// Re-check nagios.
+\local_nagios\Core::regenerate_list();
