@@ -34,3 +34,7 @@ symlink("{$CFG->dirroot}/theme/kent/pages/climaintenance.html", $path);
 
 // Re-check nagios.
 \local_nagios\Core::regenerate_list();
+
+// Signal supervisord to restart.
+$beanstalk = new \tool_adhoc\beanstalk();
+$beanstalk->add_job('\\tool_adhoc\\jobs\\supervisord', 'restart');
