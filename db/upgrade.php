@@ -881,17 +881,5 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015121401, 'local', 'kent');
     }
 
-    if ($oldversion < 2016010501) {
-        $path = "{$CFG->dataroot}/climaintenance.template.html";
-        if (file_exists($path)) {
-            unlink($path);
-        }
-
-        symlink("{$CFG->kent->basepath}theme/kent/pages/climaintenance.html", $path);
-
-        // Kent savepoint reached.
-        upgrade_plugin_savepoint(true, 2016010501, 'local', 'kent');
-    }
-
     return true;
 }
