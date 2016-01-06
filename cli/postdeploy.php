@@ -14,15 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-if (!defined('KENT_MOODLE')) {
-    define('CLI_SCRIPT', true);
-    require_once(dirname(__FILE__) . '/../../../config.php');
+define('CLI_SCRIPT', true);
+
+require_once(dirname(__FILE__) . '/../../../config.php');
+
+$user = posix_getpwuid(posix_geteuid());
+if ($user['name'] !== 'w3moodle') {
+    die("This script must be run as w3moodle.");
 }
 
 /**
  * Post deploy hooks.
  * This is run as w3moodle (magic!).
  */
+
+// Signal supervisord to restart.
+exec("supervisorctl restart all");
 
 // Re-symlink the climaintenance template.
 $path = "{$CFG->dataroot}/climaintenance.template.html";
@@ -34,7 +41,3 @@ symlink("{$CFG->dirroot}/theme/kent/pages/climaintenance.html", $path);
 
 // Re-check nagios.
 \local_nagios\Core::regenerate_list();
-
-// Signal supervisord to restart.
-$beanstalk = new \tool_adhoc\beanstalk();
-$beanstalk->add_job('\\tool_adhoc\\jobs\\supervisord', 'restart');
