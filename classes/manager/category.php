@@ -65,7 +65,7 @@ class category
             foreach ($kentcategories as $category) {
                 $category = (object)$category;
 
-                if ($category->parent > 0) {
+                if ($category->parent > 1) {
                     if (!isset($localcatmap[$category->parent])) {
                         continue;
                     }
