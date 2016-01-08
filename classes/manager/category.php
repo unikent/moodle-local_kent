@@ -52,7 +52,13 @@ class category
      * Install.
      */
     public function install() {
-        $kentcategories = clone $this->categories;
+        global $CFG;
+
+        if (!isset($CFG->coursecontact)) {
+            $CFG->coursecontact = '';
+        }
+
+        $kentcategories = $this->categories;
 
         $localcatmap = array();
         while (!empty($kentcategories)) {
