@@ -35,8 +35,8 @@ $tasks = array(
     array(
         'classname' => 'local_kent\task\course_shouter',
         'blocking' => 0,
-        'minute' => '*/5',
-        'hour' => '*',
+        'minute' => '0',
+        'hour' => '17',
         'day' => '*',
         'dayofweek' => '*',
         'month' => '*'
