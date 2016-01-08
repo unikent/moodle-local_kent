@@ -126,10 +126,14 @@ trait datapod
      * @param $baseurl
      * @return \flexible_table
      */
-    public function get_flexible_table($baseurl) {
-        global $CFG;
+    public function get_flexible_table($baseurl = null) {
+        global $CFG, $PAGE;
 
         require_once($CFG->libdir . '/tablelib.php');
+
+        if (!$baseurl) {
+            $baseurl = $PAGE->url;
+        }
 
         $class = get_called_class();
 

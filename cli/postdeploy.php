@@ -14,22 +14,30 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+define('CLI_SCRIPT', true);
+
+require_once(dirname(__FILE__) . '/../../../config.php');
+
+$user = posix_getpwuid(posix_geteuid());
+if ($user['name'] !== 'w3moodle') {
+    die("This script must be run as w3moodle.");
+}
+
 /**
- * Version information
- *
- * @package    local_kent
- * @copyright  2015 University of Kent
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Post deploy hooks.
+ * This is run as w3moodle (magic!).
  */
 
-defined('MOODLE_INTERNAL') || die();
+// Signal supervisord to restart.
+exec("supervisorctl restart all");
 
-$plugin->component = 'local_kent';
-$plugin->version   = 2016010800;
-$plugin->requires  = 2015111600;
+// Re-symlink the climaintenance template.
+$path = "{$CFG->dataroot}/climaintenance.template.html";
+if (file_exists($path) || is_link($path)) {
+    unlink($path);
+}
 
-$plugin->dependencies = array(
-    'local_hipchat' => 2015060500,
-    'local_connect' => 2015081000,
-    'local_notifications' => 2015062900
-);
+symlink("{$CFG->dirroot}/theme/kent/pages/climaintenance.html", $path);
+
+// Re-check nagios.
+\local_nagios\Core::regenerate_list();

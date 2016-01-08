@@ -17,7 +17,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 function xmldb_local_kent_install() {
-    global $DB, $SHAREDB;
+    global $CFG, $DB, $SHAREDB;
 
     // Install SHAREDB if needs be.
     if (\local_kent\util\sharedb::available()) {

@@ -20,6 +20,7 @@ if (!defined('KENT_MOODLE')) {
 }
 
 /**
+ * Pre-upgrade hooks.
  * Anything that should run before an upgrade can be put here.
  */
 

@@ -14,22 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Version information
- *
- * @package    local_kent
- * @copyright  2015 University of Kent
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace local_kent;
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'local_kent';
-$plugin->version   = 2016010800;
-$plugin->requires  = 2015111600;
-
-$plugin->dependencies = array(
-    'local_hipchat' => 2015060500,
-    'local_connect' => 2015081000,
-    'local_notifications' => 2015062900
-);
+/**
+ * Arbitrary data pod.
+ */
+class arbitrarypod
+{
+    use \local_kent\traits\datapod;
+}
