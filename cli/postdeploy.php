@@ -29,7 +29,15 @@ if ($user['name'] !== 'w3moodle') {
  */
 
 // Signal supervisord to restart.
-exec("supervisorctl restart all");
+$beanstalkv = $DB->get_field('config', 'value', array('name' => 'beanstalk_deploy'));
+if (!$beanstalkv) {
+    $DB->insert_record('config', array(
+        'name' => 'beanstalk_deploy',
+        'value' => 1
+    ));
+} else {
+    $DB->set_field('config', 'value', $beanstalkv + 1, array('name' => 'beanstalk_deploy'));
+}
 
 // Re-symlink the climaintenance template.
 $path = "{$CFG->dataroot}/climaintenance.template.html";
