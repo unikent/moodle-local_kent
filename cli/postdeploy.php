@@ -39,6 +39,9 @@ if (!$beanstalkv) {
     $DB->set_field('config', 'value', $beanstalkv + 1, array('name' => 'beanstalk_deploy'));
 }
 
+// A kick will cause all workers to reload.
+\tool_adhoc\beanstalk::kick_workers();
+
 // Re-symlink the climaintenance template.
 $path = "{$CFG->dataroot}/climaintenance.template.html";
 if (file_exists($path) || is_link($path)) {
