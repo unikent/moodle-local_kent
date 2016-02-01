@@ -881,5 +881,12 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2015121401, 'local', 'kent');
     }
 
+    if ($oldversion < 2016012600) {
+        unset_config('maintenance_message');
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2016012600, 'local', 'kent');
+    }
+
     return true;
 }
