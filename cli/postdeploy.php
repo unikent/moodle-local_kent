@@ -23,7 +23,7 @@ if ($user['name'] !== 'w3moodle') {
     die("This script must be run as w3moodle.");
 }
 
-/**
+/*
  * Post deploy hooks.
  * This is run as w3moodle (magic!).
  */
