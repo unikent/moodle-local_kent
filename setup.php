@@ -24,10 +24,13 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-global $SHAREDB;
+global $SHAREDB, $SDSDB;
 
 require_once(dirname(__FILE__) . "/classes/util/sharedb.php");
 $SHAREDB = new \local_kent\util\sharedb();
+
+require_once(dirname(__FILE__) . "/../connect/classes/sds/sdsdb.php");
+$SDSDB = new \local_kent\util\sdsdb();
 
 if (!PHPUNIT_TEST || PHPUNIT_UTIL) {
     set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {
