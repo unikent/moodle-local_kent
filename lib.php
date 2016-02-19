@@ -77,3 +77,21 @@ function local_kent_extend_settings_navigation(\settings_navigation $nav, \conte
 
     return $node;
 }
+
+/**
+ * This function extends the navigation with the tool items for user settings node.
+ *
+ * @param navigation_node $navigation  The navigation node to extend
+ * @param stdClass        $user        The user object
+ * @param context         $usercontext The context of the user
+ * @param stdClass        $course      The course to object for the tool
+ * @param context         $coursecontext     The context of the course
+ */
+function local_kent_extend_navigation_user_settings($navigation, $user, $usercontext, $course, $coursecontext) {
+    $url = new moodle_url('/local/kent/preferences.php');
+    $subsnode = navigation_node::create('Kent Preferences', $url, navigation_node::TYPE_SETTING, null, 'kent');
+
+    if (isset($subsnode) && !empty($navigation)) {
+        $navigation->add_node($subsnode);
+    }
+}
