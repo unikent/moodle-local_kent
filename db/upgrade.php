@@ -888,5 +888,14 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2016012600, 'local', 'kent');
     }
 
+    if ($oldversion < 2016021900) {
+        $roleman->remove_capability('mod/forum:addnews', array(
+            'sds_student'
+        ));
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2016021900, 'local', 'kent');
+    }
+
     return true;
 }

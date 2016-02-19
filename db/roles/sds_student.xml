@@ -589,7 +589,6 @@
 		<allow>mod/feedback:complete</allow>
 		<allow>mod/feedback:view</allow>
 		<allow>mod/feedback:viewanalysepage</allow>
-		<allow>mod/forum:addnews</allow>
 		<allow>mod/forum:allowforcesubscribe</allow>
 		<allow>mod/forum:createattachment</allow>
 		<allow>mod/forum:deleteownpost</allow>
@@ -663,6 +662,7 @@
 		<prevent>local/connect:manage</prevent>
 		<prevent>mod/cla:manage</prevent>
 		<prevent>mod/cla:report</prevent>
+		<prevent>mod/forum:addnews</prevent>
 		<prevent>mod/streamingvideo:addinstance</prevent>
 	</permissions>
 </role>
