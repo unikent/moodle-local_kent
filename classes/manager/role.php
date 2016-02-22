@@ -65,6 +65,13 @@ class role
     );
 
     /**
+     * Grab managed roles.
+     */
+    public static function get_managed_roles() {
+        return array_keys(static::$managedroles);
+    }
+
+    /**
      * Configure all managed roles, call this from an upgrade script when
      * you change something.
      * @param string $role
