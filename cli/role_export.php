@@ -14,22 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Version information
- *
- * @package    local_kent
- * @copyright  2015 University of Kent
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+define('CLI_SCRIPT', true);
 
-defined('MOODLE_INTERNAL') || die();
+require_once(dirname(__FILE__) . '/../../../config.php');
+require_once($CFG->libdir . '/clilib.php');
 
-$plugin->component = 'local_kent';
-$plugin->version   = 2016021900;
-$plugin->requires  = 2015111600;
+$roles = \local_kent\manager\role::get_managed_roles();
+foreach ($roles as $role) {
+    $role = $DB->get_record('role', array('shortname' => $role), 'id,shortname', MUST_EXIST);
+    $xml = core_role_preset::get_export_xml($role->id);
 
-$plugin->dependencies = array(
-    'local_hipchat' => 2015060500,
-    'local_connect' => 2015081000,
-    'local_notifications' => 2015062900
-);
+    $dom = new DOMDocument;
+    $dom->preserveWhiteSpace = false;
+    $dom->loadXML($xml);
+    $dom->formatOutput = true;
+    $dom->save(dirname(__FILE__) . "/../db/roles/{$role->shortname}.xml");
+}
