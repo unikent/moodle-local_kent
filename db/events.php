@@ -65,11 +65,6 @@ $observers = array (
     ),
 
     array (
-        'eventname' => '\core\event\role_unassigned',
-        'callback'  => '\local_kent\observers::role_unassigned',
-    ),
-
-    array (
         'eventname' => '\local_rollover\event\rollover_finished',
         'callback'  => '\local_kent\observers::rollover_finished',
     )
