@@ -17,13 +17,6 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
-    $ADMIN->add('reports', new admin_externalpage(
-        'reportsharedreport',
-        'ShareDB List',
-        "$CFG->wwwroot/local/kent/reports/sharedb.php",
-        'local/connect:manage'
-    ));
-
     $settings = new admin_settingpage('local_kent', get_string('pluginname', 'local_kent'));
     $ADMIN->add('localplugins', $settings);
 
