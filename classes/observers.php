@@ -109,10 +109,6 @@ class observers
     public static function user_enrolment_created(\core\event\user_enrolment_created $event) {
         global $CFG, $DB, $SHAREDB;
 
-        // Delete contacts cache.
-        $cache = \cache::make('core', 'coursecontacts');
-        $cache->delete($event->courseid);
-
         $context = $event->get_context();
         if (util\sharedb::available() && has_capability('moodle/course:update', $context, $event->relateduserid)) {
             $username = $DB->get_field('user', 'username', array(
@@ -141,10 +137,6 @@ class observers
      */
     public static function user_enrolment_deleted(\core\event\user_enrolment_deleted $event) {
         global $CFG, $DB, $SHAREDB;
-
-        // Delete contacts cache.
-        $cache = \cache::make('core', 'coursecontacts');
-        $cache->delete($event->courseid);
 
         if (util\sharedb::available()) {
             $username = $DB->get_field('user', 'username', array(
@@ -175,10 +167,6 @@ class observers
         $context = $event->get_context();
 
         if ($context->contextlevel == \CONTEXT_COURSE) {
-            // Delete contacts cache.
-            $cache = \cache::make('core', 'coursecontacts');
-            $cache->delete($context->instanceid);
-
             // Get the role shortname.
             $shortname = $DB->get_field('role', 'shortname', array(
                 'id' => $event->objectid
@@ -191,22 +179,6 @@ class observers
         }
 
         return true;
-    }
-
-    /**
-     * Triggered when user role is unassigned.
-     *
-     * @param \core\event\role_unassigned $event
-     */
-    public static function role_unassigned(\core\event\role_unassigned $event) {
-        // Get the context.
-        $context = $event->get_context();
-
-        // Delete contacts cache.
-        if ($context->contextlevel == \CONTEXT_COURSE) {
-            $cache = \cache::make('core', 'coursecontacts');
-            $cache->delete($context->instanceid);
-        }
     }
 
     /**
