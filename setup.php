@@ -30,7 +30,10 @@ require_once(dirname(__FILE__) . "/classes/util/sharedb.php");
 $SHAREDB = new \local_kent\util\sharedb();
 
 require_once(dirname(__FILE__) . "/../connect/classes/sds/sdsdb.php");
-$SDSDB = new \local_kent\util\sdsdb();
+$SDSDB = new \local_connect\sds\sdsdb();
+
+require_once(dirname(__FILE__) . "/../connect/classes/sits/sitsdb.php");
+$SITSDB = new \local_connect\sits\sitsdb();
 
 if (!PHPUNIT_TEST || PHPUNIT_UTIL) {
     set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {
