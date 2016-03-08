@@ -144,6 +144,11 @@ trait datapod
         $table->setup();
 
         foreach ($this->_data as $k => $v) {
+            $prettymethod = "_pretty_" . $k;
+            if (method_exists($this, $prettymethod)) {
+                $v = $this->$prettymethod();
+            }
+
             $table->add_data(array($k, $v));
         }
 
