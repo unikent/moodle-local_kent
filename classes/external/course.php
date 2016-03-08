@@ -111,7 +111,7 @@ class course extends external_api
         $cm = add_course_module($cm);
         course_add_cm_to_section($course->id, $cm, 0);
 
-        return true;
+        return array('success' => true);
     }
 
     /**
@@ -121,7 +121,7 @@ class course extends external_api
      */
     public static function provision_fresh_returns() {
         return new external_single_structure(array(
-            new external_value(PARAM_BOOL, 'Success or failue (true/false).')
+            'success' => new external_value(PARAM_BOOL, 'Success or failue (true/false).')
         ));
     }
 }
