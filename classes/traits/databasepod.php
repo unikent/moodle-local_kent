@@ -338,9 +338,13 @@ trait databasepod
                 }
 
                 $table->add_data(array($k, $v));
+            } else if ($k == 'id' && method_exists($this, 'get_url')) {
+                $v = \html_writer::link($this->get_url(), $v);
+                $table->add_data(array($k, $v));
             } else {
-                if ($k == 'id' && method_exists($this, 'get_url')) {
-                    $v = \html_writer::link($this->get_url(), $v);
+                $prettymethod = "_pretty_" . $k;
+                if (method_exists($this, $prettymethod)) {
+                    $v = $this->$prettymethod();
                 }
 
                 $table->add_data(array($k, $v));
