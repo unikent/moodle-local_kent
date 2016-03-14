@@ -47,10 +47,6 @@ class config_shouter extends \core\task\scheduled_task
             return true;
         }
 
-        if (!\local_hipchat\HipChat::available()) {
-            return true;
-        }
-
         // Grab all entries since then, not made by admin.
         $sql = <<<SQL
             SELECT cl.id, cl.plugin, cl.name, cl.value, cl.oldvalue, u.firstname, u.lastname
@@ -70,11 +66,9 @@ SQL;
 
         $messages = array();
         foreach ($entries as $entry) {
-            $username = $entry->firstname . " " . $entry->lastname;
-            $msg = "{$username} changed the value of '{$entry->name}'";
+            $msg = "{$entry->firstname} {$entry->lastname} changed the value of '{$entry->name}'";
             $msg .= " ('{$entry->plugin}') from '{$entry->oldvalue}' to '{$entry->value}'.";
             $messages[] = $msg;
-            \local_hipchat\Message::send($msg);
         }
 
         // Also submit a CR.
@@ -88,4 +82,4 @@ SQL;
 
         return true;
     }
-} 
+}

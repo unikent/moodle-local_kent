@@ -27,7 +27,7 @@ namespace local_kent\task;
 /**
  * New Course Shouter.
  *
- * Sends to Hipchat and Academic Liason Team
+ * Sends to Academic Liason Team
  */
 class course_shouter extends \core\task\scheduled_task
 {
@@ -44,6 +44,11 @@ class course_shouter extends \core\task\scheduled_task
             return true;
         }
 
+        $notifyalt = get_config("local_kent", "enable_course_alt_shouter");
+        if (!$notifyalt) {
+            return;
+        }
+
         // Grab all entries since then, not made by admin.
         $entries = $DB->get_records_select('course', 'timecreated > :time', array(
             'time' => $lasttime
@@ -51,32 +56,9 @@ class course_shouter extends \core\task\scheduled_task
 
         if (!empty($entries)) {
             $this->send_emails($entries);
-            $this->send_hipchats($entries);
         }
 
         return true;
-    }
-
-    /**
-     * Send a message about a new course to HipChat.
-     * @param $courses
-     * @throws \Exception
-     * @throws \dml_exception
-     * @throws \moodle_exception
-     */
-    private function send_hipchats($courses) {
-        $hipchat = get_config("local_kent", "enable_course_shouter");
-        if (!$hipchat || !\local_hipchat\HipChat::available()) {
-            return;
-        }
-
-        $shortnames = array();
-        foreach ($courses as $course) {
-            $shortnames[] = $course->shortname;
-        }
-        $shortnames = implode(', ', $shortnames);
-
-        \local_hipchat\Message::send("New courses have been created: '{$shortnames}'.");
     }
 
     /**
@@ -87,11 +69,6 @@ class course_shouter extends \core\task\scheduled_task
      */
     private function send_emails($courses) {
         global $CFG;
-
-        $notifyalt = get_config("local_kent", "enable_course_alt_shouter");
-        if (!$notifyalt) {
-            return;
-        }
 
         $formatted = array();
 
@@ -115,7 +92,7 @@ class course_shouter extends \core\task\scheduled_task
             $courseurl = "{$CFG->wwwroot}/course/view.php?id={$course->id}";
             $categoryurl = "{$CFG->wwwroot}/course/index.php?categoryid={$course->category}";
 
-            $formatted[] = <<<HTML
+            $formatted[] = <<<HTML5
 -----------------------------------
 Code: $course->shortname
 Title: $course->fullname
@@ -123,18 +100,16 @@ Campus: $campus
 Course: $courseurl
 Category: $categoryurl
 -----------------------------------
-HTML;
+HTML5;
         }
-
-        $formatted = implode("\n\n", $formatted);
 
         $ticket = new \local_kent\footprints\ticket("[Moodle] New Modules Created");
         $ticket->set_user("w3moodle");
-        $ticket->add_entry($formatted);
+        $ticket->add_entry(implode("\n\n", $formatted));
         $ticket->add_cc("D.Bedford@kent.ac.uk");
         $ticket->add_assignee("Academic Liaison");
         $ticket->set_type("Service Request - Service");
         $ticket->set_category("Library");
         $ticket->schedule();
     }
-} 
+}

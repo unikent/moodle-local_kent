@@ -102,11 +102,6 @@ class config
         set_config('supportpage', 'http://www.kent.ac.uk/itservices');
 
         /**
-         * Hipchat.
-         */
-        set_config('default_name', 'Moodle ' . ucwords($CFG->kent->distribution), 'local_hipchat');
-
-        /**
          * Aspire Lists.
          */
         set_config('baseurl', 'http://resourcelists.kent.ac.uk', 'aspirelists');
