@@ -32,8 +32,8 @@ $SHAREDB = new \local_kent\util\sharedb();
 require_once(dirname(__FILE__) . "/../connect/classes/sds/sdsdb.php");
 $SDSDB = new \local_connect\sds\sdsdb();
 
-require_once(dirname(__FILE__) . "/../connect/classes/sits/sitsdb.php");
-$SITSDB = new \local_connect\sits\sitsdb();
+//require_once(dirname(__FILE__) . "/../connect/classes/sits/sitsdb.php");
+//$SITSDB = new \local_connect\sits\sitsdb();
 
 if (!PHPUNIT_TEST || PHPUNIT_UTIL) {
     set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {
@@ -68,4 +68,18 @@ if (!PHPUNIT_TEST || PHPUNIT_UTIL) {
         // Get Moodle's default error handler to handle this.
         return default_error_handler($errno, $errstr, $errfile, $errline, $errcontext);
     });
+}
+
+// Cool utility for CLI scripts.
+if (defined("CLI_SCRIPT") && CLI_SCRIPT) {
+    function cli_progress($done, $total) {
+        $perc = floor(($done / $total) * 100);
+        $left = 100 - $perc;
+        $write = sprintf("\033[0G\033[2K[%'={$perc}s>%-{$left}s] - $perc%% - $done/$total", "", "");
+        fwrite(STDERR, $write);
+    }
+
+    function cli_progress_end() {
+        cli_writeln("", STDERR);
+    }
 }
