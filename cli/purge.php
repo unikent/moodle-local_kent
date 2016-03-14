@@ -27,20 +27,18 @@ list($options, $unrecognized) = cli_get_params(
 );
 
 if (empty($options['category'])) {
-    die("You must specify a category!\n");
+    cli_error("You must specify a category!");
 }
 
 // Dry is true by default.
 if ($options['dry']) {
-    echo "Running in DRY mode...\n";
+    cli_writeln("Running in DRY mode...");
 } else {
-    echo "Running in LIVE mode...\n";
+    cli_writeln("Running in LIVE mode...");
 }
 
 function purge_cat($category, $options) {
     global $DB;
-
-    \local_hipchat\Message::send("Purging Category {$category}...", "red");
 
     // Destroy everything.
     cli_heading("Destroying {$category}...");
@@ -63,7 +61,7 @@ function purge_cat($category, $options) {
             continue;
         }
 
-        echo "Deleting {$course->id}...\n";
+        cli_writeln("Deleting {$course->id}...");
         if (!$options['dry']) {
             delete_course($course);
         }
@@ -72,8 +70,7 @@ function purge_cat($category, $options) {
 
     $count -= $DB->count_records('course');
 
-    echo "Deleted {$count} courses.\n";
-    \local_hipchat\Message::send("Finished! {$count} courses purged.", "red");
+    cli_writeln("Deleted {$count} courses.");
 }
 
 $categories = $options['category'];

@@ -23,14 +23,14 @@ if ($hassiteconfig) {
     $settings->add(new admin_setting_configcheckbox(
         'local_kent/enable_config_shouter',
         'Enable Config Shouter',
-        'Shouts out config modifications to HipChat',
+        'Sends config modifications to CR tickets',
         1
     ));
 
     $settings->add(new admin_setting_configcheckbox(
         'local_kent/enable_course_shouter',
         'Enable Course Shouter',
-        'Shouts out new courses to HipChat.',
+        'Sends new courses to AL team in FP.',
         0
     ));
 
