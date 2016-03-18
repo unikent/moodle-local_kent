@@ -900,7 +900,7 @@ function xmldb_local_kent_upgrade($oldversion) {
     if ($oldversion < 2016031500) {
         // Define field data to be added to shared_rollovers.
         $table = new xmldb_table('shared_rollovers');
-        $field = new xmldb_field('data', XMLDB_TYPE_TEXT, null, null, null, null, '{}', 'options');
+        $field = new xmldb_field('data', XMLDB_TYPE_TEXT, null, null, null, null, null, 'options');
 
         // Conditionally launch add field type.
         if (!$sharedbman->field_exists($table, $field)) {
