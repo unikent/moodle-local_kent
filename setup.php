@@ -35,6 +35,16 @@ $SDSDB = new \local_connect\sds\sdsdb();
 //require_once(dirname(__FILE__) . "/../connect/classes/sits/sitsdb.php");
 //$SITSDB = new \local_connect\sits\sitsdb();
 
+// Shared dataroot.
+$CFG->shareddataroot = realpath($CFG->shareddataroot);
+if ($CFG->shareddataroot === false) {
+    try {
+        make_writable_directory($CFG->shareddataroot);
+    } catch (\invalid_dataroot_permissions $e) {
+        unset($CFG->shareddataroot);
+    }
+}
+
 if (!PHPUNIT_TEST || PHPUNIT_UTIL) {
     set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {
         global $CFG, $USER;
