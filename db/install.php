@@ -19,6 +19,11 @@ defined('MOODLE_INTERNAL') || die();
 function xmldb_local_kent_install() {
     global $CFG, $DB, $SHAREDB;
 
+    // Make sure this is set.
+    if (!isset($CFG->coursecontact)) {
+        $CFG->coursecontact = '';
+    }
+
     // Install SHAREDB if needs be.
     if (\local_kent\util\sharedb::available()) {
         $sharedbman = $SHAREDB->get_manager();
@@ -58,8 +63,7 @@ function xmldb_local_kent_install() {
     $catman->install();
 
     // Symlink the maintenance template.
-    $path = "{$CFG->dataroot}/climaintenance.template.html";
-    symlink("{$CFG->dirroot}/theme/kent/pages/climaintenance.html", $path);
+    @symlink("{$CFG->dirroot}/theme/kent/pages/climaintenance.html", "{$CFG->dataroot}/climaintenance.template.html");
 
     return true;
 }
