@@ -52,12 +52,6 @@ class category
      * Install.
      */
     public function install() {
-        global $CFG;
-
-        if (!isset($CFG->coursecontact)) {
-            $CFG->coursecontact = '';
-        }
-
         $kentcategories = $this->categories;
 
         $localcatmap = array();
@@ -89,11 +83,7 @@ class category
      * Create a specific category from the datafile.
      */
     public function create($id) {
-        global $CFG, $DB;
-
-        if (!isset($CFG->coursecontact)) {
-            $CFG->coursecontact = '';
-        }
+        global $DB;
 
         if (!isset($this->categories[$id])) {
             throw new \moodle_exception("Invalid kent category id {$id}!");
