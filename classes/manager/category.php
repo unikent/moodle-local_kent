@@ -89,7 +89,11 @@ class category
      * Create a specific category from the datafile.
      */
     public function create($id) {
-        global $DB;
+        global $CFG, $DB;
+
+        if (!isset($CFG->coursecontact)) {
+            $CFG->coursecontact = '';
+        }
 
         if (!isset($this->categories[$id])) {
             throw new \moodle_exception("Invalid kent category id {$id}!");
