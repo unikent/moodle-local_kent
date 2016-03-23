@@ -17,22 +17,47 @@
 /**
  * Generates a test school.
  *
- * @package    tool_kent
- * @copyright  2015 Skylar Kelty <S.Kelty@kent.ac.uk>
+ * @package    local_kent
+ * @copyright  2016 Skylar Kelty <S.Kelty@kent.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 define('CLI_SCRIPT', true);
 
-require(__DIR__ . '/../../../../config.php');
+require(dirname(__FILE__) . '/../../../config.php');
 require_once($CFG->libdir . '/clilib.php');
 require_once($CFG->libdir . '/coursecatlib.php');
 require_once($CFG->dirroot . '/lib/phpunit/classes/util.php');
+require_once($CFG->dirroot . '/user/lib.php');
 
-cli_writeln('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-cli_writeln('Welcome to the school generator!');
-cli_writeln('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+if ($CFG->kent->environment !== 'dev') {
+    die("Can only be run in dev mode.");
+}
+
+cli_writeln('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+cli_writeln('Welcome to the test env generator!');
+cli_writeln('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 cli_writeln('');
+
+cli_writeln('Running user generator...');
+
+// First provision users.
+$users = array();
+foreach (array('skylark', 'jake') as $username) {
+    $user = new \stdClass();
+    $user->username = $username;
+    $user->email = $username . "@kent.ac.uk";
+    $user->auth = "kentsaml";
+    $user->password = "not cached";
+    $user->confirmed = 1;
+    $user->mnethostid = $CFG->mnet_localhost_id;
+    $user->firstname = $username;
+    $user->lastname = $username;
+
+    $users[$username] = user_create_user($user, false);
+}
+
+cli_writeln('Running school generator...');
 
 $category = $DB->get_record('course_categories', array('name' => 'School of Witchcraft and Wizardry'));
 if (!$category) {
@@ -85,7 +110,9 @@ $courses = array(
     'Xylomancy'
 );
 
-cli_writeln('Creating courses...');
+$enrol = enrol_get_plugin('manual');
+$role = $DB->get_record('role', array('shortname' => 'editingteacher'));
+
 $generator = \phpunit_util::get_data_generator();
 $id = 1000;
 foreach ($courses as $course) {
@@ -101,6 +128,13 @@ foreach ($courses as $course) {
         'category' => $category->id
     );
 
-    $generator->create_course($courserecord, array('createsections' => true));
+    $course = $generator->create_course($courserecord, array('createsections' => true));
+
+    // Enrolments.
+    $instance = $DB->get_record('enrol', array('courseid' => $course->id, 'enrol' => 'manual'));
+    foreach ($users as $username => $userid) {
+        $enrol->enrol_user($instance, $userid, $role->id);
+    }
+
     $id += 100;
 }
