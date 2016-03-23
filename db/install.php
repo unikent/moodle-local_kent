@@ -24,6 +24,12 @@ function xmldb_local_kent_install() {
         $CFG->coursecontact = '';
     }
 
+    // Should we setup SOLR?
+    if (isset($CFG->enableglobalsearch) && $CFG->enableglobalsearch) {
+        $schema = new \search_solr\schema();
+        $schema->setup();
+    }
+
     // Install SHAREDB if needs be.
     if (\local_kent\util\sharedb::available()) {
         $sharedbman = $SHAREDB->get_manager();
