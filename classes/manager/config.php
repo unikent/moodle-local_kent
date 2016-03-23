@@ -37,6 +37,7 @@ class config
         $this->configure_20151103();
         $this->configure_20151106();
         $this->configure_20151210();
+        $this->configure_20160324();
     }
 
     /**
@@ -284,5 +285,35 @@ class config
      */
     public function configure_20151210() {
         set_config('defaultdisplayinstructions', 1, 'format_topcoll');
+    }
+
+    /**
+     * Support Moodle 2016.
+     */
+    public function configure_20160324() {
+        set_config('auth', 'kentsaml');
+        set_config('enrol_plugins_enabled', 'manual,guest,self,cohort,meta,connect,category');
+        set_config('enablestats', '1');
+        set_config('grade_aggregations_visible', '0,10,11,12,2,4,6,8,13');
+        set_config('forcelogin', '1');
+        set_config('allowblockstodock', '0');
+        set_config('forum_maxbytes', '5242880');
+        set_config('block_onlinesurvey_survey_pwd', 'server');
+        set_config('panopto_server', 'player.kent.ac.uk');
+        set_config('block_panopto_server_name1', 'player.kent.ac.uk');
+        set_config('block_panopto_application_key1', '5716aa06-a74c-42f8-8342-b368f9e5772f');
+        set_config('frontpage', '0');
+        set_config('frontpageloggedin', '0');
+
+        set_config('overduehandling_adv', '1', 'quiz');
+        set_config('graceperiodmin', '120', 'quiz');
+        set_config('questionsperpage_adv', '1', 'quiz');
+        set_config('shuffleanswers_adv', '1', 'quiz');
+        set_config('password_adv', '1', 'quiz');
+        set_config('agreement', 'By checking this box I certify that all material contained in this essay is my own work. I have not plagiarised from any source, including printed material and the Internet. This work, either as a whole or in part, has not previously been submitted for assessment at this, or any other institution, by myself or others. All direct quotation appears in inverted commas and all source material, whether directly or indirectly quoted, is clearly acknowledged as and when it occurs in references, as well as in the bibliography.\r\n\r\nThe University Academic Discipline Regulations are contained in Annex 10 to the Credit Framework\r\n(http://www.kent.ac.uk/teaching/qa/credit-framework/creditinfoannex10.html)', 'turnitintooltwo');
+        set_config('status', '0', 'enrol_guest');
+        set_config('status_adv', '1', 'enrol_guest');
+        set_config('typeoflogin', '2', 'local_mobile');
+        set_config('defaulttoggleiconsize', 'tc-small', 'format_topcoll');
     }
 }
