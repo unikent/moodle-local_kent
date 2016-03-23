@@ -32,6 +32,7 @@ class config
         $this->configure_20150313();
         $this->configure_20150415();
         $this->configure_20150416();
+        $this->configure_20150428();
         $this->configure_20150826();
         $this->configure_20151103();
         $this->configure_20151106();
@@ -119,11 +120,6 @@ class config
          */
         set_config('block_panopto_instance_name', 'Moodle');
         set_config('block_panopto_server_name', 'player.kent.ac.uk');
-
-        /**
-         * Streaming server.
-         */
-        set_config('strserver', 'cow.kent.ac.uk', 'mod_streamingvideo');
 
         /**
          * Turnitin.
