@@ -12,6 +12,7 @@
     <shortname>editingteacher</shortname>
     <shortname>teacher</shortname>
     <shortname>student</shortname>
+    <shortname>extexam</shortname>
   </allowassign>
   <allowoverride/>
   <allowswitch>

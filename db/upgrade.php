@@ -911,5 +911,14 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2016031500, 'local', 'kent');
     }
 
+    if ($oldversion < 2016032300) {
+        $roleman->allow_assign('extexam', array(
+            'support_staff'
+        ));
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2016032300, 'local', 'kent');
+    }
+
     return true;
 }
