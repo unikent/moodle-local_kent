@@ -110,11 +110,11 @@
     <allow>block/navigation:myaddinstance</allow>
     <allow>block/news_items:addinstance</allow>
     <allow>block/news_items:myaddinstance</allow>
+    <allow>block/onlinesurvey:addinstance</allow>
+    <allow>block/onlinesurvey:myaddinstance</allow>
     <allow>block/online_users:addinstance</allow>
     <allow>block/online_users:myaddinstance</allow>
     <allow>block/online_users:viewlist</allow>
-    <allow>block/onlinesurvey:addinstance</allow>
-    <allow>block/onlinesurvey:myaddinstance</allow>
     <allow>block/panopto:addinstance</allow>
     <allow>block/panopto:myaddinstance</allow>
     <allow>block/panopto:provision_course</allow>
@@ -137,10 +137,10 @@
     <allow>block/settings:myaddinstance</allow>
     <allow>block/site_main_menu:addinstance</allow>
     <allow>block/social_activities:addinstance</allow>
-    <allow>block/tag_flickr:addinstance</allow>
-    <allow>block/tag_youtube:addinstance</allow>
     <allow>block/tags:addinstance</allow>
     <allow>block/tags:myaddinstance</allow>
+    <allow>block/tag_flickr:addinstance</allow>
+    <allow>block/tag_youtube:addinstance</allow>
     <allow>block/turnitin:addinstance</allow>
     <allow>block/turnitin:myaddinstance</allow>
     <allow>booktool/exportimscp:export</allow>
@@ -649,18 +649,14 @@
     <allow>moodle/webservice:createtoken</allow>
     <allow>plagiarism/turnitin:enable</allow>
     <allow>plagiarism/turnitin:viewfullreport</allow>
-    <allow>plagiarism/turnitin:viewsimilarityscore</allow>
     <allow>quiz/grading:viewidnumber</allow>
     <allow>quiz/grading:viewstudentnames</allow>
     <allow>quiz/statistics:view</allow>
     <allow>report/completion:view</allow>
     <allow>report/courseoverview:view</allow>
-    <allow>report/filesize:view</allow>
     <allow>report/log:view</allow>
     <allow>report/log:viewtoday</allow>
     <allow>report/loglive:view</allow>
-    <allow>report/modulereport:view</allow>
-    <allow>report/modulevariance:view</allow>
     <allow>report/outline:view</allow>
     <allow>report/participation:view</allow>
     <allow>report/performance:view</allow>
@@ -668,7 +664,7 @@
     <allow>report/questioninstances:view</allow>
     <allow>report/security:view</allow>
     <allow>report/stats:view</allow>
-    <allow>report/studentactivity:view</allow>
+    <allow>report/turnitin:view</allow>
     <allow>report/usersessions:manageownsessions</allow>
     <allow>repository/alfresco:view</allow>
     <allow>repository/areafiles:view</allow>
@@ -677,8 +673,8 @@
     <allow>repository/dropbox:view</allow>
     <allow>repository/equella:view</allow>
     <allow>repository/filesystem:view</allow>
-    <allow>repository/flickr_public:view</allow>
     <allow>repository/flickr:view</allow>
+    <allow>repository/flickr_public:view</allow>
     <allow>repository/googledocs:view</allow>
     <allow>repository/local:view</allow>
     <allow>repository/merlot:view</allow>

@@ -23,9 +23,6 @@
     <shortname>extexam</shortname>
     <shortname>support_staff</shortname>
     <shortname>convenor</shortname>
-    <shortname>marker</shortname>
-    <shortname>readinglist</shortname>
-    <shortname>support</shortname>
     <shortname>is_helpdesk</shortname>
   </allowassign>
   <allowoverride/>
@@ -48,11 +45,6 @@
     <shortname>sds_convenor</shortname>
     <shortname>sds_teacher</shortname>
     <shortname>sds_student</shortname>
-    <shortname>marker</shortname>
-    <shortname>readinglist</shortname>
-    <shortname>support</shortname>
-    <shortname>staff</shortname>
-    <shortname>helpdesk_old</shortname>
   </allowswitch>
   <permissions>
     <inherit>block/activity_modules:addinstance</inherit>
@@ -86,8 +78,8 @@
     <inherit>block/myprofile:addinstance</inherit>
     <inherit>block/navigation:addinstance</inherit>
     <inherit>block/news_items:addinstance</inherit>
-    <inherit>block/online_users:addinstance</inherit>
     <inherit>block/onlinesurvey:addinstance</inherit>
+    <inherit>block/online_users:addinstance</inherit>
     <inherit>block/panopto:addinstance</inherit>
     <inherit>block/panopto:panoptocreator</inherit>
     <inherit>block/panopto:panoptoviewer</inherit>
@@ -108,9 +100,9 @@
     <inherit>block/settings:addinstance</inherit>
     <inherit>block/site_main_menu:addinstance</inherit>
     <inherit>block/social_activities:addinstance</inherit>
+    <inherit>block/tags:addinstance</inherit>
     <inherit>block/tag_flickr:addinstance</inherit>
     <inherit>block/tag_youtube:addinstance</inherit>
-    <inherit>block/tags:addinstance</inherit>
     <inherit>block/turnitin:addinstance</inherit>
     <inherit>booktool/exportimscp:export</inherit>
     <inherit>booktool/importhtml:import</inherit>
@@ -572,15 +564,11 @@
     <inherit>moodle/webservice:createtoken</inherit>
     <inherit>plagiarism/turnitin:enable</inherit>
     <inherit>plagiarism/turnitin:viewfullreport</inherit>
-    <inherit>plagiarism/turnitin:viewsimilarityscore</inherit>
     <inherit>quiz/grading:viewidnumber</inherit>
     <inherit>quiz/grading:viewstudentnames</inherit>
     <inherit>quiz/statistics:view</inherit>
     <inherit>report/completion:view</inherit>
     <inherit>report/courseoverview:view</inherit>
-    <inherit>report/filesize:view</inherit>
-    <inherit>report/modulereport:view</inherit>
-    <inherit>report/modulevariance:view</inherit>
     <inherit>report/outline:view</inherit>
     <inherit>report/participation:view</inherit>
     <inherit>report/performance:view</inherit>
@@ -588,6 +576,7 @@
     <inherit>report/questioninstances:view</inherit>
     <inherit>report/security:view</inherit>
     <inherit>report/stats:view</inherit>
+    <inherit>report/turnitin:view</inherit>
     <inherit>repository/coursefiles:view</inherit>
     <inherit>repository/filesystem:view</inherit>
     <inherit>repository/local:view</inherit>
@@ -623,9 +612,9 @@
     <allow>block/myprofile:myaddinstance</allow>
     <allow>block/navigation:myaddinstance</allow>
     <allow>block/news_items:myaddinstance</allow>
+    <allow>block/onlinesurvey:myaddinstance</allow>
     <allow>block/online_users:myaddinstance</allow>
     <allow>block/online_users:viewlist</allow>
-    <allow>block/onlinesurvey:myaddinstance</allow>
     <allow>block/panopto:myaddinstance</allow>
     <allow>block/private_files:myaddinstance</allow>
     <allow>block/recent_activity:viewaddupdatemodule</allow>
@@ -698,15 +687,14 @@
     <allow>report/log:view</allow>
     <allow>report/log:viewtoday</allow>
     <allow>report/loglive:view</allow>
-    <allow>report/studentactivity:view</allow>
     <allow>report/usersessions:manageownsessions</allow>
     <allow>repository/alfresco:view</allow>
     <allow>repository/areafiles:view</allow>
     <allow>repository/boxnet:view</allow>
     <allow>repository/dropbox:view</allow>
     <allow>repository/equella:view</allow>
-    <allow>repository/flickr_public:view</allow>
     <allow>repository/flickr:view</allow>
+    <allow>repository/flickr_public:view</allow>
     <allow>repository/googledocs:view</allow>
     <allow>repository/merlot:view</allow>
     <allow>repository/picasa:view</allow>

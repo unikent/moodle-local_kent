@@ -68,10 +68,10 @@
     <inherit>block/navigation:myaddinstance</inherit>
     <inherit>block/news_items:addinstance</inherit>
     <inherit>block/news_items:myaddinstance</inherit>
-    <inherit>block/online_users:addinstance</inherit>
-    <inherit>block/online_users:myaddinstance</inherit>
     <inherit>block/onlinesurvey:addinstance</inherit>
     <inherit>block/onlinesurvey:myaddinstance</inherit>
+    <inherit>block/online_users:addinstance</inherit>
+    <inherit>block/online_users:myaddinstance</inherit>
     <inherit>block/panopto:addinstance</inherit>
     <inherit>block/panopto:myaddinstance</inherit>
     <inherit>block/panopto:panoptocreator</inherit>
@@ -96,10 +96,10 @@
     <inherit>block/settings:myaddinstance</inherit>
     <inherit>block/site_main_menu:addinstance</inherit>
     <inherit>block/social_activities:addinstance</inherit>
-    <inherit>block/tag_flickr:addinstance</inherit>
-    <inherit>block/tag_youtube:addinstance</inherit>
     <inherit>block/tags:addinstance</inherit>
     <inherit>block/tags:myaddinstance</inherit>
+    <inherit>block/tag_flickr:addinstance</inherit>
+    <inherit>block/tag_youtube:addinstance</inherit>
     <inherit>block/turnitin:addinstance</inherit>
     <inherit>block/turnitin:myaddinstance</inherit>
     <inherit>booktool/exportimscp:export</inherit>
@@ -506,12 +506,10 @@
     <inherit>moodle/webservice:createmobiletoken</inherit>
     <inherit>moodle/webservice:createtoken</inherit>
     <inherit>plagiarism/turnitin:enable</inherit>
-    <inherit>report/filesize:view</inherit>
-    <inherit>report/modulevariance:view</inherit>
     <inherit>report/performance:view</inherit>
     <inherit>report/questioninstances:view</inherit>
     <inherit>report/security:view</inherit>
-    <inherit>report/studentactivity:view</inherit>
+    <inherit>report/turnitin:view</inherit>
     <inherit>report/usersessions:manageownsessions</inherit>
     <inherit>repository/alfresco:view</inherit>
     <inherit>repository/areafiles:view</inherit>
@@ -520,8 +518,8 @@
     <inherit>repository/dropbox:view</inherit>
     <inherit>repository/equella:view</inherit>
     <inherit>repository/filesystem:view</inherit>
-    <inherit>repository/flickr_public:view</inherit>
     <inherit>repository/flickr:view</inherit>
+    <inherit>repository/flickr_public:view</inherit>
     <inherit>repository/googledocs:view</inherit>
     <inherit>repository/local:view</inherit>
     <inherit>repository/merlot:view</inherit>
@@ -660,7 +658,6 @@
     <allow>moodle/user:viewdetails</allow>
     <allow>moodle/user:viewhiddendetails</allow>
     <allow>plagiarism/turnitin:viewfullreport</allow>
-    <allow>plagiarism/turnitin:viewsimilarityscore</allow>
     <allow>quiz/grading:viewidnumber</allow>
     <allow>quiz/grading:viewstudentnames</allow>
     <allow>quiz/statistics:view</allow>
@@ -669,7 +666,6 @@
     <allow>report/log:view</allow>
     <allow>report/log:viewtoday</allow>
     <allow>report/loglive:view</allow>
-    <allow>report/modulereport:view</allow>
     <allow>report/outline:view</allow>
     <allow>report/participation:view</allow>
     <allow>report/progress:view</allow>

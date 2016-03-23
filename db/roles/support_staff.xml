@@ -41,8 +41,8 @@
     <inherit>block/myprofile:myaddinstance</inherit>
     <inherit>block/navigation:myaddinstance</inherit>
     <inherit>block/news_items:myaddinstance</inherit>
-    <inherit>block/online_users:myaddinstance</inherit>
     <inherit>block/onlinesurvey:myaddinstance</inherit>
+    <inherit>block/online_users:myaddinstance</inherit>
     <inherit>block/panopto:myaddinstance</inherit>
     <inherit>block/panopto:panoptocreator</inherit>
     <inherit>block/panopto:provision_aspublisher</inherit>
@@ -187,20 +187,18 @@
     <inherit>moodle/user:viewuseractivitiesreport</inherit>
     <inherit>moodle/webservice:createmobiletoken</inherit>
     <inherit>moodle/webservice:createtoken</inherit>
-    <inherit>report/filesize:view</inherit>
-    <inherit>report/modulevariance:view</inherit>
     <inherit>report/performance:view</inherit>
     <inherit>report/questioninstances:view</inherit>
     <inherit>report/security:view</inherit>
-    <inherit>report/studentactivity:view</inherit>
+    <inherit>report/turnitin:view</inherit>
     <inherit>report/usersessions:manageownsessions</inherit>
     <inherit>repository/alfresco:view</inherit>
     <inherit>repository/areafiles:view</inherit>
     <inherit>repository/boxnet:view</inherit>
     <inherit>repository/dropbox:view</inherit>
     <inherit>repository/equella:view</inherit>
-    <inherit>repository/flickr_public:view</inherit>
     <inherit>repository/flickr:view</inherit>
+    <inherit>repository/flickr_public:view</inherit>
     <inherit>repository/googledocs:view</inherit>
     <inherit>repository/merlot:view</inherit>
     <inherit>repository/picasa:view</inherit>
@@ -252,9 +250,9 @@
     <allow>block/myprofile:addinstance</allow>
     <allow>block/navigation:addinstance</allow>
     <allow>block/news_items:addinstance</allow>
+    <allow>block/onlinesurvey:addinstance</allow>
     <allow>block/online_users:addinstance</allow>
     <allow>block/online_users:viewlist</allow>
-    <allow>block/onlinesurvey:addinstance</allow>
     <allow>block/panopto:addinstance</allow>
     <allow>block/panopto:panoptoviewer</allow>
     <allow>block/panopto:provision_asteacher</allow>
@@ -271,9 +269,9 @@
     <allow>block/settings:addinstance</allow>
     <allow>block/site_main_menu:addinstance</allow>
     <allow>block/social_activities:addinstance</allow>
+    <allow>block/tags:addinstance</allow>
     <allow>block/tag_flickr:addinstance</allow>
     <allow>block/tag_youtube:addinstance</allow>
-    <allow>block/tags:addinstance</allow>
     <allow>block/turnitin:addinstance</allow>
     <allow>booktool/importhtml:import</allow>
     <allow>booktool/print:print</allow>
@@ -659,7 +657,6 @@
     <allow>moodle/user:viewhiddendetails</allow>
     <allow>plagiarism/turnitin:enable</allow>
     <allow>plagiarism/turnitin:viewfullreport</allow>
-    <allow>plagiarism/turnitin:viewsimilarityscore</allow>
     <allow>quiz/grading:viewidnumber</allow>
     <allow>quiz/grading:viewstudentnames</allow>
     <allow>quiz/statistics:view</allow>
@@ -668,7 +665,6 @@
     <allow>report/log:view</allow>
     <allow>report/log:viewtoday</allow>
     <allow>report/loglive:view</allow>
-    <allow>report/modulereport:view</allow>
     <allow>report/outline:view</allow>
     <allow>report/participation:view</allow>
     <allow>report/progress:view</allow>
