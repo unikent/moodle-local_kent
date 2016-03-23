@@ -92,6 +92,43 @@ class role
     }
 
     /**
+     * Grab roles.
+     */
+    protected function grab_roles($roles) {
+        global $DB;
+
+        if ($roles == '*') {
+            return $DB->get_records('role', null, '', 'id');
+        }
+
+        if (is_array($roles)) {
+            list($sql, $params) = $DB->get_in_or_equal($roles, SQL_PARAMS_NAMED, 'shortname');
+            return $DB->get_records_select('role', 'shortname '. $sql, $params, '', 'id');
+        }
+
+        return $DB->get_records('role', array(
+            'shortname' => $roles
+        ), '', 'id');
+    }
+
+    /**
+     * Allow role assignments.
+     */
+    public function allow_assign($target, $roles) {
+        global $DB;
+
+        $roles = $this->grab_roles($roles);
+        $target = $this->grab_roles($target);
+        $target = reset($target);
+
+        foreach ($roles as $role) {
+            if (!$DB->record_exists('role_allow_assign', array('roleid' => $role->id, 'allowassign' => $target->id))) {
+                allow_assign($role->id, $target->id);
+            }
+        }
+    }
+
+    /**
      * Helper for add_capability and remove_capability.
      * @param $capability
      * @param $permission
@@ -103,20 +140,8 @@ class role
     private function set_capability($capability, $permission, $roles) {
         global $DB;
 
-        if ($roles == '*') {
-            $roles = $DB->get_records('role', null, '', 'id');
-        } else {
-            if (is_array($roles)) {
-                list($sql, $params) = $DB->get_in_or_equal($roles, SQL_PARAMS_NAMED, 'shortname');
-                $roles = $DB->get_records_select('role', 'shortname '. $sql, $params, '', 'id');
-            } else {
-                $roles = $DB->get_records('role', array(
-                    'shortname' => $roles
-                ), '', 'id');
-            }
-        }
-
         $context = \context_system::instance();
+        $roles = $this->grab_roles($roles);
         foreach ($roles as $role) {
             if (empty($permission)) {
                 unassign_capability($capability, $role->id);
