@@ -58,5 +58,14 @@ $tasks = array(
         'day' => '*',
         'dayofweek' => '*',
         'month' => '*'
+    ),
+    array(
+        'classname' => 'local_kent\task\geoip_sync',
+        'blocking' => 0,
+        'minute' => 'R',
+        'hour' => 'R',
+        'day' => 'R',
+        'dayofweek' => '*',
+        'month' => '*'
     )
 );
