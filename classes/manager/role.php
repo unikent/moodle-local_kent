@@ -51,7 +51,8 @@ class role
             'cla_viewer',
             'flt',
             'cla_admin',
-            'support'
+            'support',
+            'is_helpdesk'
         ),
         \CONTEXT_COURSECAT => array(
             'cla_viewer',
@@ -224,13 +225,20 @@ class role
     }
 
     /**
+     * Grab all shared roles.
+     */
+    public function get_shared() {
+        return static::$sharedroles;
+    }
+
+    /**
      * Is the roleid in our sphere of care?
      *
      * @param $shortname
      * @param null $contextlevel
      * @return bool
      */
-    public function is_managed($shortname, $contextlevel = null) {
+    public function is_shared($shortname, $contextlevel = null) {
         foreach (static::$sharedroles as $ctxlevel => $roles) {
             if ($contextlevel && $contextlevel != $ctxlevel) {
                 continue;
@@ -245,142 +253,12 @@ class role
     }
 
     /**
-     * Sync with SHAREDB.
-     */
-    public function sync() {
-        foreach (static::$sharedroles as $contextlevel => $roles) {
-            foreach ($roles as $shortname) {
-                $this->sync_role_type($contextlevel, $shortname);
-            }
-        }
-    }
-
-    /**
-     * Sync a given context and shortname.
-     *
-     * @param $contextlevel
-     * @param $shortname
-     */
-    private function sync_role_type($contextlevel, $shortname) {
-        global $SHAREDB;
-
-        throw new \coding_exception("This function is not currently usable.");
-
-        // Get all shared roles.
-        $shared = $SHAREDB->get_records('shared_roles', array(
-            'contextlevel' => $contextlevel,
-            'shortname' => $shortname
-        ));
-
-        // Group by context.
-        $contexts = array();
-        foreach ($shared as $sharedrole) {
-            if (!in_array($sharedrole->contextname, $contexts)) {
-                $contexts[] = $sharedrole->contextname;
-            }
-        }
-
-        foreach ($contexts as $contextname) {
-            $this->sync_role_context($contextlevel, $contextname, $shortname);
-        }
-    }
-
-    /**
-     * Sync a given context and shortname.
-     * @param $contextlevel
-     * @param $contextname
-     * @param $shortname
-     * @throws \coding_exception
-     */
-    private function sync_role_context($contextlevel, $contextname, $shortname) {
-        global $DB, $SHAREDB;
-
-        throw new \coding_exception("This function is not currently usable.");
-
-        // Resolve local context.
-        $context = $this->get_context($contextlevel, $contextname);
-        if (!$context) {
-            return;
-        }
-
-        // Resolve local role.
-        $role = $DB->get_record('role', array('shortname' => $shortname));
-        if (!$role) {
-            return;
-        }
-
-        // Get all shared roles.
-        $shared = $SHAREDB->get_records('shared_roles', array(
-            'contextlevel' => $contextlevel,
-            'contextname' => $contextname,
-            'shortname' => $shortname
-        ));
-
-        $processed = array();
-        foreach ($shared as $sharedrole) {
-            // Grab user.
-            $userid = $this->get_userid($sharedrole->username);
-            if (!$userid) {
-                continue;
-            }
-
-            // Ensure the enrolment exists!
-            if (!user_has_role_assignment($userid, $role->id, $context->id)) {
-                role_assign($role->id, $userid, $context->id);
-            }
-
-            $processed[] = $userid;
-        }
-
-        // Get all local role assignments.
-        $local = $DB->get_records('role_assignments', array(
-            'roleid' => $role->id,
-            'contextid' => $context->id
-        ));
-        foreach ($local as $localra) {
-            if (!in_array($localra->userid, $processed)) {
-                if (user_has_role_assignment($localra->userid, $role->id, $context->id)) {
-                    role_unassign($role->id, $localra->userid, $context->id);
-                }
-            }
-        }
-    }
-
-    /**
-     * Resolve shared context-isms.
-     * @param $contextlevel
-     * @param $ident
-     * @return \context_coursecat|\context_system|null
-     * @throws \Exception
-     * @throws \dml_exception
-     */
-    private function get_context($contextlevel, $ident) {
-        global $DB;
-
-        if ($contextlevel == \CONTEXT_SYSTEM) {
-            return \context_system::instance();
-        }
-
-        if ($contextlevel == \CONTEXT_COURSECAT) {
-            $coursecat = $DB->get_record('course_categories', array(
-                'idnumber' => $ident
-            ));
-
-            if ($coursecat) {
-                return \context_coursecat::instance($coursecat->id);
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Get a user ID for a username.
      * @param $username
      * @return
      * @throws \moodle_exception
      */
-    private function get_userid($username) {
+    public function get_userid($username) {
         global $CFG, $DB, $SHAREDB;
 
         static $cache = array();
