@@ -163,6 +163,15 @@ class config
         set_config('grade_report_showlocks', '1');
         set_config('grade_report_showuserimage', '0');
         set_config('messaginghidereadnotifications', '1');
+
+        $this->configure_av();
+    }
+
+    /**
+     * Support Moodle 3.1 antivirus plugins.
+     */
+    public function configure_av() {
+        set_config('antiviruses', 'clamav');
     }
 
     /**
