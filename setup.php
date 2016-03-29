@@ -38,9 +38,13 @@ $SDSDB = new \local_connect\sds\sdsdb();
 // Shared dataroot.
 $CFG->shareddataroot = realpath($CFG->shareddataroot);
 if ($CFG->shareddataroot === false) {
-    try {
-        make_writable_directory($CFG->shareddataroot);
-    } catch (\invalid_dataroot_permissions $e) {
+    if (function_exists('make_writable_directory')) {
+        try {
+            make_writable_directory($CFG->shareddataroot);
+        } catch (\invalid_dataroot_permissions $e) {
+            unset($CFG->shareddataroot);
+        }
+    } else {
         unset($CFG->shareddataroot);
     }
 }
