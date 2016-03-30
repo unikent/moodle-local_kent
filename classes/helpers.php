@@ -28,12 +28,15 @@ class helpers
      *
      * @param string $moodleinstallation The name of the installation to execute the script against (e.g. 2015).
      * @param string $script The relative script name (e.g. /admin/cli/upgrade.php).
+     * @param array $args An array of arguments (note: they will be escaped by escapeshellcmd).
      */
-    public static function execute_script_on($moodleinstallation, $script) {
+    public static function execute_script_on($moodleinstallation, $script, $args = []) {
         global $CFG;
 
         $moodleinstallation = escapeshellcmd($moodleinstallation);
         $script = escapeshellcmd($script);
+        $args = array_map('escapeshellcmd', $args);
+        $args = implode(' ', $args);
 
         $dirroot = '/var/www/vhosts/' . KENT_VHOST . '/public/' . $moodleinstallation;
         if (!file_exists($dirroot)) {
@@ -46,7 +49,7 @@ class helpers
         }
 
         $ret = '';
-        passthru("/usr/bin/php {$filename}", $ret);
+        passthru("/usr/bin/php {$filename} {$args}", $ret);
 
         return $ret;
     }
