@@ -33,6 +33,10 @@ class helpers
     public static function execute_script_on($moodleinstallation, $script, $args = []) {
         global $CFG;
 
+        if (defined("PHPUNIT_TEST") && PHPUNIT_TEST) {
+            return true;
+        }
+
         $moodleinstallation = escapeshellcmd($moodleinstallation);
         $script = escapeshellcmd($script);
         $args = array_map('escapeshellcmd', $args);
