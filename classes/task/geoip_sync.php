@@ -38,7 +38,9 @@ class geoip_sync extends \core\task\scheduled_task
 
         require_once($CFG->libdir . '/filelib.php');
 
-        make_writable_directory("{$CFG->dataroot}/geoip");
+	if (!file_exists("{$CFG->dataroot}/geoip")) {
+        	make_writable_directory("{$CFG->dataroot}/geoip");
+	}
 
         $dir = make_request_directory();
         $filepath = "{$dir}/GeoLiteCity.dat.gz";
