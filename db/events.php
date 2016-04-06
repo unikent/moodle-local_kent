@@ -18,12 +18,11 @@
  * Local stuff for Kent
  *
  * @package    local_kent
- * @copyright  2015 Skylar Kelty <S.Kelty@kent.ac.uk>
+ * @copyright  2016 Skylar Kelty <S.Kelty@kent.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $observers = array (
-
     array (
         'eventname' => '\core\event\course_created',
         'callback' => '\local_kent\observers::course_created',
@@ -35,16 +34,6 @@ $observers = array (
     ),
 
     array (
-        'eventname' => '\core\event\course_module_deleted',
-        'callback' => '\local_kent\observers::course_module_deleted',
-    ),
-
-    array (
-        'eventname' => '\core\event\user_enrolment_created',
-        'callback' => '\local_kent\observers::user_enrolment_created',
-    ),
-
-    array (
         'eventname' => '\core\event\user_updated',
         'callback' => '\local_kent\observers::user_updated',
     ),
@@ -52,11 +41,6 @@ $observers = array (
     array (
         'eventname' => '\core\event\course_deleted',
         'callback' => '\local_kent\observers::course_deleted',
-    ),
-
-    array (
-        'eventname' => '\core\event\user_enrolment_deleted',
-        'callback' => '\local_kent\observers::user_enrolment_deleted',
     ),
 
     array (
