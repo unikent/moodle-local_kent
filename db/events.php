@@ -51,5 +51,10 @@ $observers = array (
     array (
         'eventname' => '\local_rollover\event\rollover_finished',
         'callback'  => '\local_kent\observers::rollover_finished',
+    ),
+
+    array (
+        'eventname' => '\tool_recyclebin\event\course_bin_item_created',
+        'callback'  => '\local_kent\observers::course_bin_item_created',
     )
 );

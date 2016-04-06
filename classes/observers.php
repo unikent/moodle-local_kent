@@ -139,4 +139,43 @@ class observers
             'context' => \context_course::instance($event->courseid)
         ));
     }
+
+    /**
+     * Triggered when a recyclebin item has been created.
+     *
+     * @param \tool_recyclebin\event\course_bin_item_created $event
+     */
+    public static function course_bin_item_created(\tool_recyclebin\event\course_bin_item_created $event) {
+        global $CFG, $DB;
+
+        if (empty($CFG->shareddataroot)) {
+            return;
+        }
+
+        $protect = array('quiz', 'turnitintool', 'turnitintooltwo');
+
+        // Is this a quiz?
+        $record = $DB->get_record_sql('SELECT trc.*, m.name as modulename
+            FROM {tool_recyclebin_course} trc
+            INNER JOIN {modules} m ON m.id = trc.module
+        ', array('id' => $event->objectid));
+
+        if ($record && in_array($record->modulename, $protect)) {
+            // We need to protect this!
+            $fs = get_file_storage();
+            $files = $fs->get_area_files($event->get_context()->id, 'tool_recyclebin', TOOL_RECYCLEBIN_COURSE_BIN_FILEAREA,
+                $event->objectid, 'itemid, filepath, filename', false);
+            if (empty($files)) {
+                return;
+            }
+
+            $newfilename = "{$CFG->kent->distribution}_{$record->modulename}_{$record->courseid}_{$record->name}";
+            if (!file_exists("{$CFG->shareddataroot}/backups")) {
+                make_writable_directory("{$CFG->shareddataroot}/backups");
+            }
+
+            $file = reset($files);
+            $file->copy_content_to("{$CFG->shareddataroot}/backups/{$newfilename}");
+        }
+    }
 }
