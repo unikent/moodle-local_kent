@@ -70,15 +70,19 @@ class User
     /**
      * Returns a user preference.
      */
-    public static function get_all_infodata() {
+    public static function get_all_infodata($userid = null) {
         global $DB, $USER;
 
-        if (!isloggedin()) {
+        if (!isloggedin() && empty($userid)) {
             return null;
         }
 
+        if (empty($userid)) {
+            $userid = $USER->id;
+        }
+
         $cache = \cache::make('local_kent', 'userprefs');
-        $content = $cache->get($USER->id . "_prefs");
+        $content = $cache->get($userid . "_prefs");
 
         if (!$content) {
             $content = array();
@@ -92,14 +96,14 @@ class User
                     uid.userid = :userid
 SQL;
             $prefs = $DB->get_records_sql($sql, array(
-                'userid' => $USER->id
+                'userid' => $userid
             ));
 
             foreach ($prefs as $pref) {
                 $content[$pref->name] = $pref->value;
             }
 
-            $cache->set($USER->id . "_prefs", $content);
+            $cache->set($userid . "_prefs", $content);
         }
 
         return $content;
