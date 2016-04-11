@@ -52,3 +52,6 @@ symlink("{$CFG->dirroot}/theme/kent/pages/climaintenance.html", $path);
 
 // Re-check nagios.
 \local_nagios\Core::regenerate_list();
+
+// Re-generate tutorials list.
+\local_tutorials\loader::update();
