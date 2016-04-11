@@ -24,10 +24,19 @@ if ($user['name'] !== 'w3moodle') {
     die("This script must be run as w3moodle.");
 }
 
+// Check this isn't a brand new installation!
+if (!core_tables_exist()) {
+    die("No core tables, will exit.");
+}
+
 /*
  * Post deploy hooks.
  * This is run as w3moodle (magic!).
  */
+
+ // Reset caches.
+ cache_helper::purge_all(true);
+ purge_all_caches();
 
 // Signal supervisord to restart.
 $beanstalkv = $DB->get_field('config', 'value', array('name' => 'beanstalk_deploy'));
@@ -60,4 +69,7 @@ symlink("{$CFG->dirroot}/theme/kent/pages/climaintenance.html", $path);
 // We might need to upgrade!
 if (moodle_needs_upgrading()) {
     cli_writeln("Moodle needs upgrading!");
+    require_once($CFG->libdir . '/upgradelib.php');
+
+    // We could upgrade manually here..
 }
