@@ -17,6 +17,7 @@
 define('CLI_SCRIPT', true);
 
 require_once(dirname(__FILE__) . '/../../../config.php');
+require_once($CFG->libdir . '/clilib.php');
 
 $user = posix_getpwuid(posix_geteuid());
 if ($user['name'] !== 'w3moodle') {
@@ -55,3 +56,8 @@ symlink("{$CFG->dirroot}/theme/kent/pages/climaintenance.html", $path);
 
 // Re-generate tutorials list.
 \local_tutorials\loader::update();
+
+// We might need to upgrade!
+if (moodle_needs_upgrading()) {
+    cli_writeln("Moodle needs upgrading!");
+}
