@@ -867,7 +867,7 @@ $kentcategories = array(
     ),
     55 => array(
         "id" => 55,
-        "name" => "History & Philosophy of Art (HA)",
+        "name" => "History of Art (HA)",
         "idnumber" => "55",
         "description" => "",
         "descriptionformat" => 1,
