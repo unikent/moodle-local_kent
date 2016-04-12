@@ -14,11 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+// Force OPcache reset if used, we do not want any stale caches
+// when detecting if upgrade necessary or when running upgrade.
+if (function_exists('opcache_reset') and !isset($_SERVER['REMOTE_ADDR'])) {
+    opcache_reset();
+}
+
 define('CLI_SCRIPT', true);
+define('CACHE_DISABLE_ALL', true);
 
 require_once(dirname(__FILE__) . '/../../../config.php');
+require_once($CFG->libdir.'/adminlib.php');
 require_once($CFG->libdir . '/clilib.php');
 require_once($CFG->libdir . '/upgradelib.php');
+require_once($CFG->libdir . '/environmentlib.php');
 
 $user = posix_getpwuid(posix_geteuid());
 if ($user['name'] !== 'w3moodle') {
