@@ -44,24 +44,6 @@ if (!core_tables_exist()) {
  * This is run as w3moodle (magic!).
  */
 
- // Reset caches.
- cache_helper::purge_all(true);
- purge_all_caches();
-
-// Signal supervisord to restart.
-$beanstalkv = $DB->get_field('config', 'value', array('name' => 'beanstalk_deploy'));
-if (!$beanstalkv) {
-    $DB->insert_record('config', array(
-        'name' => 'beanstalk_deploy',
-        'value' => 1
-    ));
-} else {
-    $DB->set_field('config', 'value', $beanstalkv + 1, array('name' => 'beanstalk_deploy'));
-}
-
-// A kick will cause all workers to reload.
-\tool_adhoc\beanstalk::kick_workers();
-
 // Re-symlink the climaintenance template.
 $path = "{$CFG->dataroot}/climaintenance.template.html";
 if (file_exists($path) || is_link($path)) {
@@ -70,15 +52,63 @@ if (file_exists($path) || is_link($path)) {
 
 symlink("{$CFG->dirroot}/theme/kent/pages/climaintenance.html", $path);
 
+ // Reset caches.
+ cache_helper::purge_all(true);
+ purge_all_caches();
+
+// Check for any upgrades.
+if (moodle_needs_upgrading()) {
+    cli_writeln("Moodle {$CFG->kent->distribution} needs upgrading!");
+
+    require("$CFG->dirroot/version.php");
+
+    // Environment checks.
+    list($envstatus, $environment_results) = check_moodle_environment(normalize_version($release), ENV_SELECT_RELEASE);
+    if (!$envstatus || !core_plugin_manager::instance()->all_plugins_ok($version, $failed) || (
+        isset($maturity) && $maturity < MATURITY_STABLE && $CFG->kent->distribution !== 'future' && $CFG->kent->distribution !== 'future-demo')) {
+        cli_error("Bad deploy! Not upgrading.");
+    }
+
+    // Upgrade core.
+    if ($version > $CFG->version) {
+        upgrade_core($version, true);
+        set_config('release', $release);
+        set_config('branch', $branch);
+    }
+
+    // Upgrade non-core plugins.
+    upgrade_noncore(true);
+
+    // Log in as admin - we need doanything permission when applying defaults.
+    \core\session\manager::set_user(get_admin());
+
+    // Apply all default settings, just in case do it twice to fill all defaults.
+    admin_apply_default_settings(NULL, false);
+    admin_apply_default_settings(NULL, false);
+
+    // Make sure we are ok now.
+    cache_helper::purge_all(true);
+    if (moodle_needs_upgrading()) {
+        cli_writeln("Moodle {$CFG->kent->distribution} still needs upgrading!");
+    }
+}
+
+// Signal supervisord to restart.
+$beanstalkv = $DB->get_field('config', 'value', array('name' => 'beanstalk_deploy'));
+if (!$beanstalkv) {
+   $DB->insert_record('config', array(
+       'name' => 'beanstalk_deploy',
+       'value' => 1
+   ));
+} else {
+   $DB->set_field('config', 'value', $beanstalkv + 1, array('name' => 'beanstalk_deploy'));
+}
+
+// A kick will cause all workers to reload.
+\tool_adhoc\beanstalk::kick_workers();
+
 // Re-check nagios.
 \local_nagios\Core::regenerate_list();
 
 // Re-generate tutorials list.
 \local_tutorials\loader::update();
-
-// We might need to upgrade!
-if (moodle_needs_upgrading()) {
-    cli_writeln("Moodle needs upgrading!");
-
-    // We could upgrade manually here..
-}
