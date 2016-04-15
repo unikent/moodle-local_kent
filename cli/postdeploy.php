@@ -104,9 +104,6 @@ if (!$beanstalkv) {
    $DB->set_field('config', 'value', $beanstalkv + 1, array('name' => 'beanstalk_deploy'));
 }
 
-// A kick will cause all workers to reload.
-\tool_adhoc\beanstalk::kick_workers();
-
 // Re-check nagios.
 \local_nagios\Core::regenerate_list();
 
