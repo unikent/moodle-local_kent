@@ -45,15 +45,16 @@ class preference_form extends \moodleform
 
         $mform->addElement('header', 'accesssettings', 'Accessibility Settings');
         $mform->addElement('checkbox', 'kent_theme_contrast', 'Contrast mode');
+        $mform->addElement('select', 'kent_theme_zoom', 'Zoom level', array(
+            '1' => 'Standard',
+            '2' => 'High',
+            '3' => 'Highest'
+        ));
         $mform->setExpanded('accesssettings');
 
         $mform->addElement('header', 'betasettings', 'Beta Programs');
         $mform->addElement('html', '<div class="alert alert-warning"><i class="fa fa-warning"></i> These options are not well tested and may not work properly!</div>');
-        //$mform->addElement('checkbox', 'kent_theme_global_nav', 'Global nav', 'Enables a new global navigation bar.');
-        if (has_capability('moodle/site:config', \context_system::instance()) || \local_kent\User::is_dep_admin($USER->id)) {
-            $mform->addElement('checkbox', 'kent_beta_connect', 'DA Pages', 'Enables access to the new DA pages.');
-        }
-        $mform->setExpanded('betasettings');
+        $mform->addElement('checkbox', 'kent_beta', 'General', 'Receive any bleeding-edge features as they become available.');
 
         $this->add_action_buttons(true);
     }

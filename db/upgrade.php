@@ -934,5 +934,12 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2016032900, 'local', 'kent');
     }
 
+    if ($oldversion < 2016043102) {
+        \local_kent\manager\abtest::finish_test('kent_beta_connect');
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2016043102, 'local', 'kent');
+    }
+
     return true;
 }

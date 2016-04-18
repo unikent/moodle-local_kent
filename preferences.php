@@ -35,13 +35,15 @@ if ($data = $form->get_data()) {
     $arr = (array)$data;
     unset($arr['submitbutton']);
 
-    // Update and remove.
+    // Remove old vals.
     foreach ($USER->preference as $k => $v) {
         if (strpos($k, 'kent') !== 0 || strpos($k, 'isexpanded') !== false) {
             continue;
         }
 
-        set_user_preference($k, (isset($arr[$k]) ? '1' : '0'));
+        if (!isset($arr[$k])) {
+            set_user_preference($k, null);
+        }
     }
 
     // Add new prefs.
@@ -50,9 +52,12 @@ if ($data = $form->get_data()) {
             continue;
         }
 
-        if (!isset($USER->preference[$k])) {
-            set_user_preference($k, 1);
+        $val = $arr[$k];
+        if ($val <= 1) {
+            $val = '1';
         }
+
+        set_user_preference($k, $val);
     }
 
     redirect($PAGE->url);
