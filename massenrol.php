@@ -22,6 +22,9 @@ $PAGE->set_context(context_system::instance());
 $PAGE->set_url('/local/kent/massenrol.php');
 $PAGE->set_title("Mass-Enrol tool");
 
+$PAGE->requires->js(new \moodle_url('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js'));
+$PAGE->requires->css(new \moodle_url('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.min.css'));
+
 require_capability('moodle/site:config', $PAGE->context);
 
 // Form setup.
@@ -68,6 +71,15 @@ echo $OUTPUT->heading("Mass-Enrol tool");
 echo \html_writer::tag("p", "This tool will mass-enrol users on courses, in a specified role.");
 
 $form->display();
+
+echo <<<HTML5
+<script>
+$(function() {
+    // Chosen support!
+    $("select.chosen").chosen();
+});
+</script>
+HTML5;
 
 // Output footer.
 echo $OUTPUT->footer();
