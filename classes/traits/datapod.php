@@ -154,4 +154,11 @@ trait datapod
 
         return $table;
     }
+
+    /**
+     * Returns raw data to var_dump.
+     */
+    public function __debugInfo() {
+        return $this->_data;
+    }
 }
