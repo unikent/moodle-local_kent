@@ -345,6 +345,8 @@ trait databasepod
                 $prettymethod = "_pretty_" . $k;
                 if (method_exists($this, $prettymethod)) {
                     $v = $this->$prettymethod();
+                } else {
+                    $v = nl2br($v);
                 }
 
                 $table->add_data(array($k, $v));
