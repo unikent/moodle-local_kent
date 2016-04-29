@@ -18,13 +18,13 @@
  * Local stuff for Moodle Kent
  *
  * @package    local_kent
- * @copyright  2015 Skylar Kelty <S.Kelty@kent.ac.uk>
+ * @copyright  2016 Skylar Kelty <S.Kelty@kent.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-global $SHAREDB, $SDSDB;
+global $SHAREDB, $SDSDB, $SITSDB;
 
 require_once(dirname(__FILE__) . "/classes/util/sharedb.php");
 $SHAREDB = new \local_kent\util\sharedb();
@@ -32,8 +32,8 @@ $SHAREDB = new \local_kent\util\sharedb();
 require_once(dirname(__FILE__) . "/../connect/classes/sds/sdsdb.php");
 $SDSDB = new \local_connect\sds\sdsdb();
 
-//require_once(dirname(__FILE__) . "/../connect/classes/sits/sitsdb.php");
-//$SITSDB = new \local_connect\sits\sitsdb();
+require_once(dirname(__FILE__) . "/../connect/classes/sits/sitsdb.php");
+$SITSDB = new \local_connect\sits\sitsdb();
 
 // Shared dataroot.
 $CFG->shareddataroot = realpath($CFG->shareddataroot);
