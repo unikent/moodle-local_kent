@@ -79,7 +79,7 @@ if (moodle_needs_upgrading()) {
     // Upgrade non-core plugins.
     upgrade_noncore(true);
 
-    // Log in as admin - we need doanything permission when applying defaults.
+    // Log in as admin - we need "doanything" permission when applying defaults.
     \core\session\manager::set_user(get_admin());
 
     // Apply all default settings, just in case do it twice to fill all defaults.

@@ -57,4 +57,19 @@ class helpers
 
         return $ret;
     }
+
+    /**
+     * Set a cli user.
+     */
+    public static function cli_set_user() {
+        global $DB;
+
+        $username = exec('logname');
+        $user = $DB->get_record('user', array('username' => $username));
+        if (!$user) {
+            $user = get_admin();
+        }
+
+        \core\session\manager::set_user($user);
+    }
 }

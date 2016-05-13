@@ -48,22 +48,7 @@ $backuppath = $CFG->tempdir . '/backup/' . $options['category'];
 fulldelete($backuppath);
 make_writable_directory($backuppath);
 
-
-cli_heading("Running Category Backup" . ($options['compatibility'] ? ' (compatibility mode)' : ''));
-
-$username = exec('logname');
-$user = $DB->get_record('user', array(
-    'username' => $username
-));
-
-if ($user) {
-    echo "Detected user: {$user->username}.\n";
-} else {
-    $user = get_admin();
-    echo "No valid username detected - using admin.\n";
-}
-
-\core\session\manager::set_user($user);
+\local_kent\helpers::cli_set_user();
 
 $courses = $DB->get_fieldset_sql("
     SELECT c.id FROM {course} c
@@ -79,6 +64,7 @@ $courses = $DB->get_fieldset_sql("
 $files = array();
 $prefs = array();
 
+cli_heading("Running Category Backup" . ($options['compatibility'] ? ' (compatibility mode)' : ''));
 foreach ($courses as $course) {
     cli_separator();
     echo "Backing up course $course...\n";
