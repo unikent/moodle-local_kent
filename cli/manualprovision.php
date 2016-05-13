@@ -68,5 +68,9 @@ foreach ($courses as $course) {
     $obj->summary = $course->summary;
     $obj->format = $course->format;
     $obj->visible = 0;
-    $course = create_course($obj);
+
+    cli_writeln("Creating course {$obj->shortname }...");
+    if (!$options['dry']) {
+        create_course($obj);
+    }
 }
