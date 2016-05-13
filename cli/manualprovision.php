@@ -47,17 +47,17 @@ raise_memory_limit(MEMORY_HUGE);
 // Grab a list of courses.
 $moodle = $options['moodle'];
 $sql = <<<SQL
-    SELECT c.id, c.fullname, c.summary, c.format, cc.idnumber
+    SELECT c.id, c.shortname, c.fullname, c.summary, c.format, cc.idnumber
     FROM moodle_{$moodle}.mdl_course c
-    INNER JOIN moodle_2014.mdl_course_categories cc
+    INNER JOIN moodle_{$moodle}.mdl_course_categories cc
         ON cc.id=c.category
-    WHERE c.shortname LIKE "DP%" AND cc.idnumber <> NULL
+    WHERE c.shortname LIKE :shortname AND cc.idnumber IS NOT NULL
 SQL;
-$courses = $DB->get_records_sql($sql);
+$courses = $DB->get_records_sql($sql, array('shortname' => 'DP%'));
 foreach ($courses as $course) {
     $cat = $DB->get_record('course_categories', array('idnumber' => $course->idnumber));
     if (!$cat) {
-        echo "$id is not valid (category).\n";
+        cli_writeln("{$course->shortname} does not have a valid category.");
         continue;
     }
 
@@ -69,7 +69,7 @@ foreach ($courses as $course) {
     $obj->format = $course->format;
     $obj->visible = 0;
 
-    cli_writeln("Creating course {$obj->shortname }...");
+    cli_writeln("Creating course {$obj->shortname}...");
     if (!$options['dry']) {
         create_course($obj);
     }
