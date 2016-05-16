@@ -59,6 +59,35 @@ class helpers
     }
 
     /**
+     * Returns a Moodle-in-Moodle DB.
+     */
+    public static function get_db($env, $dist) {
+        global $CFG;
+
+        // Get MIM config.
+        $mimcfg = $CFG->dbcfg[$env][$dist];
+
+        static $dbs = array();
+        if (!isset($dbs["{$env}_{$dist}"])) {
+            if (!$db = \moodle_database::get_driver_instance($mimcfg->dbtype, $mimcfg->dblibrary, true)) {
+                throw new \dml_exception('dbdriverproblem', "Unknown driver for kent");
+            }
+
+            $db->connect(
+                $mimcfg->dbhost,
+                $mimcfg->dbuser,
+                $mimcfg->dbpass,
+                $mimcfg->prefix,
+                $mimcfg->dboptions
+            );
+
+            $dbs["{$env}_{$dist}"] = $db;
+        }
+
+        return $dbs["{$env}_{$dist}"];
+    }
+
+    /**
      * Set a cli user.
      */
     public static function cli_set_user() {
