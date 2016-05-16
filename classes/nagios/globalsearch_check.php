@@ -30,7 +30,7 @@ namespace local_kent\nagios;
 class globalsearch_check extends \local_nagios\base_check
 {
     public function execute() {
-        if (\core_search\manager::is_global_search_enabled()) {
+        if (class_exists("\\core_search\\manager") && \core_search\manager::is_global_search_enabled()) {
             try {
                 $search = \core_search\manager::instance();
             } catch (\moodle_exception $e) {

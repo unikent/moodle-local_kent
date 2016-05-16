@@ -36,7 +36,7 @@ class index_globalsearch extends \core\task\adhoc_task
     public function execute() {
         $data = (array)$this->get_custom_data();
 
-        if (!\core_search\manager::is_global_search_enabled()) {
+        if (!class_exists("\\core_search\\manager") || !\core_search\manager::is_global_search_enabled()) {
             return true;
         }
 

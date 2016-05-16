@@ -35,7 +35,7 @@ class check_globalsearch extends \core\task\scheduled_task
     }
 
     public function execute() {
-        if (\core_search\manager::is_global_search_enabled()) {
+        if (class_exists("\\core_search\\manager") && \core_search\manager::is_global_search_enabled()) {
             try {
                 $search = \core_search\manager::instance();
             } catch (\core_search\engine_exception $e) {
