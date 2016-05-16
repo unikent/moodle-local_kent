@@ -47,19 +47,19 @@ class sharedb {
             return true;
         }
 
-        if (!$SHAREDB = \moodle_database::get_driver_instance($CFG->kent->sharedb['driver'],
-                                                              $CFG->kent->sharedb['library'],
+        if (!$SHAREDB = \moodle_database::get_driver_instance($CFG->dbcfg[KENT_ENV]['shared']['dbdriver'],
+                                                              $CFG->dbcfg[KENT_ENV]['shared']['dblibrary'],
                                                               true)) {
             throw new \dml_exception('dbdriverproblem', "Unknown driver for kent");
         }
 
         $SHAREDB->connect(
-            $CFG->kent->sharedb['host'],
-            $CFG->kent->sharedb['user'],
-            $CFG->kent->sharedb['pass'],
-            $CFG->kent->sharedb['name'],
-            $CFG->kent->sharedb['prefix'],
-            $CFG->kent->sharedb['options']
+            $CFG->dbcfg[KENT_ENV]['shared']['dbhost'],
+            $CFG->dbcfg[KENT_ENV]['shared']['dbuser'],
+            $CFG->dbcfg[KENT_ENV]['shared']['dbpass'],
+            $CFG->dbcfg[KENT_ENV]['shared']['dbname'],
+            $CFG->dbcfg[KENT_ENV]['shared']['dbprefix'],
+            $CFG->dbcfg[KENT_ENV]['shared']['dboptions']
         );
 
         static::$setup = true;
@@ -92,7 +92,7 @@ class sharedb {
     public static function available() {
         global $CFG;
 
-        return !empty($CFG->kent->sharedb['user']);
+        return !empty($CFG->dbcfg[KENT_ENV]['shared']['dbuser']);
     }
 
     /**
