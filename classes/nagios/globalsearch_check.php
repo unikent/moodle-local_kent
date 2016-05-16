@@ -15,18 +15,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Local stuff for Kent
+ * Local stuff for Moodle Kent
  *
  * @package    local_kent
  * @copyright  2016 Skylar Kelty <S.Kelty@kent.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$nagios = array(
-    array(
-        'classname' => 'local_kent\nagios\cache_check'
-    ),
-    array(
-        'classname' => 'local_kent\nagios\globalsearch_check'
-    )
-);
+namespace local_kent\nagios;
+
+/**
+ * Checks global search.
+ */
+class globalsearch_check extends \local_nagios\base_check
+{
+    public function execute() {
+        if (\core_search\manager::is_global_search_enabled()) {
+            try {
+                $search = \core_search\manager::instance();
+            } catch (\moodle_exception $e) {
+                $this->error($e->getMessage());
+            }
+        }
+    }
+}
