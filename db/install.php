@@ -33,7 +33,7 @@ function xmldb_local_kent_install() {
     // Install SHAREDB if needs be.
     if (\local_kent\util\sharedb::available()) {
         $sharedbman = $SHAREDB->get_manager();
-        $table = new xmldb_table("shared_courses");
+        $table = new xmldb_table("courses");
         if (!$sharedbman->table_exists($table)) {
             $sharedbman->install_from_xmldb_file(dirname(__FILE__) . '/sharedb.xml');
         }

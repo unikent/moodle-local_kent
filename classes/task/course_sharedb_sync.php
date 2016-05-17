@@ -18,7 +18,7 @@
  * Local stuff for Moodle Kent
  *
  * @package    local_kent
- * @copyright  2015 Skylar Kelty <S.Kelty@kent.ac.uk>
+ * @copyright  2016 Skylar Kelty <S.Kelty@kent.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,7 +30,7 @@ namespace local_kent\task;
 class course_sharedb_sync extends \core\task\scheduled_task
 {
     public function get_name() {
-        return "Course ShareDB Sync";
+        return 'Course ShareDB Sync';
     }
 
     public function execute() {
@@ -48,22 +48,22 @@ class course_sharedb_sync extends \core\task\scheduled_task
         $adminset = array();
         foreach ($courses as $item) {
             $courseset[] = array(
-                "moodle_env" => $CFG->kent->environment,
-                "moodle_dist" => $CFG->kent->distribution,
-                "moodle_id" => $item->id,
-                "shortname" => $item->shortname,
-                "fullname" => $item->fullname,
-                "summary" => $item->summary
+                'moodle_env' => $CFG->kent->environment,
+                'moodle_dist' => $CFG->kent->distribution,
+                'moodle_id' => $item->id,
+                'shortname' => $item->shortname,
+                'fullname' => $item->fullname,
+                'summary' => $item->summary
             );
 
             $ctx = \context_course::instance($item->id);
             $users = get_users_by_capability($ctx, 'moodle/course:update', 'u.id, u.username');
             foreach ($users as $user) {
                 $adminset[] = array(
-                    "moodle_env" => $CFG->kent->environment,
-                    "moodle_dist" => $CFG->kent->distribution,
-                    "courseid" => $item->id,
-                    "username" => $user->username
+                    'moodle_env' => $CFG->kent->environment,
+                    'moodle_dist' => $CFG->kent->distribution,
+                    'courseid' => $item->id,
+                    'username' => $user->username
                 );
             }
         }
@@ -73,18 +73,18 @@ class course_sharedb_sync extends \core\task\scheduled_task
         $transaction = $SHAREDB->start_delegated_transaction();
 
         // Clear out SHAREDB.
-        $SHAREDB->delete_records('shared_courses', array(
-            "moodle_env" => $CFG->kent->environment,
-            "moodle_dist" => $CFG->kent->distribution
+        $SHAREDB->delete_records('courses', array(
+            'moodle_env' => $CFG->kent->environment,
+            'moodle_dist' => $CFG->kent->distribution
         ));
-        $SHAREDB->delete_records('shared_course_admins', array(
-            "moodle_env" => $CFG->kent->environment,
-            "moodle_dist" => $CFG->kent->distribution
+        $SHAREDB->delete_records('course_admins', array(
+            'moodle_env' => $CFG->kent->environment,
+            'moodle_dist' => $CFG->kent->distribution
         ));
 
         // Insert new records.
-        $SHAREDB->insert_records("shared_courses", $courseset);
-        $SHAREDB->insert_records("shared_course_admins", $adminset);
+        $SHAREDB->insert_records('courses', $courseset);
+        $SHAREDB->insert_records('course_admins', $adminset);
 
         $transaction->allow_commit();
 

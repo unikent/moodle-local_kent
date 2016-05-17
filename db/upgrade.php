@@ -199,10 +199,10 @@ function xmldb_local_kent_upgrade($oldversion) {
             $sharedbman->rename_table($table, 'shared_notifications');
         }
 
-        // Rename rollovers -> shared_rollovers.
+        // Rename rollovers -> rollovers.
         $table = new xmldb_table("rollovers");
         if ($sharedbman->table_exists($table)) {
-            $sharedbman->rename_table($table, 'shared_rollovers');
+            $sharedbman->rename_table($table, 'rollovers');
         }
 
         // local_kent savepoint reached.
@@ -898,8 +898,8 @@ function xmldb_local_kent_upgrade($oldversion) {
     }
 
     if ($oldversion < 2016031500) {
-        // Define field data to be added to shared_rollovers.
-        $table = new xmldb_table('shared_rollovers');
+        // Define field data to be added to rollovers.
+        $table = new xmldb_table('rollovers');
         $field = new xmldb_field('data', XMLDB_TYPE_TEXT, null, null, null, null, null, 'options');
 
         // Conditionally launch add field type.

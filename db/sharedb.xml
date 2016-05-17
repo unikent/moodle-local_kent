@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="shared_users" COMMENT="shared_users table retrofitted from MySQL">
+    <TABLE NAME="users" COMMENT="users table retrofitted from MySQL">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="username" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
@@ -15,10 +15,10 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="shared_users_on_username" UNIQUE="false" FIELDS="username"/>
+        <INDEX NAME="users_on_username" UNIQUE="false" FIELDS="username"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="shared_courses" COMMENT="shared_courses table retrofitted from MySQL">
+    <TABLE NAME="courses" COMMENT="courses table retrofitted from MySQL">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="moodle_env" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
@@ -32,12 +32,12 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="shared_courses_on_moodle_env" UNIQUE="false" FIELDS="moodle_env"/>
-        <INDEX NAME="shared_courses_on_moodle_dist" UNIQUE="false" FIELDS="moodle_dist"/>
-        <INDEX NAME="shared_courses_on_moodle_id" UNIQUE="false" FIELDS="moodle_id"/>
+        <INDEX NAME="courses_on_moodle_env" UNIQUE="false" FIELDS="moodle_env"/>
+        <INDEX NAME="courses_on_moodle_dist" UNIQUE="false" FIELDS="moodle_dist"/>
+        <INDEX NAME="courses_on_moodle_id" UNIQUE="false" FIELDS="moodle_id"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="shared_course_admins" COMMENT="shared_course_admins table retrofitted from MySQL">
+    <TABLE NAME="course_admins" COMMENT="course_admins table retrofitted from MySQL">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="moodle_env" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
@@ -49,13 +49,13 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="shared_course_admins_on_moodle_env" UNIQUE="false" FIELDS="moodle_env"/>
-        <INDEX NAME="shared_course_admins_on_moodle_dist" UNIQUE="false" FIELDS="moodle_dist"/>
-        <INDEX NAME="shared_course_admins_on_courseid" UNIQUE="false" FIELDS="courseid"/>
-        <INDEX NAME="shared_course_admins_on_username" UNIQUE="false" FIELDS="username"/>
+        <INDEX NAME="course_admins_on_moodle_env" UNIQUE="false" FIELDS="moodle_env"/>
+        <INDEX NAME="course_admins_on_moodle_dist" UNIQUE="false" FIELDS="moodle_dist"/>
+        <INDEX NAME="course_admins_on_courseid" UNIQUE="false" FIELDS="courseid"/>
+        <INDEX NAME="course_admins_on_username" UNIQUE="false" FIELDS="username"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="shared_rollovers" COMMENT="shared_rollovers table retrofitted from MySQL">
+    <TABLE NAME="rollovers" COMMENT="rollovers table retrofitted from MySQL">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="created" TYPE="datetime" NOTNULL="false" SEQUENCE="false"/>
@@ -87,7 +87,7 @@
         <INDEX NAME="index_rollovers_status" UNIQUE="false" FIELDS="status"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="shared_vimeo_quota" COMMENT="Stores Vimeo quota usage stats">
+    <TABLE NAME="vimeo_quota" COMMENT="Stores Vimeo quota usage stats">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="timestamp" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Time quota was checked"/>

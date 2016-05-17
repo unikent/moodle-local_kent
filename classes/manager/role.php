@@ -271,7 +271,7 @@ class role
             // User doesnt exist, try and create one.
             if (!$user) {
                 require_once($CFG->dirroot . "/user/lib.php");
-                $info = $SHAREDB->get_record('shared_users', array(
+                $info = $SHAREDB->get_record('users', array(
                     'username' => $username
                 ));
 
@@ -299,8 +299,8 @@ class role
     private function share_user(\stdClass $user) {
         global $SHAREDB;
 
-        if (!$SHAREDB->record_exists('shared_users', array('username' => $user->username))) {
-            $SHAREDB->insert_record('shared_users', array(
+        if (!$SHAREDB->record_exists('users', array('username' => $user->username))) {
+            $SHAREDB->insert_record('users', array(
                 'username' => $user->username,
                 'firstname' => $user->firstname,
                 'lastname' => $user->lastname
