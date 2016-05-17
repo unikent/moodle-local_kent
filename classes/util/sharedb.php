@@ -58,7 +58,7 @@ class sharedb {
             $CFG->dbcfg[KENT_ENV]['shared']['dbuser'],
             $CFG->dbcfg[KENT_ENV]['shared']['dbpass'],
             $CFG->dbcfg[KENT_ENV]['shared']['dbname'],
-            $CFG->dbcfg[KENT_ENV]['shared']['dbprefix'],
+            $CFG->dbcfg[KENT_ENV]['shared']['prefix'],
             $CFG->dbcfg[KENT_ENV]['shared']['dboptions']
         );
 
