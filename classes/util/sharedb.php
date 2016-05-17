@@ -58,7 +58,7 @@ class sharedb {
             $CFG->dbcfg[KENT_ENV]['shared']['dbuser'],
             $CFG->dbcfg[KENT_ENV]['shared']['dbpass'],
             $CFG->dbcfg[KENT_ENV]['shared']['dbname'],
-            'shared_', // TODO - $CFG->dbcfg[KENT_ENV]['shared']['prefix'],
+            $CFG->dbcfg[KENT_ENV]['shared']['prefix'],
             $CFG->dbcfg[KENT_ENV]['shared']['dboptions']
         );
 
@@ -92,7 +92,7 @@ class sharedb {
     public static function available() {
         global $CFG;
 
-        return !empty($CFG->dbcfg[KENT_ENV]['shared']['dbuser']);
+        return isset($CFG->dbcfg[KENT_ENV]['shared']);
     }
 
     /**
