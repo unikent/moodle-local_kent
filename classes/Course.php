@@ -26,9 +26,15 @@ require_once($CFG->dirroot . '/course/lib.php');
 class Course
 {
     private $_courseid;
+    private $_course;
 
-    public function __construct($courseid) {
-        $this->_courseid = $courseid;
+    public function __construct($courseorid) {
+        if (is_object($courseorid)) {
+            $this->_courseid = $courseorid->id;
+            $this->_course = $courseorid;
+        } else {
+            $this->_courseid = $courseid;
+        }
     }
 
     /**
@@ -79,11 +85,13 @@ SQL;
     public function is_manual() {
         global $DB;
 
-        $shortname = $DB->get_field('course', 'shortname', array(
-            'id' => $this->_courseid
-        ));
+        if (!isset($this->_course)) {
+            $this->_course = $DB->get_record('course', array(
+                'id' => $this->_courseid
+            ));
+        }
 
-        $indicator = substr($shortname, 0, 2);
+        $indicator = substr($this->_course->shortname, 0, 2);
 
         return in_array($indicator, array('DX', 'DP', 'DO'));
     }
