@@ -38,6 +38,16 @@ class observers
         // Ping the group manager.
         \local_kent\manager\group::course_created($course);
 
+
+        $kentcourse = new \local_kent\Course($course);
+        if ($kentcourse->is_manual()) {
+            // Add a manual notification.
+            \local_notifications\notification\manualguest::create(array(
+                'objectid' => $course->id,
+                'context' => $event->get_context()
+            ));
+        }
+
         if (!util\sharedb::available()) {
             return true;
         }
