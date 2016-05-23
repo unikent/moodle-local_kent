@@ -64,6 +64,10 @@ class helpers
     public static function get_db($env, $dist) {
         global $CFG;
 
+        if (!isset($CFG->dbcfg[$env] || !isset($CFG->dbcfg[$env][$dist])) {
+            return null;
+        }
+
         // Get MIM config.
         $mimcfg = $CFG->dbcfg[$env][$dist];
 
