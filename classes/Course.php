@@ -33,7 +33,7 @@ class Course
             $this->_courseid = $courseorid->id;
             $this->_course = $courseorid;
         } else {
-            $this->_courseid = $courseid;
+            $this->_courseid = $courseorid;
         }
     }
 
