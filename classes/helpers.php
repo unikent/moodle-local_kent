@@ -64,7 +64,7 @@ class helpers
     public static function get_db($env, $dist) {
         global $CFG;
 
-        if (!isset($CFG->dbcfg[$env] || !isset($CFG->dbcfg[$env][$dist])) {
+        if (!isset($CFG->dbcfg[$env]) || !isset($CFG->dbcfg[$env][$dist])) {
             return null;
         }
 
