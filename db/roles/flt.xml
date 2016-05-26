@@ -17,6 +17,17 @@
     <shortname>user</shortname>
     <shortname>frontpage</shortname>
     <shortname>flt</shortname>
+    <shortname>cla_admin</shortname>
+    <shortname>cla_viewer</shortname>
+    <shortname>academic_advisor</shortname>
+    <shortname>dep_admin</shortname>
+    <shortname>extexam</shortname>
+    <shortname>support_staff</shortname>
+    <shortname>marker</shortname>
+    <shortname>panopto_creator</shortname>
+    <shortname>readinglist</shortname>
+    <shortname>support</shortname>
+    <shortname>convenor</shortname>
   </allowassign>
   <allowoverride>
     <shortname>manager</shortname>
@@ -28,6 +39,16 @@
     <shortname>user</shortname>
     <shortname>frontpage</shortname>
     <shortname>flt</shortname>
+    <shortname>cla_admin</shortname>
+    <shortname>cla_viewer</shortname>
+    <shortname>academic_advisor</shortname>
+    <shortname>dep_admin</shortname>
+    <shortname>extexam</shortname>
+    <shortname>support_staff</shortname>
+    <shortname>marker</shortname>
+    <shortname>readinglist</shortname>
+    <shortname>support</shortname>
+    <shortname>convenor</shortname>
   </allowoverride>
   <allowswitch>
     <shortname>manager</shortname>
@@ -39,6 +60,20 @@
     <shortname>user</shortname>
     <shortname>frontpage</shortname>
     <shortname>flt</shortname>
+    <shortname>cla_admin</shortname>
+    <shortname>cla_viewer</shortname>
+    <shortname>academic_advisor</shortname>
+    <shortname>dep_admin</shortname>
+    <shortname>extexam</shortname>
+    <shortname>support_staff</shortname>
+    <shortname>sds_convenor</shortname>
+    <shortname>sds_teacher</shortname>
+    <shortname>sds_student</shortname>
+    <shortname>marker</shortname>
+    <shortname>panopto_creator</shortname>
+    <shortname>readinglist</shortname>
+    <shortname>support</shortname>
+    <shortname>convenor</shortname>
   </allowswitch>
   <permissions>
     <inherit>block/panopto:panoptocreator</inherit>
@@ -110,11 +145,11 @@
     <allow>block/navigation:myaddinstance</allow>
     <allow>block/news_items:addinstance</allow>
     <allow>block/news_items:myaddinstance</allow>
-    <allow>block/onlinesurvey:addinstance</allow>
-    <allow>block/onlinesurvey:myaddinstance</allow>
     <allow>block/online_users:addinstance</allow>
     <allow>block/online_users:myaddinstance</allow>
     <allow>block/online_users:viewlist</allow>
+    <allow>block/onlinesurvey:addinstance</allow>
+    <allow>block/onlinesurvey:myaddinstance</allow>
     <allow>block/panopto:addinstance</allow>
     <allow>block/panopto:myaddinstance</allow>
     <allow>block/panopto:provision_course</allow>
@@ -137,10 +172,10 @@
     <allow>block/settings:myaddinstance</allow>
     <allow>block/site_main_menu:addinstance</allow>
     <allow>block/social_activities:addinstance</allow>
-    <allow>block/tags:addinstance</allow>
-    <allow>block/tags:myaddinstance</allow>
     <allow>block/tag_flickr:addinstance</allow>
     <allow>block/tag_youtube:addinstance</allow>
+    <allow>block/tags:addinstance</allow>
+    <allow>block/tags:myaddinstance</allow>
     <allow>block/turnitin:addinstance</allow>
     <allow>block/turnitin:myaddinstance</allow>
     <allow>booktool/exportimscp:export</allow>
@@ -163,6 +198,7 @@
     <allow>enrol/meta:config</allow>
     <allow>enrol/meta:selectaslinked</allow>
     <allow>enrol/meta:unenrol</allow>
+    <allow>enrol/metaplus:config</allow>
     <allow>enrol/paypal:config</allow>
     <allow>enrol/paypal:manage</allow>
     <allow>enrol/paypal:unenrol</allow>
@@ -673,8 +709,8 @@
     <allow>repository/dropbox:view</allow>
     <allow>repository/equella:view</allow>
     <allow>repository/filesystem:view</allow>
-    <allow>repository/flickr:view</allow>
     <allow>repository/flickr_public:view</allow>
+    <allow>repository/flickr:view</allow>
     <allow>repository/googledocs:view</allow>
     <allow>repository/local:view</allow>
     <allow>repository/merlot:view</allow>

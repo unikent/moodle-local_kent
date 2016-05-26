@@ -65,11 +65,11 @@
     <inherit>block/navigation:myaddinstance</inherit>
     <inherit>block/news_items:addinstance</inherit>
     <inherit>block/news_items:myaddinstance</inherit>
-    <inherit>block/onlinesurvey:addinstance</inherit>
-    <inherit>block/onlinesurvey:myaddinstance</inherit>
     <inherit>block/online_users:addinstance</inherit>
     <inherit>block/online_users:myaddinstance</inherit>
     <inherit>block/online_users:viewlist</inherit>
+    <inherit>block/onlinesurvey:addinstance</inherit>
+    <inherit>block/onlinesurvey:myaddinstance</inherit>
     <inherit>block/panopto:addinstance</inherit>
     <inherit>block/panopto:myaddinstance</inherit>
     <inherit>block/panopto:panoptocreator</inherit>
@@ -96,10 +96,10 @@
     <inherit>block/settings:myaddinstance</inherit>
     <inherit>block/site_main_menu:addinstance</inherit>
     <inherit>block/social_activities:addinstance</inherit>
-    <inherit>block/tags:addinstance</inherit>
-    <inherit>block/tags:myaddinstance</inherit>
     <inherit>block/tag_flickr:addinstance</inherit>
     <inherit>block/tag_youtube:addinstance</inherit>
+    <inherit>block/tags:addinstance</inherit>
+    <inherit>block/tags:myaddinstance</inherit>
     <inherit>block/turnitin:addinstance</inherit>
     <inherit>block/turnitin:myaddinstance</inherit>
     <inherit>booktool/exportimscp:export</inherit>
@@ -125,6 +125,7 @@
     <inherit>enrol/meta:config</inherit>
     <inherit>enrol/meta:selectaslinked</inherit>
     <inherit>enrol/meta:unenrol</inherit>
+    <inherit>enrol/metaplus:config</inherit>
     <inherit>enrol/mnet:config</inherit>
     <inherit>enrol/paypal:config</inherit>
     <inherit>enrol/paypal:manage</inherit>
@@ -301,7 +302,6 @@
     <inherit>mod/glossary:viewanyrating</inherit>
     <inherit>mod/glossary:viewrating</inherit>
     <inherit>mod/glossary:write</inherit>
-    <inherit>mod/hotpot:addinstance</inherit>
     <inherit>mod/hotpot:attempt</inherit>
     <inherit>mod/hotpot:deleteallattempts</inherit>
     <inherit>mod/hotpot:deletemyattempts</inherit>
@@ -645,8 +645,8 @@
     <inherit>repository/dropbox:view</inherit>
     <inherit>repository/equella:view</inherit>
     <inherit>repository/filesystem:view</inherit>
-    <inherit>repository/flickr:view</inherit>
     <inherit>repository/flickr_public:view</inherit>
+    <inherit>repository/flickr:view</inherit>
     <inherit>repository/googledocs:view</inherit>
     <inherit>repository/local:view</inherit>
     <inherit>repository/merlot:view</inherit>
@@ -672,6 +672,7 @@
     <inherit>webservice/soap:use</inherit>
     <inherit>webservice/xmlrpc:use</inherit>
     <allow>mod/cla:viewresource</allow>
+    <prevent>mod/hotpot:addinstance</prevent>
     <prevent>mod/streamingvideo:addinstance</prevent>
   </permissions>
 </role>

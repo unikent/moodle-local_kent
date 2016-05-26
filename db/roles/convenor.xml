@@ -18,6 +18,7 @@
     <shortname>teacher</shortname>
     <shortname>student</shortname>
     <shortname>guest</shortname>
+    <shortname>sds_teacher</shortname>
   </allowoverride>
   <allowswitch>
     <shortname>editingteacher</shortname>
@@ -46,8 +47,8 @@
     <inherit>block/myprofile:myaddinstance</inherit>
     <inherit>block/navigation:myaddinstance</inherit>
     <inherit>block/news_items:myaddinstance</inherit>
-    <inherit>block/onlinesurvey:myaddinstance</inherit>
     <inherit>block/online_users:myaddinstance</inherit>
+    <inherit>block/onlinesurvey:myaddinstance</inherit>
     <inherit>block/panopto:myaddinstance</inherit>
     <inherit>block/panopto:provision_aspublisher</inherit>
     <inherit>block/panopto:provision_multiple</inherit>
@@ -195,15 +196,14 @@
     <inherit>report/performance:view</inherit>
     <inherit>report/questioninstances:view</inherit>
     <inherit>report/security:view</inherit>
-    <inherit>report/turnitin:view</inherit>
     <inherit>report/usersessions:manageownsessions</inherit>
     <inherit>repository/alfresco:view</inherit>
     <inherit>repository/areafiles:view</inherit>
     <inherit>repository/boxnet:view</inherit>
     <inherit>repository/dropbox:view</inherit>
     <inherit>repository/equella:view</inherit>
-    <inherit>repository/flickr:view</inherit>
     <inherit>repository/flickr_public:view</inherit>
+    <inherit>repository/flickr:view</inherit>
     <inherit>repository/googledocs:view</inherit>
     <inherit>repository/merlot:view</inherit>
     <inherit>repository/picasa:view</inherit>
@@ -255,9 +255,9 @@
     <allow>block/myprofile:addinstance</allow>
     <allow>block/navigation:addinstance</allow>
     <allow>block/news_items:addinstance</allow>
-    <allow>block/onlinesurvey:addinstance</allow>
     <allow>block/online_users:addinstance</allow>
     <allow>block/online_users:viewlist</allow>
+    <allow>block/onlinesurvey:addinstance</allow>
     <allow>block/panopto:addinstance</allow>
     <allow>block/panopto:panoptocreator</allow>
     <allow>block/panopto:panoptoviewer</allow>
@@ -275,9 +275,9 @@
     <allow>block/settings:addinstance</allow>
     <allow>block/site_main_menu:addinstance</allow>
     <allow>block/social_activities:addinstance</allow>
-    <allow>block/tags:addinstance</allow>
     <allow>block/tag_flickr:addinstance</allow>
     <allow>block/tag_youtube:addinstance</allow>
+    <allow>block/tags:addinstance</allow>
     <allow>block/turnitin:addinstance</allow>
     <allow>booktool/importhtml:import</allow>
     <allow>booktool/print:print</allow>
@@ -290,6 +290,7 @@
     <allow>enrol/manual:manage</allow>
     <allow>enrol/manual:unenrol</allow>
     <allow>enrol/meta:config</allow>
+    <allow>enrol/metaplus:config</allow>
     <allow>enrol/mnet:config</allow>
     <allow>enrol/paypal:manage</allow>
     <allow>enrol/self:config</allow>
@@ -437,7 +438,6 @@
     <allow>mod/glossary:viewanyrating</allow>
     <allow>mod/glossary:viewrating</allow>
     <allow>mod/glossary:write</allow>
-    <allow>mod/hotpot:addinstance</allow>
     <allow>mod/hotpot:attempt</allow>
     <allow>mod/hotpot:deleteallattempts</allow>
     <allow>mod/hotpot:deletemyattempts</allow>
@@ -675,6 +675,7 @@
     <allow>report/participation:view</allow>
     <allow>report/progress:view</allow>
     <allow>report/stats:view</allow>
+    <allow>report/turnitin:view</allow>
     <allow>repository/coursefiles:view</allow>
     <allow>repository/filesystem:view</allow>
     <allow>repository/local:view</allow>
@@ -684,6 +685,7 @@
     <prevent>local/connect:manage</prevent>
     <prevent>mod/cla:manage</prevent>
     <prevent>mod/cla:viewresource</prevent>
+    <prevent>mod/hotpot:addinstance</prevent>
     <prevent>mod/streamingvideo:addinstance</prevent>
   </permissions>
 </role>

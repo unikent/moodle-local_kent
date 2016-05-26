@@ -66,13 +66,14 @@
     <inherit>block/navigation:myaddinstance</inherit>
     <inherit>block/news_items:addinstance</inherit>
     <inherit>block/news_items:myaddinstance</inherit>
-    <inherit>block/onlinesurvey:addinstance</inherit>
-    <inherit>block/onlinesurvey:myaddinstance</inherit>
     <inherit>block/online_users:addinstance</inherit>
     <inherit>block/online_users:myaddinstance</inherit>
+    <inherit>block/onlinesurvey:addinstance</inherit>
+    <inherit>block/onlinesurvey:myaddinstance</inherit>
     <inherit>block/panopto:addinstance</inherit>
     <inherit>block/panopto:myaddinstance</inherit>
     <inherit>block/panopto:provision_aspublisher</inherit>
+    <inherit>block/panopto:provision_asteacher</inherit>
     <inherit>block/panopto:provision_multiple</inherit>
     <inherit>block/participants:addinstance</inherit>
     <inherit>block/private_files:addinstance</inherit>
@@ -91,10 +92,10 @@
     <inherit>block/settings:myaddinstance</inherit>
     <inherit>block/site_main_menu:addinstance</inherit>
     <inherit>block/social_activities:addinstance</inherit>
-    <inherit>block/tags:addinstance</inherit>
-    <inherit>block/tags:myaddinstance</inherit>
     <inherit>block/tag_flickr:addinstance</inherit>
     <inherit>block/tag_youtube:addinstance</inherit>
+    <inherit>block/tags:addinstance</inherit>
+    <inherit>block/tags:myaddinstance</inherit>
     <inherit>block/turnitin:addinstance</inherit>
     <inherit>block/turnitin:myaddinstance</inherit>
     <inherit>booktool/exportimscp:export</inherit>
@@ -119,6 +120,7 @@
     <inherit>enrol/meta:config</inherit>
     <inherit>enrol/meta:selectaslinked</inherit>
     <inherit>enrol/meta:unenrol</inherit>
+    <inherit>enrol/metaplus:config</inherit>
     <inherit>enrol/mnet:config</inherit>
     <inherit>enrol/paypal:config</inherit>
     <inherit>enrol/paypal:manage</inherit>
@@ -190,7 +192,6 @@
     <inherit>mod/folder:view</inherit>
     <inherit>mod/forum:addinstance</inherit>
     <inherit>mod/glossary:addinstance</inherit>
-    <inherit>mod/hotpot:addinstance</inherit>
     <inherit>mod/hotpot:manage</inherit>
     <inherit>mod/imscp:addinstance</inherit>
     <inherit>mod/imscp:view</inherit>
@@ -393,15 +394,14 @@
     <inherit>report/performance:view</inherit>
     <inherit>report/questioninstances:view</inherit>
     <inherit>report/security:view</inherit>
-    <inherit>report/turnitin:view</inherit>
     <inherit>report/usersessions:manageownsessions</inherit>
     <inherit>repository/alfresco:view</inherit>
     <inherit>repository/areafiles:view</inherit>
     <inherit>repository/boxnet:view</inherit>
     <inherit>repository/dropbox:view</inherit>
     <inherit>repository/equella:view</inherit>
-    <inherit>repository/flickr:view</inherit>
     <inherit>repository/flickr_public:view</inherit>
+    <inherit>repository/flickr:view</inherit>
     <inherit>repository/googledocs:view</inherit>
     <inherit>repository/merlot:view</inherit>
     <inherit>repository/picasa:view</inherit>
@@ -425,7 +425,6 @@
     <allow>block/online_users:viewlist</allow>
     <allow>block/panopto:panoptocreator</allow>
     <allow>block/panopto:panoptoviewer</allow>
-    <allow>block/panopto:provision_asteacher</allow>
     <allow>block/panopto:provision_course</allow>
     <allow>block/rss_client:manageownfeeds</allow>
     <allow>booktool/print:print</allow>
@@ -664,6 +663,7 @@
     <allow>report/participation:view</allow>
     <allow>report/progress:view</allow>
     <allow>report/stats:view</allow>
+    <allow>report/turnitin:view</allow>
     <allow>repository/coursefiles:view</allow>
     <allow>repository/filesystem:view</allow>
     <allow>repository/local:view</allow>
@@ -673,6 +673,7 @@
     <prevent>local/connect:manage</prevent>
     <prevent>mod/cla:manage</prevent>
     <prevent>mod/cla:viewresource</prevent>
+    <prevent>mod/hotpot:addinstance</prevent>
     <prevent>mod/streamingvideo:addinstance</prevent>
   </permissions>
 </role>
