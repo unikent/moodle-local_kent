@@ -106,6 +106,3 @@ if (!$beanstalkv) {
 
 // Re-check nagios.
 \local_nagios\Core::regenerate_list();
-
-// Re-generate tutorials list.
-\local_tutorials\loader::update();
