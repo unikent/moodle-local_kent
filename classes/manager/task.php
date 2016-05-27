@@ -27,7 +27,6 @@ class task
      * Run all upgrade steps.
      */
     public function configure() {
-        $this->yearly_rollover();
         $this->configure_2015010600();
     }
 
