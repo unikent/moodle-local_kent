@@ -27,6 +27,7 @@ define('CLI_SCRIPT', true);
 require(dirname(__FILE__) . '/../../../config.php');
 require_once($CFG->libdir . '/clilib.php');
 require_once($CFG->dirroot . '/course/lib.php');
+require_once($CFG->dirroot . "/user/lib.php");
 
 list($options, $unrecognized) = cli_get_params(
     array(
@@ -48,13 +49,15 @@ raise_memory_limit(MEMORY_HUGE);
 $moodle = $options['moodle'];
 $sql = <<<SQL
     SELECT c.id, c.shortname, c.fullname, c.summary, c.format, cc.idnumber
-    FROM moodle_{$moodle}.mdl_course c
-    INNER JOIN moodle_{$moodle}.mdl_course_categories cc
+    FROM {course} c
+    INNER JOIN {course_categories} cc
         ON cc.id=c.category
     WHERE c.shortname LIKE :shortname AND cc.idnumber IS NOT NULL
 SQL;
-$courses = $DB->get_records_sql($sql, array('shortname' => 'DP%'));
+$mimdb = \local_kent\helpers::get_db($CFG->kent->environment, $moodle);
+$courses = $mimdb->get_records_sql($sql, array('shortname' => 'DP%'));
 foreach ($courses as $course) {
+    $ctx = \course_context::instance($course);
     $cat = $DB->get_record('course_categories', array('idnumber' => $course->idnumber));
     if (!$cat) {
         cli_writeln("{$course->shortname} does not have a valid category.");
@@ -72,5 +75,90 @@ foreach ($courses as $course) {
     cli_writeln("Creating course {$obj->shortname}...");
     if (!$options['dry']) {
         create_course($obj);
+    } else {
+        continue;
+    }
+
+    // Enrolments.
+    $sql = <<<SQL
+        SELECT ue.userid
+        FROM {user_enrolments} ue
+        INNER JOIN {enrol} e
+            ON e.id=ue.enrolid
+        WHERE e.courseid=:courseid AND e.enrol=:manual
+SQL;
+    $enrolments = $mimdb->get_records_sql($sql, array(
+        'courseid' => $course->id,
+        'manual' => 'manual'
+    ));
+
+    // Roles.
+    $sql = <<<SQL
+        SELECT ra.userid, r.shortname
+        FROM {role_assignments} ra
+        INNER JOIN {role} r
+            ON r.id=ra.roleid
+        WHERE ra.contextid=:contextid
+SQL;
+    $roles = $mimdb->get_records_sql($sql, array(
+        'contextid' => $ctx->id
+    ));
+
+    // Map the roles.
+    $localroles = $DB->get_records('role', null, '', 'shortname,id');
+
+    // Grab user info.
+    $users = array();
+    foreach ($enrolments as $enrolment) {
+        $users[$enrolment->userid] = new stdClass();
+    }
+    foreach ($roles as $role) {
+        $users[$role->userid] = new stdClass();
+    }
+
+    list($sql, $params) = $DB->get_in_or_equal(array_keys($users), SQL_PARAMS_NAMED, 'id');
+    $users = $mimdb->get_records_select('user', 'id '. $sql, $params);
+
+    // Copy the users over.
+    $usermap = array();
+    foreach ($users as $user) {
+        $localuser = $DB->get_record('user', array('username' => $user->username));
+        if (!$localuser) {
+            // Create user.
+            $localuser = clone $user;
+            unset($localuser->id);
+            $localuser->id = user_create_user($localuser, false);
+        }
+
+        $usermap[$user->id] = $localuser->id;
+    }
+
+    // Copy the enrolments and roles across.
+    $enrol = enrol_get_plugin('manual');
+
+    // Find the instance.
+    $instance = $DB->get_record('enrol', array(
+        'courseid' => $course->id,
+        'enrol' => 'manual'
+    ));
+
+    if ($instance) {
+        $instanceid = $enrol->add_default_instance($course);
+        $instance = $DB->get_record('enrol', array(
+            'id' => $instanceid
+        ));
+    }
+
+    // Enrol the users.
+    foreach ($enrolments as $enrolment) {
+        $userid = $usermap[$enrolment->userid];
+        $enrol->enrol_user($instance, $userid);
+    }
+
+    // Do the roles.
+    foreach ($roles as $role) {
+        $roleid = $localroles[$role->shortname];
+        $userid = $usermap[$role->userid];
+        role_assign($roleid, $userid, $ctx->id);
     }
 }
