@@ -69,7 +69,7 @@ class helpers
         }
 
         // Get MIM config.
-        $mimcfg = $CFG->dbcfg[$env][$dist];
+        $mimcfg = (object)$CFG->dbcfg[$env][$dist];
 
         static $dbs = array();
         if (!isset($dbs["{$env}_{$dist}"])) {
@@ -81,6 +81,7 @@ class helpers
                 $mimcfg->dbhost,
                 $mimcfg->dbuser,
                 $mimcfg->dbpass,
+                $mimcfg->dbname,
                 $mimcfg->prefix,
                 $mimcfg->dboptions
             );

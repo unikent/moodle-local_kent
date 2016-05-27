@@ -40,13 +40,22 @@ list($options, $unrecognized) = cli_get_params(
     )
 );
 
+if (empty($options['moodle'])) {
+    cli_error("You must specify a Moodle installation to grab data from.");
+}
+
 raise_memory_limit(MEMORY_HUGE);
 
 // Set the user.
 \local_kent\helpers::cli_set_user();
 
+// Create MIM DB.
+$mimdb = \local_kent\helpers::get_db($CFG->kent->environment, $options['moodle']);
+if (!$mimdb) {
+    cli_error("Cannot create MIM DB.");
+}
+
 // Grab a list of courses.
-$moodle = $options['moodle'];
 $sql = <<<SQL
     SELECT c.id, c.shortname, c.fullname, c.summary, c.format, cc.idnumber
     FROM {course} c
@@ -54,10 +63,8 @@ $sql = <<<SQL
         ON cc.id=c.category
     WHERE c.shortname LIKE :shortname AND cc.idnumber IS NOT NULL
 SQL;
-$mimdb = \local_kent\helpers::get_db($CFG->kent->environment, $moodle);
 $courses = $mimdb->get_records_sql($sql, array('shortname' => 'DP%'));
 foreach ($courses as $course) {
-    $ctx = \course_context::instance($course);
     $cat = $DB->get_record('course_categories', array('idnumber' => $course->idnumber));
     if (!$cat) {
         cli_writeln("{$course->shortname} does not have a valid category.");
@@ -74,10 +81,12 @@ foreach ($courses as $course) {
 
     cli_writeln("Creating course {$obj->shortname}...");
     if (!$options['dry']) {
-        create_course($obj);
+        $localcourse = create_course($obj);
     } else {
         continue;
     }
+
+    $ctx = \context_course::instance($localcourse->id);
 
     // Enrolments.
     $sql = <<<SQL
@@ -98,10 +107,13 @@ SQL;
         FROM {role_assignments} ra
         INNER JOIN {role} r
             ON r.id=ra.roleid
-        WHERE ra.contextid=:contextid
+        INNER JOIN {context} ctx
+            ON ctx.contextlevel=:ctxlevel AND ctx.instanceid=:instanceid
+        WHERE ra.contextid=ctx.id
 SQL;
     $roles = $mimdb->get_records_sql($sql, array(
-        'contextid' => $ctx->id
+        'instanceid' => $course->id,
+        'ctxlevel' => \CONTEXT_COURSE
     ));
 
     // Map the roles.
@@ -138,12 +150,12 @@ SQL;
 
     // Find the instance.
     $instance = $DB->get_record('enrol', array(
-        'courseid' => $course->id,
+        'courseid' => $localcourse->id,
         'enrol' => 'manual'
     ));
 
-    if ($instance) {
-        $instanceid = $enrol->add_default_instance($course);
+    if (!$instance) {
+        $instanceid = $enrol->add_default_instance($localcourse);
         $instance = $DB->get_record('enrol', array(
             'id' => $instanceid
         ));
@@ -157,7 +169,7 @@ SQL;
 
     // Do the roles.
     foreach ($roles as $role) {
-        $roleid = $localroles[$role->shortname];
+        $roleid = $localroles[$role->shortname]->id;
         $userid = $usermap[$role->userid];
         role_assign($roleid, $userid, $ctx->id);
     }
