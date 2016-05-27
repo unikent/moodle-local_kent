@@ -71,19 +71,27 @@ foreach ($courses as $course) {
         continue;
     }
 
-    $obj = new \stdClass();
-    $obj->category = $cat->id;
-    $obj->shortname = $course->shortname;
-    $obj->fullname = $course->fullname;
-    $obj->summary = $course->summary;
-    $obj->format = $course->format;
-    $obj->visible = 0;
+    $localcourse = $DB->get_record('course', array(
+        'shortname' => $course->shortname
+    ));
 
-    cli_writeln("Creating course {$obj->shortname}...");
-    if (!$options['dry']) {
-        $localcourse = create_course($obj);
+    if (!$localcourse) {
+        $obj = new \stdClass();
+        $obj->category = $cat->id;
+        $obj->shortname = $course->shortname;
+        $obj->fullname = $course->fullname;
+        $obj->summary = $course->summary;
+        $obj->format = $course->format;
+        $obj->visible = 0;
+
+        cli_writeln("Creating course {$obj->shortname}...");
+        if (!$options['dry']) {
+            $localcourse = create_course($obj);
+        } else {
+            continue;
+        }
     } else {
-        continue;
+        cli_writeln("Found course {$localcourse->shortname}...");
     }
 
     $ctx = \context_course::instance($localcourse->id);
@@ -103,7 +111,7 @@ SQL;
 
     // Roles.
     $sql = <<<SQL
-        SELECT ra.userid, r.shortname
+        SELECT ra.id, ra.userid, r.shortname
         FROM {role_assignments} ra
         INNER JOIN {role} r
             ON r.id=ra.roleid
@@ -126,6 +134,10 @@ SQL;
     }
     foreach ($roles as $role) {
         $users[$role->userid] = new stdClass();
+    }
+
+    if (empty($users)) {
+        continue;
     }
 
     list($sql, $params) = $DB->get_in_or_equal(array_keys($users), SQL_PARAMS_NAMED, 'id');
@@ -164,13 +176,19 @@ SQL;
     // Enrol the users.
     foreach ($enrolments as $enrolment) {
         $userid = $usermap[$enrolment->userid];
-        $enrol->enrol_user($instance, $userid);
+        cli_writeln("  Enrolling {$userid}");
+        if (!$options['dry'] && !is_enrolled($ctx, $userid)) {
+            $enrol->enrol_user($instance, $userid);
+        }
     }
 
     // Do the roles.
     foreach ($roles as $role) {
         $roleid = $localroles[$role->shortname]->id;
         $userid = $usermap[$role->userid];
-        role_assign($roleid, $userid, $ctx->id);
+        cli_writeln("  Assigning role {$roleid} to {$userid}");
+        if (!$options['dry'] && !user_has_role_assignment($userid, $roleid, $ctx->id)) {
+            role_assign($roleid, $userid, $ctx->id);
+        }
     }
 }
