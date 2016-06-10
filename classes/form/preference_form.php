@@ -45,6 +45,7 @@ class preference_form extends \moodleform
 
         $mform->addElement('header', 'accesssettings', 'Accessibility Settings');
         $mform->addElement('checkbox', 'kent_theme_contrast', 'Contrast mode');
+        $mform->addElement('checkbox', 'kent_theme_dyslexic', 'Use OpenDyslexic font');
         $mform->addElement('select', 'kent_theme_zoom', 'Zoom level', array(
             '1' => 'Standard',
             '2' => 'High',
