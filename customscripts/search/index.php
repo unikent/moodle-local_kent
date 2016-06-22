@@ -115,6 +115,7 @@ if ($errorstr = $search->get_engine()->get_query_error()) {
 }
 
 if (!empty($results)) {
+    echo '<br />';
     echo $searchrenderer->render_results($results->results, $results->actualpage, $results->totalcount, $url);
 }
 
