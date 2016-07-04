@@ -18,7 +18,7 @@ namespace local_kent\notification;
 
 defined('MOODLE_INTERNAL') || die();
 
-class deprecated extends \local_notifications\notification\listnotification {
+class deprecated extends \local_notifications\notification\simplelist {
     private $_items = array();
 
     /**
