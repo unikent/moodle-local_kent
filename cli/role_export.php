@@ -24,7 +24,7 @@ foreach ($roles as $role) {
     $role = $DB->get_record('role', array('shortname' => $role), 'id,shortname', MUST_EXIST);
     $xml = core_role_preset::get_export_xml($role->id);
 
-    $dom = new DOMDocument;
+    $dom = new DOMDocument();
     $dom->preserveWhiteSpace = false;
     $dom->loadXML($xml);
     $dom->formatOutput = true;
