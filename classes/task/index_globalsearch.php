@@ -25,7 +25,7 @@
 namespace local_kent\task;
 
 /**
- * Send footprints tickets.
+ * Run a global search index.
  */
 class index_globalsearch extends \core\task\adhoc_task
 {
