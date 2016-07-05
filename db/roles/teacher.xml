@@ -43,6 +43,8 @@
     <inherit>block/course_overview:myaddinstance</inherit>
     <inherit>block/course_summary:addinstance</inherit>
     <inherit>block/feedback:addinstance</inherit>
+    <inherit>block/globalsearch:addinstance</inherit>
+    <inherit>block/globalsearch:myaddinstance</inherit>
     <inherit>block/glossary_random:addinstance</inherit>
     <inherit>block/glossary_random:myaddinstance</inherit>
     <inherit>block/html:addinstance</inherit>
@@ -52,6 +54,9 @@
     <inherit>block/kent_links:addinstance</inherit>
     <inherit>block/kent_links:myaddinstance</inherit>
     <inherit>block/login:addinstance</inherit>
+    <inherit>block/lp:addinstance</inherit>
+    <inherit>block/lp:myaddinstance</inherit>
+    <inherit>block/lp:view</inherit>
     <inherit>block/massaction:addinstance</inherit>
     <inherit>block/massaction:use</inherit>
     <inherit>block/mentees:addinstance</inherit>
@@ -112,6 +117,8 @@
     <inherit>enrol/guest:config</inherit>
     <inherit>enrol/imsenterprise:config</inherit>
     <inherit>enrol/ldap:manage</inherit>
+    <inherit>enrol/lti:config</inherit>
+    <inherit>enrol/lti:unenrol</inherit>
     <inherit>enrol/manual:config</inherit>
     <inherit>enrol/manual:enrol</inherit>
     <inherit>enrol/manual:manage</inherit>
@@ -146,12 +153,6 @@
     <inherit>gradereport/overview:view</inherit>
     <inherit>gradereport/singleview:view</inherit>
     <inherit>local/connect:helpdesk</inherit>
-    <inherit>local/recyclebin:delete_course</inherit>
-    <inherit>local/recyclebin:delete_item</inherit>
-    <inherit>local/recyclebin:delete_protected_item</inherit>
-    <inherit>local/recyclebin:restore_course</inherit>
-    <inherit>local/recyclebin:restore_item</inherit>
-    <inherit>local/recyclebin:view_course</inherit>
     <inherit>message/airnotifier:managedevice</inherit>
     <inherit>mod/aspirelists:addinstance</inherit>
     <inherit>mod/assign:addinstance</inherit>
@@ -272,8 +273,6 @@
     <inherit>moodle/badges:viewbadges</inherit>
     <inherit>moodle/badges:viewotherbadges</inherit>
     <inherit>moodle/block:edit</inherit>
-    <inherit>moodle/blog:associatecourse</inherit>
-    <inherit>moodle/blog:associatemodule</inherit>
     <inherit>moodle/blog:create</inherit>
     <inherit>moodle/blog:viewdrafts</inherit>
     <inherit>moodle/calendar:manageownentries</inherit>
@@ -284,6 +283,36 @@
     <inherit>moodle/cohort:view</inherit>
     <inherit>moodle/comment:delete</inherit>
     <inherit>moodle/community:download</inherit>
+    <inherit>moodle/competency:competencymanage</inherit>
+    <inherit>moodle/competency:competencyview</inherit>
+    <inherit>moodle/competency:coursecompetencyconfigure</inherit>
+    <inherit>moodle/competency:coursecompetencygradable</inherit>
+    <inherit>moodle/competency:coursecompetencymanage</inherit>
+    <inherit>moodle/competency:coursecompetencyview</inherit>
+    <inherit>moodle/competency:evidencedelete</inherit>
+    <inherit>moodle/competency:plancomment</inherit>
+    <inherit>moodle/competency:plancommentown</inherit>
+    <inherit>moodle/competency:planmanage</inherit>
+    <inherit>moodle/competency:planmanagedraft</inherit>
+    <inherit>moodle/competency:planmanageown</inherit>
+    <inherit>moodle/competency:planmanageowndraft</inherit>
+    <inherit>moodle/competency:planrequestreview</inherit>
+    <inherit>moodle/competency:planrequestreviewown</inherit>
+    <inherit>moodle/competency:planreview</inherit>
+    <inherit>moodle/competency:planview</inherit>
+    <inherit>moodle/competency:planviewdraft</inherit>
+    <inherit>moodle/competency:planviewown</inherit>
+    <inherit>moodle/competency:planviewowndraft</inherit>
+    <inherit>moodle/competency:templatemanage</inherit>
+    <inherit>moodle/competency:templateview</inherit>
+    <inherit>moodle/competency:usercompetencycomment</inherit>
+    <inherit>moodle/competency:usercompetencycommentown</inherit>
+    <inherit>moodle/competency:usercompetencyrequestreview</inherit>
+    <inherit>moodle/competency:usercompetencyrequestreviewown</inherit>
+    <inherit>moodle/competency:usercompetencyreview</inherit>
+    <inherit>moodle/competency:userevidencemanage</inherit>
+    <inherit>moodle/competency:userevidencemanageown</inherit>
+    <inherit>moodle/competency:userevidenceview</inherit>
     <inherit>moodle/course:activityvisibility</inherit>
     <inherit>moodle/course:changecategory</inherit>
     <inherit>moodle/course:changefullname</inherit>
@@ -302,6 +331,7 @@
     <inherit>moodle/course:managescales</inherit>
     <inherit>moodle/course:movesections</inherit>
     <inherit>moodle/course:publish</inherit>
+    <inherit>moodle/course:renameroles</inherit>
     <inherit>moodle/course:request</inherit>
     <inherit>moodle/course:reset</inherit>
     <inherit>moodle/course:reviewotherusers</inherit>
@@ -416,9 +446,11 @@
     <inherit>tool/cat:manage</inherit>
     <inherit>tool/customlang:edit</inherit>
     <inherit>tool/customlang:view</inherit>
+    <inherit>tool/lpmigrate:frameworksmigrate</inherit>
     <inherit>tool/monitor:managetool</inherit>
+    <inherit>tool/recyclebin:deleteitems</inherit>
+    <inherit>tool/recyclebin:restoreitems</inherit>
     <inherit>tool/uploaduser:uploaduserpictures</inherit>
-    <inherit>webservice/amf:use</inherit>
     <inherit>webservice/rest:use</inherit>
     <inherit>webservice/soap:use</inherit>
     <inherit>webservice/xmlrpc:use</inherit>
@@ -436,7 +468,6 @@
     <allow>gradereport/history:view</allow>
     <allow>gradereport/outcomes:view</allow>
     <allow>gradereport/user:view</allow>
-    <allow>local/recyclebin:view_item</allow>
     <allow>mod/assign:exportownsubmission</allow>
     <allow>mod/assign:grade</allow>
     <allow>mod/assign:grantextension</allow>
@@ -503,6 +534,7 @@
     <allow>mod/forum:exportpost</allow>
     <allow>mod/forum:managesubscriptions</allow>
     <allow>mod/forum:movediscussions</allow>
+    <allow>mod/forum:pindiscussions</allow>
     <allow>mod/forum:postwithoutthrottling</allow>
     <allow>mod/forum:rate</allow>
     <allow>mod/forum:replynews</allow>
@@ -597,6 +629,7 @@
     <allow>mod/wiki:viewcomment</allow>
     <allow>mod/wiki:viewpage</allow>
     <allow>mod/workshop:allocate</allow>
+    <allow>mod/workshop:deletesubmissions</allow>
     <allow>mod/workshop:ignoredeadlines</allow>
     <allow>mod/workshop:manageexamples</allow>
     <allow>mod/workshop:overridegrades</allow>
@@ -621,6 +654,8 @@
     <allow>moodle/comment:post</allow>
     <allow>moodle/comment:view</allow>
     <allow>moodle/community:add</allow>
+    <allow>moodle/competency:competencygrade</allow>
+    <allow>moodle/competency:usercompetencyview</allow>
     <allow>moodle/course:bulkmessaging</allow>
     <allow>moodle/course:markcomplete</allow>
     <allow>moodle/course:viewhiddenactivities</allow>
@@ -640,6 +675,7 @@
     <allow>moodle/rating:viewall</allow>
     <allow>moodle/rating:viewany</allow>
     <allow>moodle/role:review</allow>
+    <allow>moodle/search:query</allow>
     <allow>moodle/site:accessallgroups</allow>
     <allow>moodle/site:doclinks</allow>
     <allow>moodle/site:viewfullnames</allow>
@@ -670,10 +706,10 @@
     <allow>repository/webdav:view</allow>
     <allow>tool/monitor:managerules</allow>
     <allow>tool/monitor:subscribe</allow>
+    <allow>tool/recyclebin:viewitems</allow>
     <prevent>local/connect:manage</prevent>
     <prevent>mod/cla:manage</prevent>
     <prevent>mod/cla:viewresource</prevent>
     <prevent>mod/hotpot:addinstance</prevent>
-    <prevent>mod/streamingvideo:addinstance</prevent>
   </permissions>
 </role>

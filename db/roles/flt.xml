@@ -76,6 +76,9 @@
     <shortname>convenor</shortname>
   </allowswitch>
   <permissions>
+    <inherit>block/globalsearch:myaddinstance</inherit>
+    <inherit>block/lp:myaddinstance</inherit>
+    <inherit>block/lp:view</inherit>
     <inherit>block/panopto:panoptocreator</inherit>
     <inherit>block/panopto:panoptoviewer</inherit>
     <inherit>block/panopto:provision_aspublisher</inherit>
@@ -90,6 +93,17 @@
     <inherit>mod/quiz:emailnotifysubmission</inherit>
     <inherit>mod/quiz:emailwarnoverdue</inherit>
     <inherit>mod/turnitintooltwo:submit</inherit>
+    <inherit>moodle/competency:competencyview</inherit>
+    <inherit>moodle/competency:coursecompetencyview</inherit>
+    <inherit>moodle/competency:plancommentown</inherit>
+    <inherit>moodle/competency:planmanageown</inherit>
+    <inherit>moodle/competency:planmanageowndraft</inherit>
+    <inherit>moodle/competency:planrequestreviewown</inherit>
+    <inherit>moodle/competency:planviewown</inherit>
+    <inherit>moodle/competency:planviewowndraft</inherit>
+    <inherit>moodle/competency:usercompetencycommentown</inherit>
+    <inherit>moodle/competency:usercompetencyrequestreviewown</inherit>
+    <inherit>moodle/competency:userevidencemanageown</inherit>
     <inherit>moodle/my:manageblocks</inherit>
     <inherit>moodle/site:deleteownmessage</inherit>
     <inherit>tool/cat:manage</inherit>
@@ -122,6 +136,7 @@
     <allow>block/course_overview:myaddinstance</allow>
     <allow>block/course_summary:addinstance</allow>
     <allow>block/feedback:addinstance</allow>
+    <allow>block/globalsearch:addinstance</allow>
     <allow>block/glossary_random:addinstance</allow>
     <allow>block/glossary_random:myaddinstance</allow>
     <allow>block/html:addinstance</allow>
@@ -131,6 +146,7 @@
     <allow>block/kent_links:addinstance</allow>
     <allow>block/kent_links:myaddinstance</allow>
     <allow>block/login:addinstance</allow>
+    <allow>block/lp:addinstance</allow>
     <allow>block/massaction:addinstance</allow>
     <allow>block/massaction:use</allow>
     <allow>block/mentees:addinstance</allow>
@@ -190,6 +206,8 @@
     <allow>enrol/flatfile:unenrol</allow>
     <allow>enrol/guest:config</allow>
     <allow>enrol/ldap:manage</allow>
+    <allow>enrol/lti:config</allow>
+    <allow>enrol/lti:unenrol</allow>
     <allow>enrol/manual:config</allow>
     <allow>enrol/manual:enrol</allow>
     <allow>enrol/manual:manage</allow>
@@ -231,13 +249,6 @@
     <allow>gradereport/user:view</allow>
     <allow>local/connect:helpdesk</allow>
     <allow>local/connect:manage</allow>
-    <allow>local/recyclebin:delete_course</allow>
-    <allow>local/recyclebin:delete_item</allow>
-    <allow>local/recyclebin:delete_protected_item</allow>
-    <allow>local/recyclebin:restore_course</allow>
-    <allow>local/recyclebin:restore_item</allow>
-    <allow>local/recyclebin:view_course</allow>
-    <allow>local/recyclebin:view_item</allow>
     <allow>message/airnotifier:managedevice</allow>
     <allow>mod/aspirelists:addinstance</allow>
     <allow>mod/assign:addinstance</allow>
@@ -343,6 +354,7 @@
     <allow>mod/forum:exportpost</allow>
     <allow>mod/forum:managesubscriptions</allow>
     <allow>mod/forum:movediscussions</allow>
+    <allow>mod/forum:pindiscussions</allow>
     <allow>mod/forum:postwithoutthrottling</allow>
     <allow>mod/forum:rate</allow>
     <allow>mod/forum:replynews</allow>
@@ -491,6 +503,7 @@
     <allow>mod/wiki:viewpage</allow>
     <allow>mod/workshop:addinstance</allow>
     <allow>mod/workshop:allocate</allow>
+    <allow>mod/workshop:deletesubmissions</allow>
     <allow>mod/workshop:editdimensions</allow>
     <allow>mod/workshop:ignoredeadlines</allow>
     <allow>mod/workshop:manageexamples</allow>
@@ -529,8 +542,6 @@
     <allow>moodle/badges:viewotherbadges</allow>
     <allow>moodle/block:edit</allow>
     <allow>moodle/block:view</allow>
-    <allow>moodle/blog:associatecourse</allow>
-    <allow>moodle/blog:associatemodule</allow>
     <allow>moodle/blog:create</allow>
     <allow>moodle/blog:manageentries</allow>
     <allow>moodle/blog:manageexternal</allow>
@@ -550,6 +561,27 @@
     <allow>moodle/comment:view</allow>
     <allow>moodle/community:add</allow>
     <allow>moodle/community:download</allow>
+    <allow>moodle/competency:competencygrade</allow>
+    <allow>moodle/competency:competencymanage</allow>
+    <allow>moodle/competency:coursecompetencyconfigure</allow>
+    <allow>moodle/competency:coursecompetencygradable</allow>
+    <allow>moodle/competency:coursecompetencymanage</allow>
+    <allow>moodle/competency:evidencedelete</allow>
+    <allow>moodle/competency:plancomment</allow>
+    <allow>moodle/competency:planmanage</allow>
+    <allow>moodle/competency:planmanagedraft</allow>
+    <allow>moodle/competency:planrequestreview</allow>
+    <allow>moodle/competency:planreview</allow>
+    <allow>moodle/competency:planview</allow>
+    <allow>moodle/competency:planviewdraft</allow>
+    <allow>moodle/competency:templatemanage</allow>
+    <allow>moodle/competency:templateview</allow>
+    <allow>moodle/competency:usercompetencycomment</allow>
+    <allow>moodle/competency:usercompetencyrequestreview</allow>
+    <allow>moodle/competency:usercompetencyreview</allow>
+    <allow>moodle/competency:usercompetencyview</allow>
+    <allow>moodle/competency:userevidencemanage</allow>
+    <allow>moodle/competency:userevidenceview</allow>
     <allow>moodle/course:activityvisibility</allow>
     <allow>moodle/course:bulkmessaging</allow>
     <allow>moodle/course:changecategory</allow>
@@ -570,6 +602,7 @@
     <allow>moodle/course:markcomplete</allow>
     <allow>moodle/course:movesections</allow>
     <allow>moodle/course:publish</allow>
+    <allow>moodle/course:renameroles</allow>
     <allow>moodle/course:request</allow>
     <allow>moodle/course:reset</allow>
     <allow>moodle/course:reviewotherusers</allow>
@@ -640,6 +673,7 @@
     <allow>moodle/role:review</allow>
     <allow>moodle/role:safeoverride</allow>
     <allow>moodle/role:switchroles</allow>
+    <allow>moodle/search:query</allow>
     <allow>moodle/site:accessallgroups</allow>
     <allow>moodle/site:approvecourse</allow>
     <allow>moodle/site:config</allow>
@@ -726,15 +760,17 @@
     <allow>repository/youtube:view</allow>
     <allow>tool/customlang:edit</allow>
     <allow>tool/customlang:view</allow>
+    <allow>tool/lpmigrate:frameworksmigrate</allow>
     <allow>tool/monitor:managerules</allow>
     <allow>tool/monitor:subscribe</allow>
+    <allow>tool/recyclebin:deleteitems</allow>
+    <allow>tool/recyclebin:restoreitems</allow>
+    <allow>tool/recyclebin:viewitems</allow>
     <allow>tool/uploaduser:uploaduserpictures</allow>
-    <allow>webservice/amf:use</allow>
     <allow>webservice/rest:use</allow>
     <allow>webservice/soap:use</allow>
     <allow>webservice/xmlrpc:use</allow>
     <prevent>mod/hotpot:addinstance</prevent>
-    <prevent>mod/streamingvideo:addinstance</prevent>
     <prohibit>enrol/self:holdkey</prohibit>
   </permissions>
 </role>
