@@ -55,6 +55,11 @@ class deprecated extends \local_notifications\notification\simplelist {
                 if (!empty($modinfo->sections[$section->section])) {
                     foreach ($modinfo->sections[$section->section] as $modnumber) {
                         $mod = $modinfo->cms[$modnumber];
+                        if (!isset($mod->modname) || !isset($mod->url) || !isset($mod->name)) {
+                            continue;
+                        }
+
+                        // Check with activityman.
                         $activityman = new \local_kent\manager\activity($mod->modname);
                         if ($activityman->is_deprecated()) {
                             $this->_items[] = $mod;
