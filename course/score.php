@@ -36,9 +36,19 @@ $checker->run();
 
 $scores = $checker->get_score();
 $width = ((float)$scores['score'] / (float)$scores['max']) * 100.0;
+
+$color = 'danger';
+if ($width > 50) {
+    $color = 'warning';
+}
+
+if ($width > 75) {
+    $color = 'success';
+}
+
 echo <<<HTML5
     <div class="progress">
-        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="{$scores['max']}" style="width: {$width}%;">
+        <div class="progress-bar progress-bar-{$color}" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="{$scores['max']}" style="width: {$width}%;">
             {$scores['score']} / {$scores['max']}
         </div>
     </div>

@@ -67,10 +67,12 @@ function local_kent_extend_settings_navigation(\settings_navigation $nav, \conte
         $settingnode = $nav->find('categorysettings', null);
         $reportsnode = $settingnode->add('Reports', $settingnode->action, \navigation_node::TYPE_CONTAINER);
         $reportsnode->add_node($node);
+
+        return $node;
     }
 
     // Only add this settings item on non-site course pages.
-    if ($PAGE->course && $PAGE->course->id > 1) {
+    if ($PAGE->course && $PAGE->course->id > 1 && \theme_kent\core::is_beta()) {
         $context = \context_course::instance($PAGE->course->id);
         if (has_capability('moodle/course:update', $context)
             && $settingnode = $nav->find('courseadmin', navigation_node::TYPE_COURSE)) {
@@ -96,8 +98,6 @@ function local_kent_extend_settings_navigation(\settings_navigation $nav, \conte
             return $node;
         }
     }
-
-    return $node;
 }
 
 /**
