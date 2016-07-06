@@ -44,36 +44,58 @@ if ((!defined("CLI_SCRIPT") || !CLI_SCRIPT) &&
 function local_kent_extend_settings_navigation(\settings_navigation $nav, \context $context) {
     global $PAGE;
 
-    if ($context->contextlevel != \CONTEXT_COURSECAT) {
-        return;
-    }
-
     // Check we can view the Tii report.
-    if (!has_capability('report/turnitin:view', $context)) {
-        return null;
+    if ($context->contextlevel == \CONTEXT_COURSECAT && has_capability('report/turnitin:view', $context)) {
+        $url = new \moodle_url('/report/turnitin/index.php', array(
+            'category' => $context->instanceid
+        ));
+
+        $pluginname = get_string('pluginname', 'report_turnitin');
+        $node = \navigation_node::create(
+            $pluginname,
+            $url,
+            \navigation_node::NODETYPE_LEAF,
+            'report_turnitin',
+            'report_turnitin',
+            new \pix_icon('e/document_properties', $pluginname)
+        );
+
+        if ($PAGE->url->compare($url, \URL_MATCH_BASE)) {
+            $node->make_active();
+        }
+
+        $settingnode = $nav->find('categorysettings', null);
+        $reportsnode = $settingnode->add('Reports', $settingnode->action, \navigation_node::TYPE_CONTAINER);
+        $reportsnode->add_node($node);
     }
 
-    $url = new \moodle_url('/report/turnitin/index.php', array(
-        'category' => $context->instanceid
-    ));
+    // Only add this settings item on non-site course pages.
+    if ($PAGE->course && $PAGE->course->id > 1) {
+        $context = \context_course::instance($PAGE->course->id);
+        if (has_capability('moodle/course:update', $context)
+            && $settingnode = $nav->find('courseadmin', navigation_node::TYPE_COURSE)) {
+            $url = new moodle_url('/local/kent/course/score.php', array(
+                'id' => $PAGE->course->id
+            ));
 
-    $pluginname = get_string('pluginname', 'report_turnitin');
-    $node = \navigation_node::create(
-        $pluginname,
-        $url,
-        \navigation_node::NODETYPE_LEAF,
-        'report_turnitin',
-        'report_turnitin',
-        new \pix_icon('e/document_properties', $pluginname)
-    );
+            $node = navigation_node::create(
+                'Module checker (beta)',
+                $url,
+                navigation_node::NODETYPE_LEAF,
+                'local_kent',
+                'local_kent',
+                new pix_icon('e/tick', 'Module checker')
+            );
 
-    if ($PAGE->url->compare($url, \URL_MATCH_BASE)) {
-        $node->make_active();
+            if ($PAGE->url->compare($url, URL_MATCH_BASE)) {
+                $node->make_active();
+            }
+
+            $settingnode->add_node($node);
+
+            return $node;
+        }
     }
-
-    $settingnode = $nav->find('categorysettings', null);
-    $reportsnode = $settingnode->add('Reports', $settingnode->action, \navigation_node::TYPE_CONTAINER);
-    $reportsnode->add_node($node);
 
     return $node;
 }
