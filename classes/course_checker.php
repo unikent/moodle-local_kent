@@ -27,10 +27,10 @@ class course_checker
 {
     const MIN_SECTIONS = 3;
     const MAX_SECTIONS = 12;
-    const MIN_CM_PER_SECTION = 5;
-    const MAX_CM_PER_SECTION = 20;
+    const MIN_CM_PER_SECTION = 2;
+    const MAX_CM_PER_SECTION = 15;
     const MIN_CM_NAME = 1;
-    const MAX_CM_NAME = 5;
+    const MAX_CM_NAME = 7;
 
     /** @var int Course ID. */
     private $courseid;
