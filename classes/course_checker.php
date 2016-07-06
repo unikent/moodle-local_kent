@@ -158,6 +158,15 @@ class course_checker
                 'level' => 'danger'
             );
 
+            // Check the word has no spaces.
+            $this->checks["cm_{$cm->id}_name_trim"] = array(
+                'score' => trim($cm->name) != $cm->name ? 0 : 25,
+                'max' => 25,
+                'fixable' => true,
+                'text' => 'Activity names should not contain leading/trailing whitespace. Found whitespace in "' . $name . '"',
+                'level' => 'danger'
+            );
+
             // Check the word length min.
             $this->checks["cm_{$cm->id}_word_length_min"] = array(
                 'score' => $namelen >= self::MIN_CM_NAME ? self::MIN_CM_NAME : $namelen,
