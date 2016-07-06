@@ -27,7 +27,7 @@ $PAGE->set_title("Course checker");
 // Output header.
 echo $OUTPUT->header();
 
-echo $OUTPUT->notification('<i class="fa fa-warning"></i> Please note: this tool is still under development and may not yet function properly. You are advised to backup your course before auto-fixing. The rules are also still being heavily tweaked based on user feedback.');
+echo $OUTPUT->notification('<i class="fa fa-warning"></i> Please note: this tool is still under development and may not yet function properly. You are advised to backup your course before auto-fixing. The rules are also still being heavily tweaked based on user feedback, this tool is meant purely for assistance in module design alongside the good Moodle guide.');
 
 echo $OUTPUT->heading("Course checker");
 
