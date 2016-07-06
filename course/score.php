@@ -21,7 +21,7 @@ $courseid = required_param('id', PARAM_INT);
 require_login($courseid);
 require_capability('moodle/course:update', $PAGE->context);
 
-$PAGE->set_url('/local/kent/course/score.php');
+$PAGE->set_url('/local/kent/course/score.php', array('id' => $courseid));
 $PAGE->set_title("Course checker");
 
 // Output header.
