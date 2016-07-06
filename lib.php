@@ -91,6 +91,8 @@ function local_kent_extend_settings_navigation(\settings_navigation $nav, \conte
 
             if ($PAGE->url->compare($url, URL_MATCH_BASE)) {
                 $node->make_active();
+            } else if ($PAGE->url->compare(new \moodle_url('/local/kent/course/fix.php'), URL_MATCH_BASE)) {
+                $node->make_active();
             }
 
             $settingnode->add_node($node);

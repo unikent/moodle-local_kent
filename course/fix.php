@@ -17,50 +17,42 @@
 require_once(dirname(__FILE__) . '/../../../config.php');
 
 $courseid = required_param('id', PARAM_INT);
+$preview = optional_param('preview', false, PARAM_BOOL);
 
 require_login($courseid);
 require_capability('moodle/course:update', $PAGE->context);
 
-$PAGE->set_url('/local/kent/course/score.php', array('id' => $courseid));
-$PAGE->set_title("Course checker");
+if (!$preview) {
+    require_sesskey();
+
+    $checker = new \local_kent\course_checker($courseid);
+    $checker->run();
+    $checker->dispatch_fixes(false);
+    redirect(new \moodle_url('/local/kent/course/score.php', array('id' => $courseid)));
+}
+
+$PAGE->set_url('/local/kent/course/fix.php', array('id' => $courseid));
+$PAGE->set_title("Course fixer");
 
 // Output header.
 echo $OUTPUT->header();
 
 echo $OUTPUT->notification('<i class="fa fa-warning"></i> Please note: this tool is still under development and may not yet function properly. You are advised to backup your course before auto-fixing. The rules are also still being heavily tweaked based on user feedback, this tool is meant purely for assistance in module design alongside the good Moodle guide.');
 
-echo $OUTPUT->heading("Course checker");
+echo $OUTPUT->heading("Course fixer");
 
 $checker = new \local_kent\course_checker($courseid);
 $checker->run();
+$checker->dispatch_fixes($preview);
 
-$scores = $checker->get_score();
-$width = ((float)$scores['score'] / (float)$scores['max']) * 100.0;
-
-$color = 'danger';
-if ($width > 50) {
-    $color = 'warning';
+if ($preview) {
+    echo \html_writer::link(new \moodle_url($PAGE->url, array(
+        'preview' => false,
+        'sesskey' => sesskey()
+    )), 'Save changes', array(
+        'class' => 'btn btn-primary'
+    ));
 }
-
-if ($width > 85) {
-    $color = 'success';
-}
-
-echo <<<HTML5
-    <div class="progress">
-        <div class="progress-bar progress-bar-{$color}" role="progressbar" aria-valuenow="{$scores['score']}" aria-valuemin="0" aria-valuemax="{$scores['max']}" style="width: {$width}%;">
-            {$scores['score']} / {$scores['max']}
-        </div>
-    </div>
-HTML5;
-
-$checker->render_results();
-
-$link = \html_writer::link(new \moodle_url('/local/kent/course/fix.php', array(
-    'id' => $courseid,
-    'preview' => true
-)), 'Would you like to fix them now?');
-echo \html_writer::tag('p', $scores['fixable'] . ' of these issues are fixable. ' . $link);
 
 // Output footer.
 echo $OUTPUT->footer();

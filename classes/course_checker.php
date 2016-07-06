@@ -134,24 +134,8 @@ class course_checker
             $name = $cm->name;
             $namelen = str_word_count($name);
 
-            $casescore = 0;
-            if (strtolower($name) != $name) {
-                $casescore += 5;
-            }
-
-            if (strtoupper($name) != $name) {
-                $casescore += 5;
-            }
-
-            if (strlen($name) > 0) {
-                $check = strtoupper($name);
-                if ($check[0] == $name[0]) {
-                    $casescore += 5;
-                }
-            }
-
-            $this->checks["cm_{$cm->id}_case"] = array(
-                'score' => $casescore,
+            $this->checks["cm_{$cm->id}_name_case"] = array(
+                'score' => (strtolower($name) == $name) || (strtoupper($name) == $name) || ucfirst($name) !== $name ? 0 : 15,
                 'max' => 15,
                 'fixable' => true,
                 'text' => 'Activity names should be in sentence case, found "' . $name . '".',
@@ -168,7 +152,7 @@ class course_checker
             );
 
             // Check the word length min.
-            $this->checks["cm_{$cm->id}_word_length_min"] = array(
+            $this->checks["cm_{$cm->id}_name_length_min"] = array(
                 'score' => $namelen >= self::MIN_CM_NAME ? self::MIN_CM_NAME : $namelen,
                 'max' => self::MIN_CM_NAME,
                 'fixable' => false,
@@ -177,7 +161,7 @@ class course_checker
             );
 
             // Check the word length max.
-            $this->checks["cm_{$cm->id}_word_length_max"] = array(
+            $this->checks["cm_{$cm->id}_name_length_max"] = array(
                 'score' => $namelen <= self::MAX_CM_NAME ? 5 : 0,
                 'max' => 5,
                 'fixable' => false,
@@ -196,6 +180,102 @@ class course_checker
                 'text' => 'Activity names should not end in punctuation. Found "' . $name . '"',
                 'level' => 'warning'
             );
+        }
+    }
+
+    /**
+     * Dispatch all fixes and display output.
+     */
+    public function dispatch_fixes($preview = true) {
+        if ($preview) {
+            echo '<ol>';
+        }
+
+        foreach ($this->checks as $name => $check) {
+            if ($check['score'] != $check['max'] && $check['fixable']) {
+                // We can fix this!
+                $parts = explode('_', $name);
+                $type = $parts[0];
+                $id = $parts[1];
+                $fix = "fix_{$type}_" . substr($name, strlen("{$type}_{$id}_"));
+
+                $this->$fix($id, $preview);
+                $this->cminfo = get_fast_modinfo($this->courseid);
+            }
+        }
+
+        if ($preview) {
+            echo '</ol>';
+        }
+    }
+
+    /**
+     * Remove headings from section descriptions.
+     */
+    public function fix_section_description_headings($id, $preview = true) {
+        // TODO.
+    }
+
+
+    /**
+     * Remove images from section descriptions.
+     */
+    public function fix_section_description_images($id, $preview = true) {
+        // TODO.
+    }
+
+
+    /**
+     * Remove objects from section descriptions.
+     */
+    public function fix_section_description_object($id, $preview = true) {
+        // TODO.
+    }
+
+    /**
+     * Fix cm name punctuation.
+     */
+    public function fix_cm_name_punctuation($id, $preview = true) {
+        $cm = $this->cminfo->get_cm($id);
+        $name = $cm->name;
+        $newname = substr($cm->name, 0, -1);
+        if ($preview) {
+            echo \html_writer::tag('li', "Rename course module from '{$name}' to '{$newname}'.");
+        } else {
+            set_coursemodule_name($id, trim($newname));
+        }
+    }
+
+    /**
+     * Fix cm name case.
+     */
+    public function fix_cm_name_case($id, $preview = true) {
+        $cm = $this->cminfo->get_cm($id);
+        $name = $cm->name;
+        $newname = $name;
+        if (strtoupper($newname) == $newname) {
+            $newname = strtolower($newname);
+        }
+
+        $newname = ucfirst($newname);
+        if ($preview) {
+            echo \html_writer::tag('li', "Rename course module from '{$name}' to '{$newname}'.");
+        } else {
+            set_coursemodule_name($id, trim($newname));
+        }
+    }
+
+    /**
+     * Fix cm name trim.
+     */
+    public function fix_cm_name_trim($id, $preview = true) {
+        $cm = $this->cminfo->get_cm($id);
+        $name = $cm->name;
+        $newname = trim($name);
+        if ($preview) {
+            echo \html_writer::tag('li', "Rename course module from '{$name}' to '{$newname}'.");
+        } else {
+            set_coursemodule_name($id, trim($newname));
         }
     }
 
@@ -223,7 +303,7 @@ class course_checker
         foreach ($this->checks as $check) {
             $score += $check['score'];
             $max += $check['max'];
-            if ($check['fixable']) {
+            if ($check['score'] != $check['max'] && $check['fixable']) {
                 $fixable++;
             }
         }
