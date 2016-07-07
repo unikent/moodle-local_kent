@@ -82,12 +82,21 @@ class course_checker
             $summary = strtolower($section->summary);
 
             // Check section description contains no headings.
+            $this->checks["section_{$section->section}_description_whitespace"] = array(
+                'score' => $summary === trim($summary) ? 5 : 0,
+                'max' => 5,
+                'fixable' => true,
+                'text' => 'Section descriptions should contain no leading/trailing whitespace, found in section ' . $section->section,
+                'level' => 'warning'
+            );
+
+            // Check section description contains no headings.
             $this->checks["section_{$section->section}_description_headings"] = array(
                 'score' => strpos($summary, '<h') === false ? 5 : 0,
                 'max' => 5,
                 'fixable' => true,
                 'text' => 'Section descriptions should contain no headings! Heading found in section ' . $section->section,
-                'level' => 'danger'
+                'level' => 'warning'
             );
 
             // Check section description contains no images.
@@ -114,7 +123,7 @@ class course_checker
                 'max' => self::MIN_CM_PER_SECTION,
                 'fixable' => false,
                 'text' => 'You should have a minimum of ' . self::MIN_CM_PER_SECTION . ' activities per section. ' . $cms . ' found in section ' . $section->section,
-                'level' => 'warning'
+                'level' => 'info'
             );
 
             // Check the max number of course modules.
@@ -123,7 +132,7 @@ class course_checker
                 'max' => 15,
                 'fixable' => false,
                 'text' => 'You should have a maximum of ' . self::MAX_CM_PER_SECTION . ' activities per section. ' . $cms . ' found in section ' . $section->section,
-                'level' => 'danger'
+                'level' => 'info'
             );
         }
 
@@ -191,16 +200,21 @@ class course_checker
             echo '<ol>';
         }
 
+        $skiplist = array();
         foreach ($this->checks as $name => $check) {
             if ($check['score'] != $check['max'] && $check['fixable']) {
                 // We can fix this!
                 $parts = explode('_', $name);
                 $type = $parts[0];
                 $id = $parts[1];
+                if (isset($skiplist["{$type}_{$id}"])) {
+                    continue;
+                }
                 $fix = "fix_{$type}_" . substr($name, strlen("{$type}_{$id}_"));
 
                 $this->$fix($id, $preview);
                 $this->cminfo = get_fast_modinfo($this->courseid);
+                $skiplist["{$type}_{$id}"] = true;
             }
         }
 
@@ -210,10 +224,34 @@ class course_checker
     }
 
     /**
+     * Remove bad tags from section descriptions.
+     */
+    public function fix_section_description($id, $preview = true) {
+        global $DB;
+
+        $section = $this->cminfo->get_section_info($id);
+        $content = trim($section->summary);
+        $content = preg_replace("/<img[^>]+\>/i", '', $content);
+        $content = preg_replace('/<script.+?<\/script>/im', '', $content);
+        $content = preg_replace('/<embed.+?<\/embed>/im', '', $content);
+        $content = preg_replace('/<object.+?<\/object>/im', '', $content);
+        $content = preg_replace('/<h[1-6].*?>(.*?)<\/h[1-6]>/si', '<p>${1}</p>', $content);
+
+        if ($preview) {
+            echo \html_writer::tag('li', "Adjust section {$section->section} summary from <pre>{$section->summary}</pre> to <pre>{$content}</pre>");
+        } else {
+            $DB->set_field('course_sections', 'summary', $content, array(
+                'id' => $section->id
+            ));
+            rebuild_course_cache($this->courseid, true);
+        }
+    }
+
+    /**
      * Remove headings from section descriptions.
      */
     public function fix_section_description_headings($id, $preview = true) {
-        // TODO.
+        $this->fix_section_description($id, $preview);
     }
 
 
@@ -221,7 +259,7 @@ class course_checker
      * Remove images from section descriptions.
      */
     public function fix_section_description_images($id, $preview = true) {
-        // TODO.
+        $this->fix_section_description($id, $preview);
     }
 
 
@@ -229,35 +267,29 @@ class course_checker
      * Remove objects from section descriptions.
      */
     public function fix_section_description_object($id, $preview = true) {
-        // TODO.
+        $this->fix_section_description($id, $preview);
     }
 
     /**
      * Fix cm name punctuation.
      */
-    public function fix_cm_name_punctuation($id, $preview = true) {
+    public function fix_cm_name($id, $preview = true) {
         $cm = $this->cminfo->get_cm($id);
-        $name = $cm->name;
-        $newname = substr($cm->name, 0, -1);
-        if ($preview) {
-            echo \html_writer::tag('li', "Rename course module from '{$name}' to '{$newname}'.");
-        } else {
-            set_coursemodule_name($id, trim($newname));
-        }
-    }
-
-    /**
-     * Fix cm name case.
-     */
-    public function fix_cm_name_case($id, $preview = true) {
-        $cm = $this->cminfo->get_cm($id);
-        $name = $cm->name;
+        $name = trim($cm->name);
         $newname = $name;
         if (strtoupper($newname) == $newname) {
             $newname = strtolower($newname);
         }
 
         $newname = ucfirst($newname);
+
+        // Punctuation fix.
+        $letters = str_split($newname);
+        $letter = array_pop($letters);
+        if (ctype_punct($letter)) {
+            $newname = substr($newname, 0, -1);
+        }
+
         if ($preview) {
             echo \html_writer::tag('li', "Rename course module from '{$name}' to '{$newname}'.");
         } else {
@@ -266,17 +298,24 @@ class course_checker
     }
 
     /**
+     * Fix cm name punctuation.
+     */
+    public function fix_cm_name_punctuation($id, $preview = true) {
+        $this->fix_cm_name($id, $preview);
+    }
+
+    /**
+     * Fix cm name case.
+     */
+    public function fix_cm_name_case($id, $preview = true) {
+        $this->fix_cm_name($id, $preview);
+    }
+
+    /**
      * Fix cm name trim.
      */
     public function fix_cm_name_trim($id, $preview = true) {
-        $cm = $this->cminfo->get_cm($id);
-        $name = $cm->name;
-        $newname = trim($name);
-        if ($preview) {
-            echo \html_writer::tag('li', "Rename course module from '{$name}' to '{$newname}'.");
-        } else {
-            set_coursemodule_name($id, trim($newname));
-        }
+        $this->fix_cm_name($id, $preview);
     }
 
     /**
