@@ -941,5 +941,12 @@ function xmldb_local_kent_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2016043102, 'local', 'kent');
     }
 
+    if ($oldversion < 2016071100) {
+        $catman->create(69);
+
+        // Kent savepoint reached.
+        upgrade_plugin_savepoint(true, 2016071100, 'local', 'kent');
+    }
+
     return true;
 }

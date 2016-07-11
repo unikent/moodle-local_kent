@@ -1072,5 +1072,21 @@ $kentcategories = array(
         "depth" => 3,
         "path" => "/11/12/68",
         "theme" => ""
-    )
+    ),
+    69 => array(
+        "id" => 69,
+        "name" => "Study Plus",
+        "idnumber" => "69",
+        "description" => "Study Plus modules",
+        "descriptionformat" => 1,
+        "parent" => 12,
+        "sortorder" => 640000,
+        "coursecount" => 0,
+        "visible" => 1,
+        "visibleold" => 1,
+        "timemodified" => 0,
+        "depth" => 3,
+        "path" => "/1/69",
+        "theme" => ""
+    ),
 );
