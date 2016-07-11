@@ -28,13 +28,6 @@ if ($hassiteconfig) {
     ));
 
     $settings->add(new admin_setting_configcheckbox(
-        'local_kent/enable_course_shouter',
-        'Enable Course Shouter',
-        'Sends new courses to AL team in FP.',
-        0
-    ));
-
-    $settings->add(new admin_setting_configcheckbox(
         'local_kent/enable_course_alt_shouter',
         'Enable Course Shouter',
         'Shouts out new courses to Academic Liason Team.',
