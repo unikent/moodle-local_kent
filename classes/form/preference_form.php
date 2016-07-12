@@ -51,6 +51,11 @@ class preference_form extends \moodleform
             '2' => 'High',
             '3' => 'Highest'
         ));
+        $mform->addElement('select', 'kent_theme_enable_nightmode', 'Night time mode', array(
+            '1' => 'Allow toggle',
+            '2' => 'Always on',
+            '3' => 'Always off'
+        ));
         $mform->setExpanded('accesssettings');
 
         $mform->addElement('header', 'betasettings', 'Beta Programs');
