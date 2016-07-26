@@ -37,8 +37,9 @@ class category
         global $CFG, $kentcategories;
 
         require($CFG->dirroot . "/local/kent/db/categories.php");
-
         $this->categories = $kentcategories;
+
+        require_once($CFG->libdir . '/coursecatlib.php');
     }
 
     /**
@@ -92,7 +93,7 @@ class category
         $category = $this->categories[$id];
         $category = (object)$category;
 
-        if ($category->parent > 0) {
+        if ($category->parent > 1) {
             $category->parent = $DB->get_field('course_categories', 'id', array(
                 'idnumber' => $category->parent
             ), \MUST_EXIST);
