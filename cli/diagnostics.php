@@ -21,8 +21,10 @@
 
 define('CLI_SCRIPT', true);
 
+ini_set('error_reporting', E_ALL);
 require_once(dirname(__FILE__) . '/../../../config.php');
 require_once($CFG->libdir . '/clilib.php');
+ini_set('error_reporting', E_ALL);
 
 // Can we communicate with Memcached?
 cli_heading("Testing Memcached");
