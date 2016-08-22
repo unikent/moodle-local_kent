@@ -35,7 +35,7 @@ class course_request extends \course_request_form
             $mform->addElement('static', 'pendingcourses', get_string('courses'), $list);
         }
 
-        $mform->addElement('header','coursedetails', get_string('courserequestdetails'));
+        $mform->addElement('header', 'coursedetails', get_string('courserequestdetails'));
 
         $mform->addElement('text', 'fullname', get_string('fullnamecourse'), 'maxlength="254" size="50"');
         $mform->addHelpButton('fullname', 'fullnamecourse');
@@ -43,8 +43,8 @@ class course_request extends \course_request_form
         $mform->setType('fullname', PARAM_TEXT);
 
         $mform->addElement('select', 'type', 'Rollover Settings', array(
-        	'true' => 'Auto rollover',
-        	'false' => 'Don\'t auto rollover'
+            'true' => 'Auto rollover',
+            'false' => 'Don\'t auto rollover'
         ));
         $mform->setDefault('type', 'O');
 
@@ -59,9 +59,12 @@ class course_request extends \course_request_form
         $mform->addHelpButton('summary_editor', 'coursesummary');
         $mform->setType('summary_editor', PARAM_RAW);
 
-        $mform->addElement('header','requestreason', get_string('courserequestreason'));
+        $mform->addElement('header', 'requestreason', get_string('courserequestreason'));
 
-        $mform->addElement('textarea', 'reason', get_string('courserequestsupport'), array('rows'=>'15', 'cols'=>'50'));
+        $mform->addElement('textarea', 'reason', get_string('courserequestsupport'), array(
+            'rows' => '15',
+            'cols' => '50'
+        ));
         $mform->addRule('reason', get_string('missingreqreason'), 'required', null, 'client');
         $mform->setType('reason', PARAM_TEXT);
 
